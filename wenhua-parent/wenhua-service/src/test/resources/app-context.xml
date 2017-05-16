@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+       				http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+					http://www.springframework.org/schema/context
+        			http://www.springframework.org/schema/context/spring-context-4.2.xsd
+					http://www.springframework.org/schema/tx 
+					http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+					http://www.springframework.org/schema/aop 
+					http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
+
+	<context:property-placeholder location="classpath*:app-*.properties" />
+	
+	<!-- 业务服务 -->
+	<import resource="classpath:spring-context-service.xml"/>
+	
+	<context:component-scan base-package="com.howard.svr" use-default-filters="false">
+		<!-- 
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
+         -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Component" />
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
+    </context:component-scan>
+
+	<!-- Druid 数据库源配置 -->
+	<bean id="abstractDataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		abstract="true" init-method="init" destroy-method="close">
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="${dataSource.initialSize}" />
+		<property name="minIdle" value="${dataSource.minIdle}" />
+		<property name="maxActive" value="${dataSource.maxActive}" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="${dataSource.maxWait}" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<!--property name="validationQuery" value="SELECT 'x'"/ -->
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<!--property name="poolPreparedStatements" value="true"/> <property name="maxPoolPreparedStatementPerConnectionSize" 
+			value="20"/ -->
+
+		<!-- 配置监控统计拦截的filters。状态统计：stat，日常记录：slf4j -->
+		<property name="filters" value="stat,slf4j" />
+	</bean>
+
+	<!-- Druid 数据库源配置 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+		parent="abstractDataSource">
+		<!-- 基本属性 url、user、password -->
+		<property name="url" value="${uc.jdbcUrl}" />
+		<property name="username" value="${uc.username}" />
+		<property name="password" value="${uc.password}" />
+	</bean>
+
+	<!-- ========================================针对myBatis的配置项============================== -->
+	<!-- 配置sqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!-- 实例化sqlSessionFactory时需要使用上述配置好的数据源以及SQL映射文件 -->
+		<property name="dataSource" ref="dataSource" />
+		<!-- 自动扫描me/gacl/mapping/目录下的所有SQL映射的xml文件, 省掉Configuration.xml里的手工配置 value="classpath:me/gacl/mapping/*.xml"指的是classpath(类路径)下me.gacl.mapping包中的所有xml文件 
+			UserMapper.xml位于me.gacl.mapping包下，这样UserMapper.xml就可以被自动扫描 -->
+		<property name="mapperLocations" value="classpath:mapping/*.xml" />
+
+		<!-- mybatis配置文件路径 -->
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+	</bean>
+
+	<!--其实这里类的实例就是mybatis中SQLSession -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0">
+			<ref bean="sqlSessionFactory" />
+		</constructor-arg>
+	</bean>
+	
+	<!--动态代理实现 不用写dao的实现 -->
+	<bean id="MapperScannerConfigurer" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<!-- 这里的basePackage 指定了dao层接口路劲，这里的dao接口不用自己实现 -->
+		<property name="basePackage" value="com.wenhua.svr.dao" />
+		<!-- 如果只有一个数据源的话可以不用指定，但是如果有多个数据源的话必须要指定 -->
+		<!-- <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" /> -->
+		<!--直接指定了sqlsessionTemplate名称，这个和上面的其实是一样的 -->
+		<!-- <property name="sqlSessionTemplateBeanName" value="sqlSession" /> -->
+	</bean>
+
+	<!-- ========================================分隔线========================================= -->
+	<!-- 配置Spring的事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 注解方式配置事物 -->
+	<!-- <tx:annotation-driven transaction-manager="transactionManager" /> -->
+
+	<!-- 拦截器方式配置事物 -->
+	<tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="append*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="edit*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+			<tx:method name="repair" propagation="REQUIRED" />
+			<tx:method name="delAndRepair" propagation="REQUIRED" />
+
+			<tx:method name="get*" propagation="SUPPORTS" />
+			<tx:method name="select*" propagation="SUPPORTS" />
+			<tx:method name="find*" propagation="SUPPORTS" />
+			<tx:method name="load*" propagation="SUPPORTS" />
+			<tx:method name="search*" propagation="SUPPORTS" />
+			<tx:method name="datagrid*" propagation="SUPPORTS" />
+
+			<tx:method name="*" propagation="SUPPORTS" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="transactionPointcut"
+			expression="execution(* com.wenhua.svr.service..*Impl.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut"
+			advice-ref="transactionAdvice" />
+	</aop:config>
+
+
+	<!-- 配置druid监控spring jdbc -->
+	<bean id="druid-stat-interceptor"
+		class="com.alibaba.druid.support.spring.stat.DruidStatInterceptor">
+	</bean>
+	<bean id="druid-stat-pointcut" class="org.springframework.aop.support.JdkRegexpMethodPointcut"
+		scope="prototype">
+		<property name="patterns">
+			<list>
+				<value>com.wenhua.svr.service.*</value>
+			</list>
+		</property>
+	</bean>
+	<aop:config>
+		<aop:advisor advice-ref="druid-stat-interceptor"
+			pointcut-ref="druid-stat-pointcut" />
+	</aop:config>
+
+
+</beans>

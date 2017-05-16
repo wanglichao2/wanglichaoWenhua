@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wenhua.svr.dao.StatAreaDao">
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.StatArea">
+    <id column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <id column="stat_date" jdbcType="DATE" property="statDate" />
+    <result column="online" jdbcType="INTEGER" property="online" />
+    <result column="offline" jdbcType="INTEGER" property="offline" />
+    <result column="login" jdbcType="INTEGER" property="login" />
+    <result column="rankno" jdbcType="CHAR" property="rankno" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    area_code, stat_date, online, offline, login, rankno
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.wenhua.svr.domain.base.BaseStatAreaKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_stat_area
+    where area_code = #{areaCode,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="com.wenhua.svr.domain.base.BaseStatAreaKey">
+    delete from t_stat_area
+    where area_code = #{areaCode,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </delete>
+  <insert id="insert" parameterType="com.wenhua.svr.domain.StatArea">
+    insert into t_stat_area (area_code, stat_date, online, 
+      offline, login, rankno
+      )
+    values (#{areaCode,jdbcType=VARCHAR}, #{statDate,jdbcType=DATE}, #{online,jdbcType=INTEGER}, 
+      #{offline,jdbcType=INTEGER}, #{login,jdbcType=INTEGER}, #{rankno,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.StatArea">
+    insert into t_stat_area
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areaCode != null">
+        area_code,
+      </if>
+      <if test="statDate != null">
+        stat_date,
+      </if>
+      <if test="online != null">
+        online,
+      </if>
+      <if test="offline != null">
+        offline,
+      </if>
+      <if test="login != null">
+        login,
+      </if>
+      <if test="rankno != null">
+        rankno,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="statDate != null">
+        #{statDate,jdbcType=DATE},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=INTEGER},
+      </if>
+      <if test="offline != null">
+        #{offline,jdbcType=INTEGER},
+      </if>
+      <if test="login != null">
+        #{login,jdbcType=INTEGER},
+      </if>
+      <if test="rankno != null">
+        #{rankno,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.StatArea">
+    update t_stat_area
+    <set>
+      <if test="online != null">
+        online = #{online,jdbcType=INTEGER},
+      </if>
+      <if test="offline != null">
+        offline = #{offline,jdbcType=INTEGER},
+      </if>
+      <if test="login != null">
+        login = #{login,jdbcType=INTEGER},
+      </if>
+      <if test="rankno != null">
+        rankno = #{rankno,jdbcType=CHAR},
+      </if>
+    </set>
+    where area_code = #{areaCode,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.StatArea">
+    update t_stat_area
+    set online = #{online,jdbcType=INTEGER},
+      offline = #{offline,jdbcType=INTEGER},
+      login = #{login,jdbcType=INTEGER},
+      rankno = #{rankno,jdbcType=CHAR}
+    where area_code = #{areaCode,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </update>
+</mapper>

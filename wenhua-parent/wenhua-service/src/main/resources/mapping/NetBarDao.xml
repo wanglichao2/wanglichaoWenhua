@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wenhua.svr.dao.NetBarDao">
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.NetBar">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="net_bar_name" jdbcType="VARCHAR" property="netBarName" />
+    <result column="business_reg_no" jdbcType="VARCHAR" property="businessRegNo" />
+    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="server_version" jdbcType="VARCHAR" property="serverVersion" />
+    <result column="client_version" jdbcType="VARCHAR" property="clientVersion" />
+    <result column="address_name" jdbcType="VARCHAR" property="addressName" />
+    <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
+    <result column="contact_tel" jdbcType="VARCHAR" property="contactTel" />
+    <result column="client_total" jdbcType="INTEGER" property="clientTotal" />
+    <result column="outside_network" jdbcType="VARCHAR" property="outsideNetwork" />
+    <result column="inside_network" jdbcType="VARCHAR" property="insideNetwork" />
+    <result column="server_mac" jdbcType="VARCHAR" property="serverMac" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, net_bar_name, business_reg_no, city_code, area_code, server_version, client_version, 
+    address_name, contact_name, contact_tel, client_total, outside_network, inside_network, 
+    server_mac, creator, create_time, status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_net_bar
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  <!-- ################### -->
+  <!-- 自定义SQL -->
+  <select id="countAreaPc" resultType="java.lang.Integer">
+    select
+    	ifnull(sum(client_total),0)
+    from t_net_bar
+    where 
+    	area_code = #{areaCode, jdbcType=VARCHAR}
+    and 
+    	status = 1
+  </select>
+  <select id="countCityPc" resultType="java.lang.Integer">
+    select
+    	ifnull(sum(client_total),0)
+    from t_net_bar
+    where 
+    	city_code = #{areaCode, jdbcType=VARCHAR}
+    and 
+    	status = 1
+  </select>
+  <select id="countProvincePc" resultType="java.lang.Integer">
+    select
+    	ifnull(sum(client_total),0)
+    from t_net_bar
+    where
+    	status = 1
+  </select>
+  
+  <select id="countAreaBar" resultType="java.lang.Integer">
+    select
+    	ifnull(count(*),0)
+    from t_net_bar
+    where 
+    	area_code = #{areaCode, jdbcType=VARCHAR}
+    and 
+    	status = 1
+  </select>
+  <select id="countCityBar" resultType="java.lang.Integer">
+    select
+    	ifnull(count(*),0)
+    from t_net_bar
+    where 
+    	city_code = #{areaCode, jdbcType=VARCHAR}
+    and 
+    	status = 1
+  </select>
+  <select id="countProvinceBar" resultType="java.lang.Integer">
+    select
+    	ifnull(count(*),0)
+    from t_net_bar
+    where
+    	status = 1
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+		*
+    from t_net_bar
+    where
+    	status = 1
+  </select>
+  
+  <!-- ################### -->
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_net_bar
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenhua.svr.domain.NetBar">
+    insert into t_net_bar (id, net_bar_name, business_reg_no, city_code, 
+      area_code, server_version, client_version, 
+      address_name, contact_name, contact_tel, 
+      client_total, outside_network, inside_network, 
+      server_mac, creator, create_time, 
+      status)
+    values (#{id,jdbcType=VARCHAR}, #{netBarName,jdbcType=VARCHAR}, #{businessRegNo,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{areaCode,jdbcType=VARCHAR}, #{serverVersion,jdbcType=VARCHAR}, #{clientVersion,jdbcType=VARCHAR}, 
+      #{addressName,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, 
+      #{clientTotal,jdbcType=INTEGER}, #{outsideNetwork,jdbcType=VARCHAR}, #{insideNetwork,jdbcType=VARCHAR}, 
+      #{serverMac,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{status,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.NetBar">
+    insert into t_net_bar
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="netBarName != null">
+        net_bar_name,
+      </if>
+      <if test="businessRegNo != null">
+        business_reg_no,
+      </if>
+      <if test="cityCode != null">
+        city_code,
+      </if>
+      <if test="areaCode != null">
+        area_code,
+      </if>
+      <if test="serverVersion != null">
+        server_version,
+      </if>
+      <if test="clientVersion != null">
+        client_version,
+      </if>
+      <if test="addressName != null">
+        address_name,
+      </if>
+      <if test="contactName != null">
+        contact_name,
+      </if>
+      <if test="contactTel != null">
+        contact_tel,
+      </if>
+      <if test="clientTotal != null">
+        client_total,
+      </if>
+      <if test="outsideNetwork != null">
+        outside_network,
+      </if>
+      <if test="insideNetwork != null">
+        inside_network,
+      </if>
+      <if test="serverMac != null">
+        server_mac,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="netBarName != null">
+        #{netBarName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRegNo != null">
+        #{businessRegNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null">
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serverVersion != null">
+        #{serverVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="clientVersion != null">
+        #{clientVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="addressName != null">
+        #{addressName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null">
+        #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null">
+        #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="clientTotal != null">
+        #{clientTotal,jdbcType=INTEGER},
+      </if>
+      <if test="outsideNetwork != null">
+        #{outsideNetwork,jdbcType=VARCHAR},
+      </if>
+      <if test="insideNetwork != null">
+        #{insideNetwork,jdbcType=VARCHAR},
+      </if>
+      <if test="serverMac != null">
+        #{serverMac,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.NetBar">
+    update t_net_bar
+    <set>
+      <if test="netBarName != null">
+        net_bar_name = #{netBarName,jdbcType=VARCHAR},
+      </if>
+      <if test="businessRegNo != null">
+        business_reg_no = #{businessRegNo,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null">
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+      <if test="areaCode != null">
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="serverVersion != null">
+        server_version = #{serverVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="clientVersion != null">
+        client_version = #{clientVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="addressName != null">
+        address_name = #{addressName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null">
+        contact_name = #{contactName,jdbcType=VARCHAR},
+      </if>
+      <if test="contactTel != null">
+        contact_tel = #{contactTel,jdbcType=VARCHAR},
+      </if>
+      <if test="clientTotal != null">
+        client_total = #{clientTotal,jdbcType=INTEGER},
+      </if>
+      <if test="outsideNetwork != null">
+        outside_network = #{outsideNetwork,jdbcType=VARCHAR},
+      </if>
+      <if test="insideNetwork != null">
+        inside_network = #{insideNetwork,jdbcType=VARCHAR},
+      </if>
+      <if test="serverMac != null">
+        server_mac = #{serverMac,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.NetBar">
+    update t_net_bar
+    set net_bar_name = #{netBarName,jdbcType=VARCHAR},
+      business_reg_no = #{businessRegNo,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      area_code = #{areaCode,jdbcType=VARCHAR},
+      server_version = #{serverVersion,jdbcType=VARCHAR},
+      client_version = #{clientVersion,jdbcType=VARCHAR},
+      address_name = #{addressName,jdbcType=VARCHAR},
+      contact_name = #{contactName,jdbcType=VARCHAR},
+      contact_tel = #{contactTel,jdbcType=VARCHAR},
+      client_total = #{clientTotal,jdbcType=INTEGER},
+      outside_network = #{outsideNetwork,jdbcType=VARCHAR},
+      inside_network = #{insideNetwork,jdbcType=VARCHAR},
+      server_mac = #{serverMac,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

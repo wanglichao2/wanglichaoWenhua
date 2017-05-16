@@ -1,0 +1,84 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>wenhua</groupId>
+		<artifactId>wenhua-parent</artifactId>
+		<version>${howard.version}</version>
+	</parent>
+	<groupId>wenhua-service</groupId>
+	<artifactId>wenhua-service</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>wenhua-service-base</groupId>
+			<artifactId>wenhua-service-base</artifactId>
+			<version>${howard.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis-spring</artifactId>
+			<version>${howard.version.mybatisspring}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis</groupId>
+			<artifactId>mybatis</artifactId>
+			<version>${howard.version.mybatis}</version>
+		</dependency>
+		<!-- 数据源 -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>druid</artifactId>
+			<version>${howard.version.com.alibaba.druid}</version>
+		</dependency>
+		<!-- 数据源 结束 -->
+
+		<!-- 加密包 -->
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<!-- 加密包 结束 -->
+
+		<!-- redis dubbo 使用redis做注册中心时会报错 使用 2.2.1以下版本不出错 -->
+		<!-- <dependency> <groupId>redis.clients</groupId> <artifactId>jedis</artifactId> 
+			<version>${howard.version.jedis}</version> </dependency> -->
+		<!-- redis 结束 -->
+
+		<!-- zookeeper <dependency> <groupId>com.101tec</groupId> <artifactId>zkclient</artifactId> 
+			<version>${howard.version.zkclient}</version> </dependency> zookeeper 结束 -->
+
+		<!-- <dependency> <groupId>commons-pool</groupId> <artifactId>commons-pool</artifactId> 
+			</dependency> -->
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+		</dependency>
+
+		<!-- MySQL connector driver (optional) -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<type>jar</type>
+		</dependency>
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+		</dependency>
+
+	</dependencies>
+</project>

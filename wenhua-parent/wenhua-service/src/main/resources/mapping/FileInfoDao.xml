@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wenhua.svr.dao.FileInfoDao">
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.FileInfo">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="filename" jdbcType="VARCHAR" property="filename" />
+    <result column="version" jdbcType="VARCHAR" property="version" />
+    <result column="md5" jdbcType="VARCHAR" property="md5" />
+    <result column="flag" jdbcType="CHAR" property="flag" />
+    <result column="type" jdbcType="CHAR" property="type" />
+    <result column="action" jdbcType="CHAR" property="action" />
+    <result column="is_apply" jdbcType="CHAR" property="isApply" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="creator" jdbcType="BIGINT" property="creator" />
+    <result column="create_time" jdbcType="DATE" property="createTime" />
+    <result column="last_modifier" jdbcType="BIGINT" property="lastModifier" />
+    <result column="last_modify_time" jdbcType="DATE" property="lastModifyTime" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.wenhua.svr.domain.FileInfo">
+    <result column="data" jdbcType="LONGVARBINARY" property="data" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, filename, version, md5, flag, type, action, is_apply, status, creator, create_time, last_modifier, 
+    last_modify_time
+  </sql>
+  <sql id="Blob_Column_List">
+    data
+  </sql>
+  
+  <!-- ############################## -->
+  <!-- 自定义SQL -->
+  
+  <select id="selectBaseAll" resultMap="BaseResultMap">
+    select 
+		<include refid="Base_Column_List" />
+    from t_file_info
+    where status = 1
+  </select>
+  
+  <!-- ############################## -->
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from t_file_info
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_file_info
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wenhua.svr.domain.FileInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_file_info (id, filename, version, 
+      md5, flag, type, action, 
+      is_apply, status, creator, create_time, 
+      last_modifier, last_modify_time, data
+      )
+    values (#{id,jdbcType=BIGINT}, #{filename,jdbcType=VARCHAR}, #{version,jdbcType=VARCHAR}, 
+      #{md5,jdbcType=VARCHAR}, #{flag,jdbcType=CHAR}, #{type,jdbcType=CHAR}, #{action,jdbcType=CHAR}, 
+      #{isApply,jdbcType=CHAR}, #{status,jdbcType=INTEGER}, #{creator,jdbcType=BIGINT}, #{createTime,jdbcType=DATE}, 
+      #{lastModifier,jdbcType=BIGINT}, #{lastModifyTime,jdbcType=DATE}, #{data,jdbcType=LONGVARBINARY}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.FileInfo">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_file_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      id,
+      <if test="filename != null">
+        filename,
+      </if>
+      <if test="version != null">
+        version,
+      </if>
+      <if test="md5 != null">
+        md5,
+      </if>
+      <if test="flag != null">
+        flag,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="action != null">
+        action,
+      </if>
+      <if test="isApply != null">
+        is_apply,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="lastModifier != null">
+        last_modifier,
+      </if>
+      <if test="lastModifyTime != null">
+        last_modify_time,
+      </if>
+      <if test="data != null">
+        data,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="filename != null">
+        #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        #{flag,jdbcType=CHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=CHAR},
+      </if>
+      <if test="action != null">
+        #{action,jdbcType=CHAR},
+      </if>
+      <if test="isApply != null">
+        #{isApply,jdbcType=CHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=DATE},
+      </if>
+      <if test="lastModifier != null">
+        #{lastModifier,jdbcType=BIGINT},
+      </if>
+      <if test="lastModifyTime != null">
+        #{lastModifyTime,jdbcType=DATE},
+      </if>
+      <if test="data != null">
+        #{data,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.FileInfo">
+    update t_file_info
+    <set>
+      <if test="filename != null">
+        filename = #{filename,jdbcType=VARCHAR},
+      </if>
+      <if test="version != null">
+        version = #{version,jdbcType=VARCHAR},
+      </if>
+      <if test="md5 != null">
+        md5 = #{md5,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null">
+        flag = #{flag,jdbcType=CHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=CHAR},
+      </if>
+      <if test="action != null">
+        action = #{action,jdbcType=CHAR},
+      </if>
+      <if test="isApply != null">
+        is_apply = #{isApply,jdbcType=CHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=BIGINT},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=DATE},
+      </if>
+      <if test="lastModifier != null">
+        last_modifier = #{lastModifier,jdbcType=BIGINT},
+      </if>
+      <if test="lastModifyTime != null">
+        last_modify_time = #{lastModifyTime,jdbcType=DATE},
+      </if>
+      <if test="data != null">
+        data = #{data,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.wenhua.svr.domain.FileInfo">
+    update t_file_info
+    set filename = #{filename,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR},
+      md5 = #{md5,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=CHAR},
+      type = #{type,jdbcType=CHAR},
+      action = #{action,jdbcType=CHAR},
+      is_apply = #{isApply,jdbcType=CHAR},
+      status = #{status,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=DATE},
+      last_modifier = #{lastModifier,jdbcType=BIGINT},
+      last_modify_time = #{lastModifyTime,jdbcType=DATE},
+      data = #{data,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.FileInfo">
+    update t_file_info
+    set filename = #{filename,jdbcType=VARCHAR},
+      version = #{version,jdbcType=VARCHAR},
+      md5 = #{md5,jdbcType=VARCHAR},
+      flag = #{flag,jdbcType=CHAR},
+      type = #{type,jdbcType=CHAR},
+      action = #{action,jdbcType=CHAR},
+      is_apply = #{isApply,jdbcType=CHAR},
+      status = #{status,jdbcType=INTEGER},
+      creator = #{creator,jdbcType=BIGINT},
+      create_time = #{createTime,jdbcType=DATE},
+      last_modifier = #{lastModifier,jdbcType=BIGINT},
+      last_modify_time = #{lastModifyTime,jdbcType=DATE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

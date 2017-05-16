@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wenhua.svr.dao.FileBarDao">
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.FileBar">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="fileId" jdbcType="BIGINT" property="fileid" />
+    <result column="barid" jdbcType="VARCHAR" property="barid" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, fileId, barid
+  </sql>
+  
+  <!-- #################### -->
+  <!-- 自定义SQL -->
+  <select id="selectAllByBarId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+		*
+    from t_file_bar
+    where
+    	barid = #{barId, jdbcType=VARCHAR}
+    	
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+		*
+    from t_file_bar
+  </select>
+  <!-- #################### -->
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_file_bar
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from t_file_bar
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wenhua.svr.domain.FileBar">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_file_bar (id, fileId, barid
+      )
+    values (#{id,jdbcType=BIGINT}, #{fileid,jdbcType=BIGINT}, #{barid,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.FileBar">
+    <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Long">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_file_bar
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      id,
+      <if test="fileid != null">
+        fileId,
+      </if>
+      <if test="barid != null">
+        barid,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      #{id,jdbcType=BIGINT},
+      <if test="fileid != null">
+        #{fileid,jdbcType=BIGINT},
+      </if>
+      <if test="barid != null">
+        #{barid,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.FileBar">
+    update t_file_bar
+    <set>
+      <if test="fileid != null">
+        fileId = #{fileid,jdbcType=BIGINT},
+      </if>
+      <if test="barid != null">
+        barid = #{barid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.FileBar">
+    update t_file_bar
+    set fileId = #{fileid,jdbcType=BIGINT},
+      barid = #{barid,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

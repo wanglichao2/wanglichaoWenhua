@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<description>NETTY服务</description>
+
+	
+	<bean id="bossGroup" class="io.netty.channel.nio.NioEventLoopGroup" />
+	<bean id="workerGroup" class="io.netty.channel.nio.NioEventLoopGroup" />
+
+	<!-- ############################################################### -->
+	<!-- ##############            TCP SERVER            ############### -->
+	<!-- ############################################################### -->
+	
+	<bean id="tcpServer" class="com.wenhua.server.TcpServer">
+		<property name="initializer" ref="tcpServerInitializer" />
+		<property name="bossGroup" ref="bossGroup" />
+		<property name="workerGroup" ref="workerGroup" />
+	</bean>
+
+	<bean id="tcpServerInitializer" class="com.wenhua.server.TcpServerInitializer" >
+		<property name="timeoutSeconds" value="${freqInstantPcInfo}" />
+	</bean>
+
+	<!-- 消息处理 -->
+	<bean id="channelHandlerWenhuaMsg" class="com.wenhua.server.ChannelHandlerWenhuaMsg" scope="prototype">
+		<property name="authService" ref="authService" />
+		<property name="codeMaps">
+			<map>
+				<entry key="0" 		value="调用成功" />
+				<entry key="1001" 	value="Message无接口名称或序列号" />
+				<entry key="1002" 	value="中心无此网吧" />
+				<entry key="1003" 	value="sign无效" />
+				<entry key="1004" 	value="网络链接错误" />
+				<entry key="1005" 	value="客户端未验证" />
+				<entry key="1006" 	value="文件未找到" />
+				<entry key="1007" 	value="系统异常" />
+				<entry key="1008" 	value="网吧已无效" />
+				<entry key="1009" 	value="请求消息解析错误" />
+			</map>
+		</property>
+	</bean>
+	
+	<!-- ############################################################### -->
+	<!-- ##############           HTTP SERVER            ############### -->
+	<!-- ############################################################### -->
+	
+	<bean id="httpServer" class="com.wenhua.server.HttpServer">
+		<property name="initializer" ref="httpServerInitializer" />
+		<property name="bossGroup" ref="bossGroup" />
+		<property name="workerGroup" ref="workerGroup" />
+	</bean>
+
+	<bean id="httpServerInitializer" class="com.wenhua.server.HttpServerInitializer" />
+
+	<!-- 消息处理 -->
+	<bean id="channelHandlerHttp" class="com.wenhua.server.ChannelHandlerHttp" scope="prototype">
+		<property name="authService" ref="authService" />
+	</bean>
+	
+</beans>

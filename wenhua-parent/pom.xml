@@ -1,0 +1,113 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>wenhua</groupId>
+	<artifactId>wenhua-parent</artifactId>
+	<version>${howard.version}</version>
+	<packaging>pom</packaging>
+	<modules>
+		<module>wenhua-protobuf</module>
+		<module>wenhua-service</module>
+		<module>wenhua-app-tcpserver</module>
+		<module>wenhua-util</module>
+		<module>wenhua-service-base</module>
+	</modules>
+
+	<properties>
+		<maven.compile.source>1.7</maven.compile.source>
+		<maven.compile.target>1.7</maven.compile.target>
+
+		<howard.version.springio>Athens-SR3</howard.version.springio>
+		<howard.version.fastjson>1.2.11</howard.version.fastjson>
+		<howard.encoding>UTF-8</howard.encoding>
+		<howard.version.com.alibaba.druid>0.2.15</howard.version.com.alibaba.druid>
+		<howard.version.complier>2.3.2</howard.version.complier>
+		<howard.version.resource>2.4.3</howard.version.resource>
+		<howard.version.mybatisspring>1.2.2</howard.version.mybatisspring>
+		<howard.version.mybatis>3.2.8</howard.version.mybatis>
+		<howard.version.zookeeper>3.4.9</howard.version.zookeeper>
+		<howard.version.zkclient>0.3</howard.version.zkclient>
+		<howard.version.jedis>2.2.1</howard.version.jedis>
+		<howard.version.protobuf>3.2.0</howard.version.protobuf>
+		<howard.version.netty>4.1.9.Final</howard.version.netty>
+
+		<howard.version>0.0.1-SNAPSHOT</howard.version>
+		<howard.version.maven.war.plugin>2.6</howard.version.maven.war.plugin>
+		<howard.version.jfreechart>1.0.14</howard.version.jfreechart>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>io.spring.platform</groupId>
+				<artifactId>platform-bom</artifactId>
+				<version>${howard.version.springio}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- 为了方便进行单元测试，添加spring-test包 -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- 日志 -->
+		<!-- <dependency> <groupId>ch.qos.logback</groupId> <artifactId>logback-classic</artifactId> 
+			</dependency> -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<!-- 日志 结束 -->
+		<!-- 工具依赖 -->
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+		</dependency>
+		<!-- 工具依赖 结束 -->
+
+		<!-- 测试包 -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- 测试包 结束 -->
+
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>${howard.version.resource}</version>
+				<configuration>
+					<encoding>${howard.encoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${howard.version.complier}</version>
+				<configuration>
+					<source>${maven.compile.source}</source>
+					<target>${maven.compile.target}</target>
+					<encoding>${howard.encoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

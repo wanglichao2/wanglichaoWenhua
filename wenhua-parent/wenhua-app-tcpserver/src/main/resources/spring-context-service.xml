@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<description>业务服务</description>
+
+	<bean id="authService" class="com.wenhua.svr.service.impl.AuthServiceImpl">
+		<property name="key" value="${auth.key}" />
+		<property name="freqInstantPcInfo" value="${freqInstantPcInfo}" />
+		<property name="netBarDao" ref="netBarDao" />
+		<property name="serverInfoDao" ref="serverInfoDao" />
+		<property name="pcInfoDao" ref="pcInfoDao" />
+		<property name="fileBarDao" ref="fileBarDao" />
+		<property name="fileInfoDao" ref="fileInfoDao" />
+		<property name="areasCodeDao" ref="areasCodeDao" />
+		<property name="statAreaDao" ref="statAreaDao" />
+		<property name="statNetBarDao" ref="statNetBarDao" />
+	</bean>
+	
+	<!-- 区域实时信息的缓存 -->
+	<bean id="statAreaInstanceCacher" class="com.wenhua.svr.component.StatAreaInstanceCacher" init-method="init">
+		<property name="authService" ref="authService" />
+	</bean>
+	
+	<!-- 网吧实时信息的缓存 -->
+	<bean id="statBarInstancerCacher" class="com.wenhua.svr.component.StatBarInstancerCacher" init-method="init">
+		<property name="authService" ref="authService" />
+	</bean>
+	
+</beans>

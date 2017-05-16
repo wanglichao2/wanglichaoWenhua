@@ -1,0 +1,142 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>wenhua</groupId>
+		<artifactId>wenhua-parent</artifactId>
+		<version>${howard.version}</version>
+	</parent>
+	<groupId>wenhua-app-tcpserver</groupId>
+	<artifactId>wenhua-app-tcpserver</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>${howard.version.netty}</version><!--$NO-MVN-MAN-VER$ -->
+		</dependency>
+		<dependency>
+			<groupId>wenhua-service</groupId>
+			<artifactId>wenhua-service</artifactId>
+			<version>${howard.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>wenhua-util</groupId>
+			<artifactId>wenhua-util</artifactId>
+			<version>${howard.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>wenhua-protobuf</groupId>
+			<artifactId>wenhua-protobuf</artifactId>
+			<version>${howard.version}</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${howard.version.protobuf}</version><!--$NO-MVN-MAN-VER$ -->
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.quartz-scheduler/quartz -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>wenhua-app-tcpserver</finalName>
+		<!-- <resources> <resource> <targetPath>${project.build.directory}/classes</targetPath> 
+			<directory>src/main/resources</directory> <filtering>true</filtering> <includes> 
+			<include>**/*.xml</include> <include>**/*.properties</include> </includes> 
+			</resource> </resources> -->
+		<plugins>
+			<!-- 打包jar文件时，配置manifest文件，加入lib包的jar依赖 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<classesDirectory>target/classes/</classesDirectory>
+					<archive>
+						<manifest>
+							<mainClass>com.wenhua.server.TcpServer</mainClass>
+							<!-- 打包时 MANIFEST.MF文件不记录的时间戳版本 -->
+							<useUniqueVersions>false</useUniqueVersions>
+							<addClasspath>true</addClasspath>
+							<classpathPrefix>lib/</classpathPrefix>
+						</manifest>
+						<manifestEntries>
+							<Class-Path>.</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-dependencies</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<type>jar</type>
+							<includeTypes>jar</includeTypes>
+							<useUniqueVersions>false</useUniqueVersions>
+							<outputDirectory>
+								${project.build.directory}/lib
+							</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>env-dev</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>env</name>
+					<value>dev</value>
+				</property>
+			</activation>
+		</profile>
+		<profile>
+			<id>env-prod</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>env</name>
+					<value>prod</value>
+				</property>
+			</activation>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+						<excludes>
+							<exclude>app-database.properties</exclude>
+							<exclude>app-config.properties</exclude>
+						</excludes>
+						<targetPath>${project.build.directory}</targetPath>
+					</resource>
+					<resource>
+						<directory>src/main/prod-resources</directory>
+						<targetPath>${project.build.directory}</targetPath>
+					</resource>
+				</resources>
+			</build>
+		</profile>
+	</profiles>
+</project>

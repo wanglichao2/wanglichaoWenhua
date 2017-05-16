@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wenhua.svr.dao.StatNetBarDao">
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.StatNetBar">
+    <id column="bar_id" jdbcType="VARCHAR" property="barId" />
+    <id column="stat_date" jdbcType="DATE" property="statDate" />
+    <result column="online" jdbcType="INTEGER" property="online" />
+    <result column="offline" jdbcType="INTEGER" property="offline" />
+    <result column="valid" jdbcType="INTEGER" property="valid" />
+    <result column="login" jdbcType="INTEGER" property="login" />
+    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    bar_id, stat_date, online, offline, valid, login, area_code, city_code
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="com.wenhua.svr.domain.base.BaseStatNetBarKey" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_stat_net_bar
+    where bar_id = #{barId,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </select>
+
+<!-- ################### -->
+  <!-- 自定义SQL -->
+  <select id="countAreaDaily" resultType="java.lang.Integer">
+    select
+    	ifnull(count(*),0)
+    from t_stat_net_bar
+    where 
+    	stat_date = #{statDate, jdbcType=DATE}
+    	and
+    	area_code = #{areaCode, jdbcType=VARCHAR}
+  </select>
+  <select id="countCityDaily" resultType="java.lang.Integer">
+    select
+    	ifnull(count(*),0)
+    from t_stat_net_bar
+    where 
+    	stat_date = #{statDate, jdbcType=DATE}
+    	and
+    	city_code = #{areaCode, jdbcType=VARCHAR}
+  </select>
+  
+  <select id="countLoginAreaDaily" resultType="java.lang.Integer">
+    select
+    	ifnull(sum(login),0)
+    from t_stat_net_bar
+    where 
+    	stat_date = #{statDate, jdbcType=DATE}
+    	and
+    	area_code = #{areaCode, jdbcType=VARCHAR}
+  </select>
+  <select id="countLoginCityDaily" resultType="java.lang.Integer">
+    select
+    	ifnull(sum(login),0)
+    from t_stat_net_bar
+    where 
+    	stat_date = #{statDate, jdbcType=DATE}
+    	and
+    	city_code = #{areaCode, jdbcType=VARCHAR}
+  </select>
+  
+  <!-- ################### -->
+  
+  <delete id="deleteByPrimaryKey" parameterType="com.wenhua.svr.domain.base.BaseStatNetBarKey">
+    delete from t_stat_net_bar
+    where bar_id = #{barId,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </delete>
+  <insert id="insert" parameterType="com.wenhua.svr.domain.StatNetBar">
+    insert into t_stat_net_bar (bar_id, stat_date, online, 
+      offline, valid, login, 
+      area_code, city_code)
+    values (#{barId,jdbcType=VARCHAR}, #{statDate,jdbcType=DATE}, #{online,jdbcType=INTEGER}, 
+      #{offline,jdbcType=INTEGER}, #{valid,jdbcType=INTEGER}, #{login,jdbcType=INTEGER}, 
+      #{areaCode,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.StatNetBar">
+    insert into t_stat_net_bar
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="barId != null">
+        bar_id,
+      </if>
+      <if test="statDate != null">
+        stat_date,
+      </if>
+      <if test="online != null">
+        online,
+      </if>
+      <if test="offline != null">
+        offline,
+      </if>
+      <if test="valid != null">
+        valid,
+      </if>
+      <if test="login != null">
+        login,
+      </if>
+      <if test="areaCode != null">
+        area_code,
+      </if>
+      <if test="cityCode != null">
+        city_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="barId != null">
+        #{barId,jdbcType=VARCHAR},
+      </if>
+      <if test="statDate != null">
+        #{statDate,jdbcType=DATE},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=INTEGER},
+      </if>
+      <if test="offline != null">
+        #{offline,jdbcType=INTEGER},
+      </if>
+      <if test="valid != null">
+        #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="login != null">
+        #{login,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null">
+        #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null">
+        #{cityCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.StatNetBar">
+    update t_stat_net_bar
+    <set>
+      <if test="online != null">
+        online = #{online,jdbcType=INTEGER},
+      </if>
+      <if test="offline != null">
+        offline = #{offline,jdbcType=INTEGER},
+      </if>
+      <if test="valid != null">
+        valid = #{valid,jdbcType=INTEGER},
+      </if>
+      <if test="login != null">
+        login = #{login,jdbcType=INTEGER},
+      </if>
+      <if test="areaCode != null">
+        area_code = #{areaCode,jdbcType=VARCHAR},
+      </if>
+      <if test="cityCode != null">
+        city_code = #{cityCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where bar_id = #{barId,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.StatNetBar">
+    update t_stat_net_bar
+    set online = #{online,jdbcType=INTEGER},
+      offline = #{offline,jdbcType=INTEGER},
+      valid = #{valid,jdbcType=INTEGER},
+      login = #{login,jdbcType=INTEGER},
+      area_code = #{areaCode,jdbcType=VARCHAR},
+      city_code = #{cityCode,jdbcType=VARCHAR}
+    where bar_id = #{barId,jdbcType=VARCHAR}
+      and stat_date = #{statDate,jdbcType=DATE}
+  </update>
+</mapper>

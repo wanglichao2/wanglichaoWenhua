@@ -1,0 +1,97 @@
+// version	1.3
+// protoc.exe --cpp_out=.  Wenhua.proto
+
+syntax = "proto3";
+// ***以下为中心接口，由网吧端调用***
+
+
+// 接  口：bool Authentication(AuthenInfo auth)		网吧服务端身份验证:
+// 参  数：AuthInfo
+// 返回值：bool			如果验证失败，失败原因（“中心无此网吧”、“比如sign无效”）在Message.returnMsg里给出
+message AuthInfo {
+	int32 barID = 1;	// 网吧ID
+	string when = 2;	// 当时的时间
+	string sign = 3;	// 验证信息，大写hex编码的md5值。md5(barID + when + key)，key="hn123wh"
+}
+
+
+// 接  口：BarConfig GetConfig(int32 barID)		获取网吧配置:
+// 参  数：int32 网吧ID
+// 返回值：BarConfig 网吧配置
+message BarConfig {
+	int32 freqInstantPcInfo = 1;	// 单位：秒，上报客户机实时信息频率，默认1分钟
+}
+
+
+// 接  口：void SetServerInfo(ServerInfo info)		上报服务器基本信息
+// 参  数：ServerInfo 服务器基本信息
+// 返回值：无
+message ServerInfo {
+	string mac = 1;			// 服务器Mac地址；	例：50-E5-49-3D-5D-78	此为字段能唯一标识一台服务器
+	string ip = 2;			// 服务器IP地址；	例：192.168.0.112
+	string pcname = 3;		// 服务器机器名；	例：BAR-SERVER
+	int32 osType = 4;		// 操作系统类型；	例：0-windows, 1-macos, 2-android, 3-linux
+	string osVersion = 5;	// 操作系统版本；	例：win7, win10
+}
+
+
+// 接  口：void SetPcInfoList(PcInfoList infos)		上报客户机基本信息列表
+// 参  数：PcInfoList 客户机基本信息列表
+// 返回值：无
+message PcInfoList {
+	repeated PcInfo infos = 1;
+}
+message PcInfo {			// 客户机基本信息
+	string mac = 1;			// 客户机Mac地址；	例：50-E5-49-3D-5D-78	此为字段能唯一标识一台客户机
+	string ip = 2;			// 客户机IP地址；	例：192.168.0.112
+	string pcname = 3;		// 客户机名；		例：PC-001
+	int32 osType = 4;		// 操作系统类型；	例：0-windows, 1-macos, 2-android, 3-linux
+	string osVersion = 5;	// 操作系统版本；	例：win7, win10
+}
+
+
+// 接  口：void SetInstantPcInfoList(PcInstantInfoList infos)		上报客户机实时信息列表
+// 参  数：PcInstantInfoList
+// 返回值：无
+message PcInstantInfoList {
+	repeated PcInstantInfo infos = 1;
+}
+message PcInstantInfo {			// 客户机实时信息
+	string mac = 1;				// 客户机Mac地址；	例：50-E5-49-3D-5D-78	以此为字段关联是这家网吧的哪台机器
+	bool  isPowerOn = 2;		// 是否开机
+	bool  isRunWenhua = 3;		// 是否运行文化客户端
+	bool  isUserLogin = 4;		// 是否实名登录
+	int32 wenhuaDuration = 5;	// 文化客户端运行时长，单位：分钟
+	int32 poweronDuration = 6;	// 客户机开机时长，单位：分钟
+}
+
+
+// 接  口：FileInfoList GetFileInfoList(SoftwareVersion ver)		获取文件信息列表
+// 参  数：SoftwareVersion 网吧端软件版本信息，此为上报信息，需要入库
+// 返回值：FileInfoList 文件信息列表
+message SoftwareVersion {
+	string serverVersion = 1;	// 服务端版本
+	string clientVersion = 2;	// 客户端版本
+}
+message FileInfoList {
+	repeated FileInfo infos = 1;
+	repeated FileBar fileBars = 2;
+}
+message FileInfo {
+	int32 id = 1;				// 文件ID
+	string filename = 2;		// 文件名
+	string version = 3;			// 文件版本号（1.01）
+	string md5 = 4;				// 文件md5值(大写hex编码的md5值)
+	int32 flag = 5;				// 文件所在模块：1-服务端，2-客户端
+	int32 type = 6;				// 0-忽略，1-dll，2-exe
+	int32 action = 7;			// 0-忽略，1-加载dll，2-运行exe
+	bool applyAllBar = 8;		// 是否应用到所有网吧
+}
+message FileBar {
+	int32 fileID = 1;			// 文件ID
+	repeated int32 barID = 2;	// 该文件应用到的网吧列表
+}
+
+// 接  口：byte[] GetFile(int32 fileID)		获取文件
+// 参  数：fileID 文件ID
+// 返回值：文件二进行字节数组，放在Message.content中

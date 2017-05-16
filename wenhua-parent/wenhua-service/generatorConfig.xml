@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+  <!-- 数据库驱动包位置 -->
+	<!--  -->
+    <classPathEntry  
+        location="D:/maven/.m2/repository/mysql/mysql-connector-java/5.1.38/mysql-connector-java-5.1.38.jar" />
+    
+	<context id="context1">
+		<commentGenerator>
+			<!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+			<property name="suppressAllComments" value="true" />
+		</commentGenerator>
+		<jdbcConnection 
+		connectionURL="jdbc:mysql://127.0.0.1:3306/qcms" 
+		driverClass="com.mysql.jdbc.Driver"
+		password="fpe511" 
+		userId="root" />
+		<javaModelGenerator 
+			targetPackage="com.wenhua.svr.domain.base"
+			targetProject="wenhua-service/src/main/java" />
+		<sqlMapGenerator 
+			targetPackage="mapping" 
+			targetProject="wenhua-service/src/main/resources" />
+		<javaClientGenerator
+			targetPackage="com.wenhua.svr.dao"
+			targetProject="wenhua-service/src/main/java" 
+			type="XMLMAPPER" />
+			
+		<!-- 
+		<table tableName="t_net_bar" domainObjectName="BaseNetBar" mapperName="NetBarDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+            <property name="rootClass" value="com.wenhua.svr.base.domain.AbstractEntity"/>
+        </table>
+        -->
+       
+        <!--
+        <table tableName="t_server_info" domainObjectName="BaseServerInfo" mapperName="ServerInfoDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+            <property name="rootClass" value="com.wenhua.svr.base.domain.AbstractEntity"/>
+            <generatedKey column="ID" sqlStatement="MySql" identity="true"/>
+        </table>
+        -->
+        <!--
+        <table tableName="t_pc_info" domainObjectName="BasePcInfo" mapperName="PcInfoDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+            <property name="rootClass" value="com.wenhua.svr.base.domain.AbstractEntity"/>
+            <generatedKey column="ID" sqlStatement="MySql"/>
+        </table>
+        -->
+        <!-- 
+		<table tableName="t_stat_net_bar" domainObjectName="BaseStatNetBar" mapperName="StatNetBarDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+            <property name="rootClass" value="com.wenhua.svr.base.domain.AbstractEntity"/>
+        </table>
+         -->
+         
+         <!-- 
+		<table tableName="t_stat_area" domainObjectName="BaseStatArea" mapperName="StatAreaDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+            <property name="rootClass" value="com.wenhua.svr.base.domain.AbstractEntity"/>
+        </table>
+         -->
+        
+         <!-- 
+		<table tableName="t_areas_code" domainObjectName="BaseAreasCode" mapperName="AreasCodeDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+        </table>
+         -->
+         
+		<table tableName="t_file_info" domainObjectName="BaseFileInfo" mapperName="FileInfoDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+            <generatedKey column="ID" sqlStatement="MySql"/>
+        </table>
+        
+        <table tableName="t_file_bar" domainObjectName="BaseFileBar" mapperName="FileBarDao"
+			enableCountByExample="false" 
+			enableUpdateByExample="false"  
+            enableDeleteByExample="false" 
+            enableSelectByExample="false" 
+            selectByExampleQueryId="false">
+            <generatedKey column="ID" sqlStatement="MySql"/>
+        </table>
+      
+	</context>
+</generatorConfiguration>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wenhua.svr.dao.AreasCodeDao">
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.AreasCode">
+    <result column="areasid" jdbcType="VARCHAR" property="areasid" />
+    <result column="areasname" jdbcType="VARCHAR" property="areasname" />
+    <result column="rankno" jdbcType="CHAR" property="rankno" />
+  </resultMap>
+  
+  <!-- ############## -->
+  <!-- 自定义SQL -->
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+		*
+    from t_areas_code
+  </select>
+  <!-- ############## -->
+    
+  <insert id="insert" parameterType="com.wenhua.svr.domain.AreasCode">
+    insert into t_areas_code (areasid, areasname, rankno
+      )
+    values (#{areasid,jdbcType=VARCHAR}, #{areasname,jdbcType=VARCHAR}, #{rankno,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.AreasCode">
+    insert into t_areas_code
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="areasid != null">
+        areasid,
+      </if>
+      <if test="areasname != null">
+        areasname,
+      </if>
+      <if test="rankno != null">
+        rankno,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="areasid != null">
+        #{areasid,jdbcType=VARCHAR},
+      </if>
+      <if test="areasname != null">
+        #{areasname,jdbcType=VARCHAR},
+      </if>
+      <if test="rankno != null">
+        #{rankno,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

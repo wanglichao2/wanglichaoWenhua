@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wenhua.svr.dao.ServerInfoDao">
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.ServerInfo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="bar_id" jdbcType="VARCHAR" property="barId" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="pc_name" jdbcType="VARCHAR" property="pcName" />
+    <result column="os_type" jdbcType="INTEGER" property="osType" />
+    <result column="os_version" jdbcType="VARCHAR" property="osVersion" />
+    <result column="wenhua_ver" jdbcType="VARCHAR" property="wenhuaVer" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, bar_id, ip, pc_name, os_type, os_version, wenhua_ver, creator, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_server_info
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from t_server_info
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wenhua.svr.domain.ServerInfo">
+    insert into t_server_info (id, bar_id, ip, pc_name, 
+      os_type, os_version, wenhua_ver, creator, 
+      create_time)
+    values (#{id,jdbcType=VARCHAR}, #{barId,jdbcType=VARCHAR}, #{ip,jdbcType=VARCHAR}, #{pcName,jdbcType=VARCHAR}, 
+      #{osType,jdbcType=INTEGER}, #{osVersion,jdbcType=VARCHAR}, #{wenhuaVer,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.ServerInfo">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.String">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into t_server_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="barId != null">
+        bar_id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="pcName != null">
+        pc_name,
+      </if>
+      <if test="osType != null">
+        os_type,
+      </if>
+      <if test="osVersion != null">
+        os_version,
+      </if>
+      <if test="wenhuaVer != null">
+        wenhua_ver,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="barId != null">
+        #{barId,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="pcName != null">
+        #{pcName,jdbcType=VARCHAR},
+      </if>
+      <if test="osType != null">
+        #{osType,jdbcType=INTEGER},
+      </if>
+      <if test="osVersion != null">
+        #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="wenhuaVer != null">
+        #{wenhuaVer,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.ServerInfo">
+    update t_server_info
+    <set>
+      <if test="barId != null">
+        bar_id = #{barId,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="pcName != null">
+        pc_name = #{pcName,jdbcType=VARCHAR},
+      </if>
+      <if test="osType != null">
+        os_type = #{osType,jdbcType=INTEGER},
+      </if>
+      <if test="osVersion != null">
+        os_version = #{osVersion,jdbcType=VARCHAR},
+      </if>
+      <if test="wenhuaVer != null">
+        wenhua_ver = #{wenhuaVer,jdbcType=VARCHAR},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.ServerInfo">
+    update t_server_info
+    set bar_id = #{barId,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      pc_name = #{pcName,jdbcType=VARCHAR},
+      os_type = #{osType,jdbcType=INTEGER},
+      os_version = #{osVersion,jdbcType=VARCHAR},
+      wenhua_ver = #{wenhuaVer,jdbcType=VARCHAR},
+      creator = #{creator,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+            http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<description>定时服务</description>
+
+	<!-- ###### -->
+	<bean id="jobDetail-01" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="statAreaInstanceCacher"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>save</value>  
+        </property>  
+    </bean>  
+      
+    <bean id="trigger-01" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail">  
+            <ref bean="jobDetail-01"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>${scheduler.interval1}</value>  
+        </property>  
+    </bean>
+    
+    <!-- ### 定时更新实时区域信息 ###
+    <bean id="jobDetail-02" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="statAreaInstanceCacher"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>updateDaily</value>  
+        </property>  
+    </bean>
+    
+      
+    <bean id="trigger-02" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail">  
+            <ref bean="jobDetail-02"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>${scheduler.interval2}</value>  
+        </property>  
+    </bean>
+     -->
+    
+    <!-- ### 定时將网吧实时最大值保存进数据库 ### -->
+    <bean id="jobDetail-03" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="statBarInstancerCacher"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>save</value>  
+        </property>  
+    </bean>  
+      
+    <bean id="trigger-03" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail">  
+            <ref bean="jobDetail-03"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>${scheduler.interval3}</value>  
+        </property>  
+    </bean>
+     
+    <!-- ### 定时將网吧实时最大值清0 ### -->
+    <bean id="jobDetail-04" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="statBarInstancerCacher"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>resetMax</value>  
+        </property>  
+    </bean>  
+      
+    <bean id="trigger-04" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail">  
+            <ref bean="jobDetail-04"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>${scheduler.interval4}</value>  
+        </property>  
+    </bean>
+    
+     <!-- ### 定时將地区实时最大值清0 ### -->
+    <bean id="jobDetail-05" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">  
+        <property name="targetObject">  
+            <ref bean="statAreaInstanceCacher"/>  
+        </property>  
+        <property name="targetMethod">  
+            <value>resetMax</value>  
+        </property>  
+    </bean>  
+      
+    <bean id="trigger-05" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">  
+        <property name="jobDetail">  
+            <ref bean="jobDetail-05"/>  
+        </property>  
+        <property name="cronExpression">  
+            <value>${scheduler.interval5}</value>  
+        </property>  
+    </bean>
+      
+    <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">  
+        <property name="triggers">  
+            <list>  
+                <ref bean="trigger-01"/>
+                <!-- 
+                <ref bean="trigger-02"/>  
+                 -->
+                <ref bean="trigger-03"/>
+                <ref bean="trigger-04"/>  
+                <ref bean="trigger-05"/>  
+            </list>  
+        </property>  
+        <property name="autoStartup" value="true"></property>  
+    </bean>  
+
+
+</beans>

@@ -1,0 +1,2 @@
+wenhua-app-tcpserver 启动方式(内存与端口号可以手动修改):
+java -Xms512M -Xmx512M -jar wenhua-app-tcpserver.jar 9527 8088
