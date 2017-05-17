@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"  xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+    xmlns:util="http://www.springframework.org/schema/util" xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd 
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+	http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+	http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd
+	http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache-4.0.xsd "
+	default-lazy-init="false">
+	<context:component-scan base-package="com.iss">
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+
+    <!-- 用于指定持久化实现厂商类 -->
+    <bean id="persistenceProvider" class="org.hibernate.jpa.HibernatePersistenceProvider"/>
+
+    <!-- 用于设置JPA实现厂商的特定属性 -->
+    <bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+        <property name="generateDdl" value="false" />
+        <property name="database" value="MYSQL" />
+    </bean>
+
+    <!-- 用于指定一些高级特性 Hibernate可以不指定 -->
+    <bean id="jpaDialect" class="org.springframework.orm.jpa.vendor.HibernateJpaDialect"/>
+
+    <!-- 设置数据库属性-->
+    <util:map id="jpaPropertyMap">
+        <entry key="hibernate.max_fetch_depth" value="3" /><!-- 设置外连接抓取树的最大深度 -->
+        <entry key="hibernate.jdbc.fetch_size" value="50"/>
+        <entry key="hibernate.jdbc.batch_size" value="25"/>
+        <entry key="hibernate.show_sql" value="false" />
+        <entry key="hibernate.format_sql" value="true" />
+        <entry key="hibernate.hbm2ddl.auto" value="validate" />
+        <entry key="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect" />
+        <entry key="hibernate.cache.use_second_level_cache" value="true"/>
+        <entry key="hibernate.cache.use_query_cache" value="true"/>
+        <entry key="hibernate.cache.region.factory_class" value="org.hibernate.cache.ehcache.EhCacheRegionFactory" />
+        <entry key="hibernate.cache.provider_configuration" value="classpath:ehcache.xml" />
+    </util:map>
+    
+	<!-- 激活PersistenceContext注解,获取EntityManager对象 -->
+    <bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
+    <!-- 自动检测@Repository标注的bean并为该bean打开exception转换功能 --> 
+    <bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor" />
+    
+    <!-- tomcat jdbc-pool数据源 -->
+	<bean id="dataSource" class="org.apache.tomcat.jdbc.pool.DataSource" destroy-method="close">
+	    <property name="driverClassName"><value>com.mysql.jdbc.Driver</value></property>
+	    <property name="url"><value>jdbc:mysql://127.0.0.1:3306/qcms?useUnicode=true&amp;characterEncoding=UTF-8</value></property>
+	    <property name="username" ><value>root</value></property>
+	    <property name="password"><value>root</value></property>
+	    <property name="maxActive"><value>30</value></property>
+	    <property name="maxIdle"><value>15</value></property> 
+	    <property name="initialSize"><value>10</value></property>
+	    <property name="validationQuery"><value>SELECT 1</value></property>
+	    <property name="testOnBorrow"><value>true</value></property>
+	    <property name="testOnReturn"><value>true</value></property>
+	    <property name="testWhileIdle"><value>true</value></property>
+	</bean> 
+	<!-- <bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">   
+         <property name="jndiName"><value>QCMS</value></property>   
+    </bean> -->   
+
+	<bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+        p:packagesToScan="com.iss.entity" p:dataSource-ref="dataSource" p:jpaDialect-ref="jpaDialect"
+        p:jpaVendorAdapter-ref="jpaVendorAdapter" p:jpaPropertyMap-ref="jpaPropertyMap" p:persistenceProvider-ref="persistenceProvider">
+	</bean>
+
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+	
+	<!-- 启用AOP拦截器注解 -->
+	<aop:aspectj-autoproxy />
+	
+	<!-- 启用注解事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<jpa:repositories base-package="com.iss.dao" repository-impl-postfix="Impl" 
+		entity-manager-factory-ref="entityManagerFactory" transaction-manager-ref="transactionManager" />
+
+    <!--Ehcache 配置-->
+    <cache:annotation-driven cache-manager="cacheManager"/>
+
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+          p:configLocation="classpath:ehcache.xml" p:shared="true" />
+          
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager"
+          p:cacheManager-ref="ehcache" />
+          
+    <!-- <import resource="classpath:spring-quartz.xml"/> -->
+</beans>

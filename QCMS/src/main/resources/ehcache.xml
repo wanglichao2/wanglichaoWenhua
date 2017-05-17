@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true"
+	monitoring="autodetect" dynamicConfig="true">
+	
+	<!-- 
+	maxElementsInMemory:缓存中最大允许创建的对象数
+	eternal:缓存中对象是否为永久的，如果是，超时设置将被忽略，对象从不过期
+	timeToIdleSeconds:缓存数据钝化时间(设置对象在它过期之前的空闲时间)
+	timeToLiveSeconds:缓存数据的生存时间(设置对象在它过期之前的生存时间)
+	overflowToDisk:内存不足时，是否启用磁盘缓存
+	maxElementsOnDisk：硬盘最大缓存个数。
+	diskSpoolBufferSizeMB：这个参数设置DiskStore（磁盘缓存）的缓存区大小。默认是30MB
+	memoryStoreEvictionPolicy：当达到maxElementsInMemory限制时，Ehcache将会根据指定的策略去清理内存。
+								默认策略是LRU（最近最少使用）。你可以设置为FIFO（先进先出）或是LFU（较少使用）。
+	clearOnFlush：内存数量最大时是否清除。
+	<diskStore path="java.io.tmpdir" />
+	<diskStore path="E:/cachetmpdir"/>
+	<defaultCache maxElementsInMemory="1000" eternal="false"
+		timeToIdleSeconds="1200" timeToLiveSeconds="1200" overflowToDisk="true"
+		maxElementsOnDisk="10000000" diskPersistent="false"
+		diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU" />
+	-->
+	<defaultCache maxElementsInMemory="1000" eternal="false"
+		timeToIdleSeconds="1200" timeToLiveSeconds="3600" overflowToDisk="false"
+		clearOnFlush="true">
+	</defaultCache>
+	
+	<cache name="org.hibernate.cache.internal.StandardQueryCache"
+		maxElementsInMemory="50" eternal="false" timeToLiveSeconds="1200" />
+		
+	<cache name="org.hibernate.cache.spi.UpdateTimestampsCache"
+		maxElementsInMemory="5000" eternal="true" />
+	
+	<cache name="dataCache" maxElementsInMemory="1000" eternal="false" overflowToDisk="false"
+        timeToIdleSeconds="900" timeToLiveSeconds="1800" />
+        
+	<!-- <cache name="query_cache" maxElementsInMemory="10000"  
+        maxElementsOnDisk="1000" eternal="false" overflowToDisk="true"  
+        diskSpoolBufferSizeMB="20" timeToIdleSeconds="300" timeToLiveSeconds="600"  
+        memoryStoreEvictionPolicy="LFU" /> -->
+</ehcache>
