@@ -142,7 +142,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		config.setMethod("login");
 		config.setUsername(username);
 		config.setPassword(password);
-		String loginKey=WebServiceUtil.netBarSyncLogin(config);
+		String loginKey=WebServiceUtil.netBarSyncLoginAxis2(config);
 		String syncurl=PropertiesUtil.getPropery("barSyncDownLoadUrl");
 		config.setUrl(syncurl);
 		String endtime=this.queryMaxUpdateTime();

@@ -50,15 +50,15 @@
 			<version>3.1</version>
 		</dependency>
 		<dependency>
-		    <groupId>com.alibaba</groupId>
-		    <artifactId>fastjson</artifactId>
-		    <version>1.2.31</version>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.31</version>
 		</dependency>
 		<!-- jsoup HTML parser -->
 		<dependency>
-    		<groupId>org.jsoup</groupId>
-		    <artifactId>jsoup</artifactId>
-		    <version>1.10.1</version>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.10.1</version>
 		</dependency>
 
 		<!-- servlet + jstl -->
@@ -210,16 +210,9 @@
 		</dependency>
 
 		<!-- c3p0 -->
-		<!-- <dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>mchange-commons-java</artifactId>
-			<version>0.2.10</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mchange</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.5</version>
-		</dependency> -->
+		<!-- <dependency> <groupId>com.mchange</groupId> <artifactId>mchange-commons-java</artifactId> 
+			<version>0.2.10</version> </dependency> <dependency> <groupId>com.mchange</groupId> 
+			<artifactId>c3p0</artifactId> <version>0.9.5</version> </dependency> -->
 
 		<!-- tomcat jdbc pool -->
 		<dependency>
@@ -239,7 +232,55 @@
 			<artifactId>gson</artifactId>
 			<version>2.7</version>
 		</dependency>
-
+		<!-- axis2 -->
+		<!-- <dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2</artifactId>
+		    <version>1.7.5</version>
+		</dependency> -->
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-jaxws</artifactId>
+		    <version>1.7.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.axis2</groupId>
+			<artifactId>axis2-kernel</artifactId>
+			<version>1.7.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-adb</artifactId>
+		    <version>1.7.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-transport-local</artifactId>
+		    <version>1.7.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.axis2</groupId>
+		    <artifactId>axis2-transport-http</artifactId>
+		    <version>1.7.5</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpcore</artifactId>
+		    <version>4.4.6</version>
+		</dependency>
+				
+		<dependency>
+		    <groupId>wsdl4j</groupId>
+		    <artifactId>wsdl4j</artifactId>
+		    <version>1.6.2</version>
+		</dependency>
+				
+		
 		<!-- apache shiro -->
 		<dependency>
 			<groupId>org.apache.shiro</groupId>
@@ -274,19 +315,19 @@
 			<version>${poi.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml</artifactId>
-		    <version>${poi.version}</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>${poi.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.poi</groupId>
-		    <artifactId>poi-ooxml-schemas</artifactId>
-		    <version>${poi.version}</version>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml-schemas</artifactId>
+			<version>${poi.version}</version>
 		</dependency>
 		<dependency>
-		    <groupId>org.apache.xmlbeans</groupId>
-		    <artifactId>xmlbeans</artifactId>
-		    <version>2.6.0</version>
+			<groupId>org.apache.xmlbeans</groupId>
+			<artifactId>xmlbeans</artifactId>
+			<version>2.6.0</version>
 		</dependency>
 
 		<!-- easypoi -->
@@ -305,17 +346,17 @@
 			<artifactId>easypoi-annotation</artifactId>
 			<version>${easypoi.version}</version>
 		</dependency>
-		
-		<!-- quartz任务调度 -->  
-		<dependency>  
-		    <groupId>org.quartz-scheduler</groupId>  
-		    <artifactId>quartz</artifactId>  
-		    <version>${quartz.version}</version>  
-		</dependency>  
-		<dependency>  
-		    <groupId>org.quartz-scheduler</groupId>  
-		    <artifactId>quartz-jobs</artifactId>  
-		    <version>${quartz.version}</version>  
+
+		<!-- quartz任务调度 -->
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz-jobs</artifactId>
+			<version>${quartz.version}</version>
 		</dependency>
 	</dependencies>
 	<build>
@@ -346,10 +387,10 @@
 				<configuration>
 					<source>1.7</source>
 					<target>1.7</target>
-					 <compilerArguments>
-                        <verbose />
-                        <bootclasspath>${java.home}/lib/rt.jar;${java.home}/lib/jce.jar</bootclasspath>
-                    </compilerArguments>
+					<compilerArguments>
+						<verbose />
+						<bootclasspath>${java.home}/lib/rt.jar;${java.home}/lib/jce.jar</bootclasspath>
+					</compilerArguments>
 				</configuration>
 			</plugin>
 			<plugin>
