@@ -20,6 +20,7 @@ import com.iss.vo.DataTables;
 
 @Repository
 public class NetBarDaoImpl extends BaseJPADaoImpl<Object, Long> implements INetBarJPADao{
+	
 	@Override
 	public DataTables<NetBarEntity> query(DataParam param) {
 		int total=0;

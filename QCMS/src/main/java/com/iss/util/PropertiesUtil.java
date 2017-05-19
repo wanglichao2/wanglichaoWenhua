@@ -59,4 +59,9 @@ public class PropertiesUtil {
 		}
 
 	}
+	
+	public static String getLogUrl(){
+		String path=PropertiesUtil.class.getClassLoader().getResource("").getPath();
+		return path.substring(0,path.indexOf("QCMS"));
+	}
 }

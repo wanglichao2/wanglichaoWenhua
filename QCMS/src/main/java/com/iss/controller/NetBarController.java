@@ -3,7 +3,7 @@
  * @author: yjdai
  * @date: 2017年2月13日
  * @version: 1.0
- */
+ *//*
 package com.iss.controller;
 
 import java.sql.Timestamp;
@@ -27,9 +27,9 @@ import com.iss.vo.AjaxJson;
 import com.iss.vo.DataParam;
 import com.iss.vo.DataTables;
 
-/**
+*//**
  * 缺陷管理
- */
+ *//*
 @Controller
 @RequestMapping("/netbar")
 public class NetBarController extends BaseController {
@@ -45,12 +45,12 @@ public class NetBarController extends BaseController {
 		return "wh/netbar_reg";
 	}
 	
-	/**
+	*//**
 	 * 加载列表数据
 	 * @author yjdai 
 	 * @param param
 	 * @return
-	 */
+	 *//*
 	@ResponseBody
 	@RequestMapping(value="/load", produces="application/json;charset=UTF-8")
 	public String load(DataParam param){
@@ -58,12 +58,12 @@ public class NetBarController extends BaseController {
 		return JsonUtil.toJson(dt);
 	}
 	
-	/**
+	*//**
 	 * 添加数据
 	 * @author yjdai 
 	 * @param entity
 	 * @return
-	 */
+	 *//*
 	@ResponseBody
 	@RequestMapping("/add")
 	public AjaxJson add(NetBarEntity entity){
@@ -111,14 +111,14 @@ public class NetBarController extends BaseController {
 		return json;
 	}
 	
-	/**
+	*//**
 	 * 更新数据
 	 * @author yjdai 
 	 * @param pk
 	 * @param name
 	 * @param value
 	 * @return
-	 */
+	 *//*
 	@ResponseBody
 	@RequestMapping("/del")
 	public AjaxJson del(Long pk, String name, String value){
@@ -130,3 +130,4 @@ public class NetBarController extends BaseController {
 		return json;
 	}
 }
+*/

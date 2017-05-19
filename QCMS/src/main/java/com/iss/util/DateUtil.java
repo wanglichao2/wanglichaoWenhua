@@ -19,6 +19,8 @@ import org.apache.commons.lang3.StringUtils;
  * 类描述：时间操作定义类
  */
 public class DateUtil extends PropertyEditorSupport {
+	public static final String datetimeformat_str="yyyy-MM-dd HH:mm:ss";
+	public static final String datetimeformat_str_cn="yyyy年MM月dd日_HH时mm分ss秒";
 	// 各种时间格式
 	public static final SimpleDateFormat date_sdf = new SimpleDateFormat("yyyy-MM-dd");
 	public static final SimpleDateFormat yyyyMMdd = new SimpleDateFormat("yyyyMMdd");
@@ -26,7 +28,8 @@ public class DateUtil extends PropertyEditorSupport {
 	public static final SimpleDateFormat time_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	public static final SimpleDateFormat yyyymmddhhmmss = new SimpleDateFormat("yyyyMMddHHmmss");
 	public static final SimpleDateFormat short_time_sdf = new SimpleDateFormat("HH:mm");
-	public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	public static final SimpleDateFormat datetimeFormat = new SimpleDateFormat(datetimeformat_str);
+	
 	// 以毫秒表示的时间
 	private static final long DAY_IN_MILLIS = 24 * 3600 * 1000;
 	private static final long HOUR_IN_MILLIS = 3600 * 1000;

@@ -20,12 +20,15 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresGuest;
 import org.apache.shiro.subject.Subject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.iss.entity.NodeEntity;
 import com.iss.entity.RoleEntity;
 import com.iss.entity.UserEntity;
@@ -42,6 +45,8 @@ import com.iss.vo.AjaxJson;
 @Controller
 @RequestMapping("/login")
 public class LoginController extends BaseController {
+	
+	private Logger log=LoggerFactory.getLogger(LoginController.class);
 	@Autowired
 	private IUserService iUserService;
 	@Autowired
@@ -100,6 +105,7 @@ public class LoginController extends BaseController {
 	    		session.removeAttribute(ConstantValue.SESSION_USER_NODE);
 	    		if(!roles.isEmpty() || entity.getIsAdmin()){
 	    			List<NodeEntity> list = iNodeService.loadMenu(entity, false);
+	    			log.info("------------->"+new Gson().toJson(list));
 	    			session.setAttribute(ConstantValue.SESSION_USER_NODE, list);
 	    		}
 	        }else{
