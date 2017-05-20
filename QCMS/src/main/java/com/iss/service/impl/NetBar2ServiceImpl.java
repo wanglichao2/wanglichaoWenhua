@@ -2,6 +2,7 @@ package com.iss.service.impl;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -134,6 +135,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	@Override
 	public String syncNetBarData(String code)throws Exception {
 		// TODO Auto-generated method stub
+		Gson gson=new Gson();
 		String loginurl=PropertiesUtil.getPropery("barSyncLoginUrl");
 		String username=PropertiesUtil.getPropery("barSyncLoginName");
 		String password=PropertiesUtil.getPropery("barSyncLoginPwd");
@@ -142,18 +144,23 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		config.setMethod("login");
 		config.setUsername(username);
 		config.setPassword(password);
-		String loginKey=WebServiceUtil.netBarSyncLoginAxis2(config);
+//		String loginKey=WebServiceUtil.netBarSyncLoginAxis2(config);
+		String loginKey=WebServiceUtil.netBarSyncLogin(config);
 		String syncurl=PropertiesUtil.getPropery("barSyncDownLoadUrl");
 		config.setUrl(syncurl);
+		config.setMethod("downloadNetbarInfo");
 		String endtime=this.queryMaxUpdateTime();
 		if(StringUtil.isEmpty(endtime))	
-				DateUtil.getDate(DateUtil.datetimeformat_str);
+			DateUtil.getDate(DateUtil.datetimeformat_str);
 		//调用接口
 		List<NetBarBean> list= WebServiceUtil.netBarSyncData(config,loginKey,endtime);
 		if(list==null || list.size()==0){
 			log.info("netbar data from webservice is null....");
 		}else{
 			log.info("netbar data from webservice size is "+list.size());
+//			List<NetBar2Entity> nblist =this.changeBean2EntityList(list);
+			NetBarBean[] t=gson.fromJson(gson.toJson(list), NetBarBean[].class);
+			list=new ArrayList<NetBarBean>(Arrays.asList(t));
 			List<NetBar2Entity> nblist =this.changeBean2EntityList(list);
 			log.info("netbar data from change size is "+nblist.size());
 			this.saveSync(nblist);
@@ -167,6 +174,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	private void saveSync(List<NetBar2Entity> nblist){
 		if(nblist==null || nblist.isEmpty())return ;
 		String filename=FileUtil.NETBAR_DATA_LOG_HEAD+DateUtil.getDate(DateUtil.datetimeformat_str_cn)+".log";
+		String fileurl=PropertiesUtil.getLogUrl()+"log"+File.separator;
 		Gson gson=new Gson();
 		int total=this.iNetBarJPADao.countNetBar(new NetBarQuery());
 		if(total==0){
@@ -177,8 +185,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 				} catch (Exception e2) {
 					// TODO: handle exception
 					log.error("",e2);
-					String fileurl=PropertiesUtil.getLogUrl()+"log"+File.separator+filename;
-					FileUtil.writeContent(fileurl, gson.toJson(e));
+					FileUtil.writeContent(fileurl,filename, gson.toJson(e));
 				}
 			}
 		}else{
@@ -195,8 +202,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 				} catch (Exception e2) {
 					// TODO: handle exception
 					log.error("",e2);
-					String fileurl=PropertiesUtil.getLogUrl()+"log"+File.separator+filename;
-					FileUtil.writeContent(fileurl, gson.toJson(e));
+					FileUtil.writeContent(fileurl,filename, gson.toJson(e));
 				}
 			}
 		}
@@ -277,7 +283,8 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		e.setApproval_dept(b.getApprovalDept());
 		e.setApproval_num(b.getApprovalNum());
 		e.setBusi_area(b.getBusiArea());
-		e.setComputer_num(NumberUtil.toInteger(b.getComputerNum()));
+		double num=NumberUtil.toDouble(StringUtil.isEmpty(b.getComputerNum(), "0"));
+		e.setComputer_num((int)num);
 		e.setDistrict_code(b.getDistrictCode());
 		e.setEconomic_type(b.getEconomicType());
 		e.setIp(b.getIp());

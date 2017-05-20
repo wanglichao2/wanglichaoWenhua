@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.rpc.client.RPCServiceClient;
-import org.apache.axis2.transport.http.HTTPConstants;
+//import org.apache.axiom.om.OMElement;
+//import org.apache.axis2.AxisFault;
+//import org.apache.axis2.addressing.EndpointReference;
+//import org.apache.axis2.client.Options;
+//import org.apache.axis2.rpc.client.RPCServiceClient;
+//import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.httpclient.ConnectTimeoutException;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.endpoint.ClientImpl;
@@ -41,7 +41,7 @@ public class WebServiceUtil {
 		return client;
 	}
 
-	public static String netBarSyncLoginAxis2(InterfaceConfig config)throws Exception {
+	/*public static String netBarSyncLoginAxis2(InterfaceConfig config)throws Exception {
 		try {
 			// 使用RPC方式调用WebService
 			RPCServiceClient serviceClient = new RPCServiceClient();
@@ -54,11 +54,11 @@ public class WebServiceUtil {
 			options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, 10000);
 			// 确定调用方法
 //			options.setAction("urn:getPrice");
-			/**
+			*//**
 			 * 指定要调用的方法及WSDL文件的命名空间 如果 webservice 服务端由axis2编写 命名空间
 			 * 不一致导致的问题 org.apache.axis2.AxisFault: java.lang.RuntimeException:
 			 * Unexpected subelement arg0
-			 */
+			 *//*
 			QName qname = new QName("http://loginInfo.interfaceImp.netbar.ccm.gov", config.getMethod());
 			// 指定getPrice方法的参数值
 			Object[] parameters = new Object[] { config.getUsername() ,config.getPassword()};
@@ -99,11 +99,11 @@ public class WebServiceUtil {
 			options.setTo(targetEPR);
 			options.setProperty(HTTPConstants.SO_TIMEOUT, 10000);
 			options.setProperty(HTTPConstants.CONNECTION_TIMEOUT, 10000);
-			/**
+			*//**
 			 * 指定要调用的方法及WSDL文件的命名空间 如果 webservice 服务端由axis2编写 命名空间
 			 * 不一致导致的问题 org.apache.axis2.AxisFault: java.lang.RuntimeException:
 			 * Unexpected subelement arg0
-			 */
+			 *//*
 			QName qname = new QName("http://placeInfo.interfaceImp.netbar.ccm.gov", config.getMethod());
 			// 指定getPrice方法的参数值
 			Object[] parameters = new Object[] { key ,endtime};
@@ -125,7 +125,7 @@ public class WebServiceUtil {
 			throw e;
 		}
 		return null;
-	}
+	}*/
 
 	public static String netBarSyncLogin(InterfaceConfig config)
 			throws Exception {

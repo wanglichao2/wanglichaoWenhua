@@ -22,7 +22,7 @@ import org.jeecgframework.poi.handler.inter.IExcelModel;
  */
 @Entity
 @Table(name="t_net_bar")
-public class NetBarEntity implements Serializable, IExcelModel {
+public class NetBarEntity_bak implements Serializable, IExcelModel {
 	/**
 	 * @Fields serialVersionUID : long
 	 */

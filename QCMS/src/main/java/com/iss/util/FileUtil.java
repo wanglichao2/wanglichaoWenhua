@@ -11,13 +11,15 @@ public class FileUtil {
 	public static String NETBAR_DATA_LOG_HEAD="网吧信息更新失败_";
 	
 
-	public static void writeContent(String fileurl, String conent) {
+	public static void writeContent(String fileurl,String filename, String conent) {
 		BufferedWriter out = null;
 		try {
-			File file=new File(fileurl);
-			if(!file.exists()){
-				System.out.println("not exist...");
+			File filepath=new File(fileurl);
+			if(!filepath.exists()){
+//				System.out.println("not exist...");
+				filepath.mkdirs();
 			}
+			String file=fileurl+filename;
 			out = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(file, true)));
 			out.write(conent + "\r\n");
@@ -34,11 +36,11 @@ public class FileUtil {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		String fileurl="/workspace/project/test/test.txt";
+		String fileurl="/workspace/project/test/";
 		String path=PropertiesUtil.getLogUrl();
 		System.out.println(path);
 		System.out.println(System.getProperty("user.dir"));
-		writeContent(fileurl, "sdfaldfj受到法律上的饭卡地方"+System.currentTimeMillis());
+		writeContent(fileurl,"test.txt", "sdfaldfj受到法律上的饭卡地方"+System.currentTimeMillis());
 		System.out.println(DateUtil.getDate(DateUtil.datetimeformat_str_cn));
 	}
 

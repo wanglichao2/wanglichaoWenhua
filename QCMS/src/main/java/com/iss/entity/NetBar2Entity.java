@@ -17,11 +17,13 @@ import javax.persistence.Transient;
 
 import org.jeecgframework.poi.handler.inter.IExcelModel;
 
+import com.iss.constants.TableConstants;
+
 /**
  * 网吧实体
  */
 @Entity
-@Table(name="t_net_bar2")
+@Table(name=TableConstants.NETBAR2_TABLE)
 public class NetBar2Entity implements Serializable, IExcelModel {
 	/**
 	 * @Fields serialVersionUID : long

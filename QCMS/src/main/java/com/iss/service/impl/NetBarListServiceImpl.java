@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
-import com.iss.dao.INetBarJPADao;
+import com.iss.dao.INetBar2JPADao;
+//import com.iss.dao.INetBarJPADao;
 import com.iss.entity.AreasBarEntity;
 import com.iss.entity.ProvinceCityBarEntity;
 import com.iss.entity.StatAreaEntity;
@@ -22,7 +23,7 @@ import com.iss.vo.DataParam;
 public class NetBarListServiceImpl implements INetBarListService {
 
 	@Autowired
-	private INetBarJPADao iNetBarJPADao;
+	private INetBar2JPADao iNetBarJPADao;
 	
 	@Override
 	public List<ProvinceCityBarEntity> loadProvinceCityBar() {

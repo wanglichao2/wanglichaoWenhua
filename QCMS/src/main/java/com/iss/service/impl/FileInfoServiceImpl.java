@@ -16,10 +16,12 @@ import com.iss.dao.IFileBarDao;
 import com.iss.dao.IFileBarJPADao;
 import com.iss.dao.IFileInfoDao;
 import com.iss.dao.IFileInfoJPADao;
-import com.iss.dao.INetBarDao;
+import com.iss.dao.INetBar2Dao;
+//import com.iss.dao.INetBarDao;
 import com.iss.entity.FileBarEntity;
 import com.iss.entity.FileInfoEntity;
-import com.iss.entity.NetBarEntity;
+import com.iss.entity.NetBar2Entity;
+//import com.iss.entity.NetBarEntity;
 import com.iss.service.IFileInfoService;
 import com.iss.util.StringUtil;
 import com.iss.vo.DataParam;
@@ -38,7 +40,7 @@ public class FileInfoServiceImpl implements IFileInfoService {
 	@Autowired
 	private IFileBarJPADao IFileBarJPADao;
 	@Autowired
-	private INetBarDao iNetBarDao;
+	private INetBar2Dao iNetBarDao;
 	
 	@Override
 	public List<FileInfoEntity> load(){
@@ -108,9 +110,10 @@ public class FileInfoServiceImpl implements IFileInfoService {
 					}
 				}
 			}else{
-				List<NetBarEntity> netbars = iNetBarDao.findAll();
-				for(NetBarEntity netbar : netbars){
-					if(netbar.getStatus() == 1){
+				List<NetBar2Entity> netbars = iNetBarDao.findAll();
+				for(NetBar2Entity netbar : netbars){
+//					if(netbar.getStatus() == 1){
+					if(netbar.getIsdeleted()==0){
 						FileBarEntity fileBar = new FileBarEntity();
 						fileBar.setFileId(fileInfo.getId());
 						fileBar.setBarid(netbar.getId());

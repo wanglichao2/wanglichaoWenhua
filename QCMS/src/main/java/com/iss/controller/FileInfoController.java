@@ -19,9 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.iss.entity.FileInfoEntity;
-import com.iss.entity.NetBarEntity;
+import com.iss.entity.NetBar2Entity;
+//import com.iss.entity.NetBarEntity;
 import com.iss.service.IAreasCodeService;
 import com.iss.service.IFileInfoService;
+import com.iss.service.INetBar2Service;
 import com.iss.service.INetBarService;
 import com.iss.util.JsonUtil;
 import com.iss.vo.AjaxJson;
@@ -37,7 +39,7 @@ public class FileInfoController extends BaseController {
 	@Autowired
 	private IFileInfoService iFileInfoService;
 	@Autowired
-	private INetBarService iNetBarService;
+	private INetBar2Service iNetBarService;
 	@Autowired
 	private IAreasCodeService iAreasCodeService;
 
@@ -45,7 +47,7 @@ public class FileInfoController extends BaseController {
 	public String list(Model model) {
 		String json = iAreasCodeService.getTreeAreas();
 		model.addAttribute("areasTree", json);
-		List<NetBarEntity> netbarList = iNetBarService.load();
+		List<NetBar2Entity> netbarList = iNetBarService.load();
 		model.addAttribute("netbarList", netbarList);
 		return "wh/fileinfo_list";
 	}
@@ -77,7 +79,7 @@ public class FileInfoController extends BaseController {
 		param.setLength(-1);
 		param.setDraw(1);
 		param.setStart(0);
-		DataTables<NetBarEntity> dt = iNetBarService.load(param);
+		DataTables<NetBar2Entity> dt = iNetBarService.load(param);
 		return JsonUtil.toJson(dt);
 	}
 
