@@ -289,6 +289,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		e.setEconomic_type(b.getEconomicType());
 		e.setIp(b.getIp());
 		e.setIsdeleted(NumberUtil.toInteger(b.getIsdeleted()));
+		e.setCity_code(StringUtil.isEmpty(e.getDistrict_code())?"":e.getDistrict_code().substring(0,4)+"00");
 		
 	}
 }

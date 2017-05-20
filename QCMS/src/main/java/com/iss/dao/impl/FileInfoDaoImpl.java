@@ -9,6 +9,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import com.iss.constants.TableConstants;
 import com.iss.dao.IFileInfoJPADao;
 import com.iss.entity.FileInfoEntity;
 import com.iss.util.DateUtil;
@@ -72,7 +73,7 @@ public class FileInfoDaoImpl extends BaseJPADaoImpl<Object, Long> implements IFi
 				entity.setLastModifier(NumberUtil.toLong(obj[10]));
 				entity.setLastModifyTime(DateUtil.toDate(obj[11]));
 				if(entity.getIsApply() == '0'){
-					String sqlStr = "select n.id,n.net_bar_name from t_net_bar n left JOIN t_file_bar b on b.barid = n.id where b.fileId="+entity.getId();
+					String sqlStr = "select n.id,n.net_bar_name from "+TableConstants.NETBAR2_TABLE+" n left JOIN t_file_bar b on b.barid = n.id where b.fileId="+entity.getId();
 					List<Object> netbarList = findNativeQuery(sqlStr);
 					StringBuffer netbarIds = new StringBuffer();
 					StringBuffer netbarNames = new StringBuffer();
