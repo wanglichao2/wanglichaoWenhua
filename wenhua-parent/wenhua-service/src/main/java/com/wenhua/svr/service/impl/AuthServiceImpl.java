@@ -103,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
 		}
 		
 		bar.setServerVersion(serverInfo.getWenhuaVer());
-		bar.setServerMac(serverInfo.getId());
+//		bar.setServerMac(serverInfo.getId());
 		netBarDao.updateByPrimaryKey(bar);
 		// 更新缓存网吧服务器相关信息
 		StatBarInstancerCacher.addOrUpdate(bar);

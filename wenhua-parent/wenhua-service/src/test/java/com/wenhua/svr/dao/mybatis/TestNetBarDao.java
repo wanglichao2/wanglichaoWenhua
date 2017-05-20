@@ -28,7 +28,7 @@ public class TestNetBarDao {
 	@Test
 	public void test0() {
 		NetBar bar = NetBar.newOne("4101020017", "1234567123", "me");
-		bar.setClientTotal(10);
+		bar.setComputerNum(10);
 		netBarDao.insert(bar);
 		
 	}
@@ -37,7 +37,7 @@ public class TestNetBarDao {
 	public void test1() {
 		System.out.println(netBarDao);
 		NetBar target = netBarDao.selectByPrimaryKey("4101020001");
-		System.out.println(target.getAreaCode());
+		System.out.println(target.getDistrictCode());
 		target.setServerVersion("V1.0");
 		target.setClientVersion("V2.0");
 		

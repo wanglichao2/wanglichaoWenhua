@@ -49,22 +49,21 @@ public class StatBarInstancerCacher {
 		if(null == instance) {
 			instance = StatBarInstance.newOne(
 					bar.getId(), 
-					bar.getNetBarName(), 
+					bar.getNetbarName(), 
 					bar.getServerVersion(), 
 					bar.getClientVersion(), 
-					bar.getClientTotal()
+					bar.getComputerNum()
 					);
 			barInstanceCacher.put(bar.getId(), instance);
 		} else if(!bar.isValid()) {
-			
 			barInstanceCacher.remove(bar.getId());
 			logger.debug("##StatBarInstance of barId[%s] is removed from cache");
 			return;
 		} else {
 			instance.setClientVersion(bar.getClientVersion());
 			instance.setServerVersion(bar.getServerVersion());
-			instance.setBarName(bar.getNetBarName());
-			instance.setOffline(bar.getClientTotal() - instance.getOnline());
+			instance.setBarName(bar.getNetbarName());
+			instance.setOffline(bar.getComputerNum() - instance.getOnline());
 
 		}
 		logger.debug(String.format("##StatBarInstance of barId[%s] is : %s", bar.getId(), instance.toString()));
@@ -103,7 +102,7 @@ public class StatBarInstancerCacher {
 		if(null == bars || 0 == bars.size()) return;
 		
 		for(NetBar bar : bars) {
-			StatBarInstance instance = StatBarInstance.newOne(bar.getId(), bar.getNetBarName(), bar.getServerVersion(), bar.getClientVersion(), bar.getClientTotal());
+			StatBarInstance instance = StatBarInstance.newOne(bar.getId(), bar.getNetbarName(), bar.getServerVersion(), bar.getClientVersion(), bar.getComputerNum());
 			
 			barInstanceCacher.put(bar.getId(), instance);
 		}

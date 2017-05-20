@@ -1,7 +1,6 @@
 package com.wenhua.svr.domain.base;
 
 import com.wenhua.svr.base.domain.AbstractEntity;
-import java.util.Date;
 
 public class BaseNetBar extends AbstractEntity<String, BaseNetBar> {
     /**
@@ -11,100 +10,197 @@ public class BaseNetBar extends AbstractEntity<String, BaseNetBar> {
 
 	private String id;
 
-    private String netBarName;
+    private String mainId;
 
-    private String businessRegNo;
+    private String netbarName;
 
-    private String cityCode;
+    private String netbarState;
 
-    private String areaCode;
+    private String districtCode;
 
-    private String serverVersion;
+    private String regAddress;
 
-    private String clientVersion;
+    private String regAddressDetail;
 
-    private String addressName;
+    private String regFund;
+
+    private String economicType;
+
+    private String approvalNum;
+
+    private String approvalDept;
+
+    private String approvalDate;
+
+    private String legalName;
+
+    private String busiArea;
+
+    private Integer computerNum;
+
+    private String ip;
+
+    private Integer isdeleted;
+
+    private String updateTime;
 
     private String contactName;
 
     private String contactTel;
 
-    private Integer clientTotal;
+    private String cityCode;
 
-    private String outsideNetwork;
+    private Integer isdeployed;
 
-    private String insideNetwork;
+    private String createTime;
 
-    private String serverMac;
-
-    private String creator;
-
-    private Date createTime;
-
-    private Integer status;
+    private String syncTime;
+    
+    private String clientVersion;
+    private String serverVersion;
 
     public String getId() {
         return id;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.id = id == null ? null : id.trim();
     }
 
-    public String getNetBarName() {
-        return netBarName;
+    public String getMainId() {
+        return mainId;
     }
 
-    public void setNetBarName(String netBarName) {
-        this.netBarName = netBarName;
+    public void setMainId(String mainId) {
+        this.mainId = mainId == null ? null : mainId.trim();
     }
 
-    public String getBusinessRegNo() {
-        return businessRegNo;
+    public String getNetbarName() {
+        return netbarName;
     }
 
-    public void setBusinessRegNo(String businessRegNo) {
-        this.businessRegNo = businessRegNo;
+    public void setNetbarName(String netbarName) {
+        this.netbarName = netbarName == null ? null : netbarName.trim();
     }
 
-    public String getCityCode() {
-        return cityCode;
+    public String getNetbarState() {
+        return netbarState;
     }
 
-    public void setCityCode(String cityCode) {
-        this.cityCode = cityCode;
+    public void setNetbarState(String netbarState) {
+        this.netbarState = netbarState == null ? null : netbarState.trim();
     }
 
-    public String getAreaCode() {
-        return areaCode;
+    public String getDistrictCode() {
+        return districtCode;
     }
 
-    public void setAreaCode(String areaCode) {
-        this.areaCode = areaCode;
+    public void setDistrictCode(String districtCode) {
+        this.districtCode = districtCode == null ? null : districtCode.trim();
     }
 
-    public String getServerVersion() {
-        return serverVersion;
+    public String getRegAddress() {
+        return regAddress;
     }
 
-    public void setServerVersion(String serverVersion) {
-        this.serverVersion = serverVersion;
+    public void setRegAddress(String regAddress) {
+        this.regAddress = regAddress == null ? null : regAddress.trim();
     }
 
-    public String getClientVersion() {
-        return clientVersion;
+    public String getRegAddressDetail() {
+        return regAddressDetail;
     }
 
-    public void setClientVersion(String clientVersion) {
-        this.clientVersion = clientVersion;
+    public void setRegAddressDetail(String regAddressDetail) {
+        this.regAddressDetail = regAddressDetail == null ? null : regAddressDetail.trim();
     }
 
-    public String getAddressName() {
-        return addressName;
+    public String getRegFund() {
+        return regFund;
     }
 
-    public void setAddressName(String addressName) {
-        this.addressName = addressName;
+    public void setRegFund(String regFund) {
+        this.regFund = regFund == null ? null : regFund.trim();
+    }
+
+    public String getEconomicType() {
+        return economicType;
+    }
+
+    public void setEconomicType(String economicType) {
+        this.economicType = economicType == null ? null : economicType.trim();
+    }
+
+    public String getApprovalNum() {
+        return approvalNum;
+    }
+
+    public void setApprovalNum(String approvalNum) {
+        this.approvalNum = approvalNum == null ? null : approvalNum.trim();
+    }
+
+    public String getApprovalDept() {
+        return approvalDept;
+    }
+
+    public void setApprovalDept(String approvalDept) {
+        this.approvalDept = approvalDept == null ? null : approvalDept.trim();
+    }
+
+    public String getApprovalDate() {
+        return approvalDate;
+    }
+
+    public void setApprovalDate(String approvalDate) {
+        this.approvalDate = approvalDate == null ? null : approvalDate.trim();
+    }
+
+    public String getLegalName() {
+        return legalName;
+    }
+
+    public void setLegalName(String legalName) {
+        this.legalName = legalName == null ? null : legalName.trim();
+    }
+
+    public String getBusiArea() {
+        return busiArea;
+    }
+
+    public void setBusiArea(String busiArea) {
+        this.busiArea = busiArea == null ? null : busiArea.trim();
+    }
+
+    public Integer getComputerNum() {
+        return computerNum;
+    }
+
+    public void setComputerNum(Integer computerNum) {
+        this.computerNum = computerNum;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip == null ? null : ip.trim();
+    }
+
+    public Integer getIsdeleted() {
+        return isdeleted;
+    }
+
+    public void setIsdeleted(Integer isdeleted) {
+        this.isdeleted = isdeleted;
+    }
+
+    public String getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime == null ? null : updateTime.trim();
     }
 
     public String getContactName() {
@@ -112,7 +208,7 @@ public class BaseNetBar extends AbstractEntity<String, BaseNetBar> {
     }
 
     public void setContactName(String contactName) {
-        this.contactName = contactName;
+        this.contactName = contactName == null ? null : contactName.trim();
     }
 
     public String getContactTel() {
@@ -120,62 +216,55 @@ public class BaseNetBar extends AbstractEntity<String, BaseNetBar> {
     }
 
     public void setContactTel(String contactTel) {
-        this.contactTel = contactTel;
+        this.contactTel = contactTel == null ? null : contactTel.trim();
     }
 
-    public Integer getClientTotal() {
-        return clientTotal;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setClientTotal(Integer clientTotal) {
-        this.clientTotal = clientTotal;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode == null ? null : cityCode.trim();
     }
 
-    public String getOutsideNetwork() {
-        return outsideNetwork;
+    public Integer getIsdeployed() {
+        return isdeployed;
     }
 
-    public void setOutsideNetwork(String outsideNetwork) {
-        this.outsideNetwork = outsideNetwork;
+    public void setIsdeployed(Integer isdeployed) {
+        this.isdeployed = isdeployed;
     }
 
-    public String getInsideNetwork() {
-        return insideNetwork;
-    }
-
-    public void setInsideNetwork(String insideNetwork) {
-        this.insideNetwork = insideNetwork;
-    }
-
-    public String getServerMac() {
-        return serverMac;
-    }
-
-    public void setServerMac(String serverMac) {
-        this.serverMac = serverMac;
-    }
-
-    public String getCreator() {
-        return creator;
-    }
-
-    public void setCreator(String creator) {
-        this.creator = creator;
-    }
-
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime == null ? null : createTime.trim();
     }
 
-    public Integer getStatus() {
-        return status;
+    public String getSyncTime() {
+        return syncTime;
     }
 
-    public void setStatus(Integer status) {
-        this.status = status;
+    public void setSyncTime(String syncTime) {
+        this.syncTime = syncTime == null ? null : syncTime.trim();
     }
+
+	public String getClientVersion() {
+		return clientVersion;
+	}
+
+	public void setClientVersion(String clientVersion) {
+		this.clientVersion = clientVersion;
+	}
+
+	public String getServerVersion() {
+		return serverVersion;
+	}
+
+	public void setServerVersion(String serverVersion) {
+		this.serverVersion = serverVersion;
+	}
+    
 }

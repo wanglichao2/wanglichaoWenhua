@@ -191,7 +191,8 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		}
 		
 		if(!netBar.isValid()) {
-			throw new AuthBarNotValidException(String.format("##The added bar: %s is not valid. Status of bar is: %d", netBar.getId(), netBar.getStatus()));
+			throw new AuthBarNotValidException(
+					String.format("##The added bar: %s is not valid. Status of bar is: %d", netBar.getId(), netBar.getIsdeleted()));
 		}
 
 		//更新该网吧实时信息缓存

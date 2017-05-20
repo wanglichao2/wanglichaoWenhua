@@ -2,28 +2,36 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wenhua.svr.dao.NetBarDao">
   <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.NetBar">
-    <id column="id" jdbcType="VARCHAR" property="id" />
-    <result column="net_bar_name" jdbcType="VARCHAR" property="netBarName" />
-    <result column="business_reg_no" jdbcType="VARCHAR" property="businessRegNo" />
-    <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
-    <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
-    <result column="server_version" jdbcType="VARCHAR" property="serverVersion" />
-    <result column="client_version" jdbcType="VARCHAR" property="clientVersion" />
-    <result column="address_name" jdbcType="VARCHAR" property="addressName" />
-    <result column="contact_name" jdbcType="VARCHAR" property="contactName" />
-    <result column="contact_tel" jdbcType="VARCHAR" property="contactTel" />
-    <result column="client_total" jdbcType="INTEGER" property="clientTotal" />
-    <result column="outside_network" jdbcType="VARCHAR" property="outsideNetwork" />
-    <result column="inside_network" jdbcType="VARCHAR" property="insideNetwork" />
-    <result column="server_mac" jdbcType="VARCHAR" property="serverMac" />
-    <result column="creator" jdbcType="VARCHAR" property="creator" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="status" jdbcType="INTEGER" property="status" />
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="main_id" property="mainId" jdbcType="VARCHAR" />
+    <result column="netbar_name" property="netbarName" jdbcType="VARCHAR" />
+    <result column="netbar_state" property="netbarState" jdbcType="VARCHAR" />
+    <result column="district_code" property="districtCode" jdbcType="VARCHAR" />
+    <result column="reg_address" property="regAddress" jdbcType="VARCHAR" />
+    <result column="reg_address_detail" property="regAddressDetail" jdbcType="VARCHAR" />
+    <result column="reg_fund" property="regFund" jdbcType="VARCHAR" />
+    <result column="economic_type" property="economicType" jdbcType="VARCHAR" />
+    <result column="approval_num" property="approvalNum" jdbcType="VARCHAR" />
+    <result column="approval_dept" property="approvalDept" jdbcType="VARCHAR" />
+    <result column="approval_date" property="approvalDate" jdbcType="VARCHAR" />
+    <result column="legal_name" property="legalName" jdbcType="VARCHAR" />
+    <result column="busi_area" property="busiArea" jdbcType="VARCHAR" />
+    <result column="computer_num" property="computerNum" jdbcType="INTEGER" />
+    <result column="ip" property="ip" jdbcType="VARCHAR" />
+    <result column="isdeleted" property="isdeleted" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="VARCHAR" />
+    <result column="contact_name" property="contactName" jdbcType="VARCHAR" />
+    <result column="contact_tel" property="contactTel" jdbcType="VARCHAR" />
+    <result column="city_code" property="cityCode" jdbcType="VARCHAR" />
+    <result column="isdeployed" property="isdeployed" jdbcType="INTEGER" />
+    <result column="create_time" property="createTime" jdbcType="VARCHAR" />
+    <result column="sync_time" property="syncTime" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, net_bar_name, business_reg_no, city_code, area_code, server_version, client_version, 
-    address_name, contact_name, contact_tel, client_total, outside_network, inside_network, 
-    server_mac, creator, create_time, status
+    id, main_id, netbar_name, netbar_state, district_code, reg_address, reg_address_detail, 
+    reg_fund, economic_type, approval_num, approval_dept, approval_date, legal_name, 
+    busi_area, computer_num, ip, isdeleted, update_time, contact_name, contact_tel, city_code, 
+    isdeployed, create_time, sync_time
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
     select 
@@ -36,28 +44,28 @@
   <!-- 自定义SQL -->
   <select id="countAreaPc" resultType="java.lang.Integer">
     select
-    	ifnull(sum(client_total),0)
+    	ifnull(sum(computer_num),0)
     from t_net_bar
     where 
-    	area_code = #{areaCode, jdbcType=VARCHAR}
+    	district_code = #{areaCode, jdbcType=VARCHAR}
     and 
-    	status = 1
+    	isdeleted = 0
   </select>
   <select id="countCityPc" resultType="java.lang.Integer">
     select
-    	ifnull(sum(client_total),0)
+    	ifnull(sum(computer_num),0)
     from t_net_bar
     where 
     	city_code = #{areaCode, jdbcType=VARCHAR}
     and 
-    	status = 1
+    	isdeleted = 0
   </select>
   <select id="countProvincePc" resultType="java.lang.Integer">
     select
-    	ifnull(sum(client_total),0)
+    	ifnull(sum(computer_num),0)
     from t_net_bar
     where
-    	status = 1
+    	isdeleted = 0
   </select>
   
   <select id="countAreaBar" resultType="java.lang.Integer">
@@ -65,9 +73,9 @@
     	ifnull(count(*),0)
     from t_net_bar
     where 
-    	area_code = #{areaCode, jdbcType=VARCHAR}
+    	district_code = #{areaCode, jdbcType=VARCHAR}
     and 
-    	status = 1
+    	isdeleted = 0
   </select>
   <select id="countCityBar" resultType="java.lang.Integer">
     select
@@ -76,14 +84,14 @@
     where 
     	city_code = #{areaCode, jdbcType=VARCHAR}
     and 
-    	status = 1
+    	isdeleted = 0
   </select>
   <select id="countProvinceBar" resultType="java.lang.Integer">
     select
     	ifnull(count(*),0)
     from t_net_bar
     where
-    	status = 1
+    	isdeleted = 0
   </select>
   
   <select id="selectAll" resultMap="BaseResultMap">
@@ -91,7 +99,7 @@
 		*
     from t_net_bar
     where
-    	status = 1
+    	isdeleted = 0
   </select>
   
   <!-- ################### -->
@@ -101,200 +109,276 @@
     where id = #{id,jdbcType=VARCHAR}
   </delete>
   <insert id="insert" parameterType="com.wenhua.svr.domain.NetBar">
-    insert into t_net_bar (id, net_bar_name, business_reg_no, city_code, 
-      area_code, server_version, client_version, 
-      address_name, contact_name, contact_tel, 
-      client_total, outside_network, inside_network, 
-      server_mac, creator, create_time, 
-      status)
-    values (#{id,jdbcType=VARCHAR}, #{netBarName,jdbcType=VARCHAR}, #{businessRegNo,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
-      #{areaCode,jdbcType=VARCHAR}, #{serverVersion,jdbcType=VARCHAR}, #{clientVersion,jdbcType=VARCHAR}, 
-      #{addressName,jdbcType=VARCHAR}, #{contactName,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, 
-      #{clientTotal,jdbcType=INTEGER}, #{outsideNetwork,jdbcType=VARCHAR}, #{insideNetwork,jdbcType=VARCHAR}, 
-      #{serverMac,jdbcType=VARCHAR}, #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{status,jdbcType=INTEGER})
+    insert into t_net_bar (id, main_id, netbar_name, 
+      netbar_state, district_code, reg_address, 
+      reg_address_detail, reg_fund, economic_type, 
+      approval_num, approval_dept, approval_date, 
+      legal_name, busi_area, computer_num, 
+      ip, isdeleted, update_time, 
+      contact_name, contact_tel, city_code, 
+      isdeployed, create_time, sync_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{mainId,jdbcType=VARCHAR}, #{netbarName,jdbcType=VARCHAR}, 
+      #{netbarState,jdbcType=VARCHAR}, #{districtCode,jdbcType=VARCHAR}, #{regAddress,jdbcType=VARCHAR}, 
+      #{regAddressDetail,jdbcType=VARCHAR}, #{regFund,jdbcType=VARCHAR}, #{economicType,jdbcType=VARCHAR}, 
+      #{approvalNum,jdbcType=VARCHAR}, #{approvalDept,jdbcType=VARCHAR}, #{approvalDate,jdbcType=VARCHAR}, 
+      #{legalName,jdbcType=VARCHAR}, #{busiArea,jdbcType=VARCHAR}, #{computerNum,jdbcType=INTEGER}, 
+      #{ip,jdbcType=VARCHAR}, #{isdeleted,jdbcType=INTEGER}, #{updateTime,jdbcType=VARCHAR}, 
+      #{contactName,jdbcType=VARCHAR}, #{contactTel,jdbcType=VARCHAR}, #{cityCode,jdbcType=VARCHAR}, 
+      #{isdeployed,jdbcType=INTEGER}, #{createTime,jdbcType=VARCHAR}, #{syncTime,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.wenhua.svr.domain.NetBar">
     insert into t_net_bar
-    <trim prefix="(" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         id,
       </if>
-      <if test="netBarName != null">
-        net_bar_name,
+      <if test="mainId != null" >
+        main_id,
       </if>
-      <if test="businessRegNo != null">
-        business_reg_no,
+      <if test="netbarName != null" >
+        netbar_name,
       </if>
-      <if test="cityCode != null">
-        city_code,
+      <if test="netbarState != null" >
+        netbar_state,
       </if>
-      <if test="areaCode != null">
-        area_code,
+      <if test="districtCode != null" >
+        district_code,
       </if>
-      <if test="serverVersion != null">
-        server_version,
+      <if test="regAddress != null" >
+        reg_address,
       </if>
-      <if test="clientVersion != null">
-        client_version,
+      <if test="regAddressDetail != null" >
+        reg_address_detail,
       </if>
-      <if test="addressName != null">
-        address_name,
+      <if test="regFund != null" >
+        reg_fund,
       </if>
-      <if test="contactName != null">
+      <if test="economicType != null" >
+        economic_type,
+      </if>
+      <if test="approvalNum != null" >
+        approval_num,
+      </if>
+      <if test="approvalDept != null" >
+        approval_dept,
+      </if>
+      <if test="approvalDate != null" >
+        approval_date,
+      </if>
+      <if test="legalName != null" >
+        legal_name,
+      </if>
+      <if test="busiArea != null" >
+        busi_area,
+      </if>
+      <if test="computerNum != null" >
+        computer_num,
+      </if>
+      <if test="ip != null" >
+        ip,
+      </if>
+      <if test="isdeleted != null" >
+        isdeleted,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="contactName != null" >
         contact_name,
       </if>
-      <if test="contactTel != null">
+      <if test="contactTel != null" >
         contact_tel,
       </if>
-      <if test="clientTotal != null">
-        client_total,
+      <if test="cityCode != null" >
+        city_code,
       </if>
-      <if test="outsideNetwork != null">
-        outside_network,
+      <if test="isdeployed != null" >
+        isdeployed,
       </if>
-      <if test="insideNetwork != null">
-        inside_network,
-      </if>
-      <if test="serverMac != null">
-        server_mac,
-      </if>
-      <if test="creator != null">
-        creator,
-      </if>
-      <if test="createTime != null">
+      <if test="createTime != null" >
         create_time,
       </if>
-      <if test="status != null">
-        status,
+      <if test="syncTime != null" >
+        sync_time,
       </if>
     </trim>
-    <trim prefix="values (" suffix=")" suffixOverrides=",">
-      <if test="id != null">
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
         #{id,jdbcType=VARCHAR},
       </if>
-      <if test="netBarName != null">
-        #{netBarName,jdbcType=VARCHAR},
+      <if test="mainId != null" >
+        #{mainId,jdbcType=VARCHAR},
       </if>
-      <if test="businessRegNo != null">
-        #{businessRegNo,jdbcType=VARCHAR},
+      <if test="netbarName != null" >
+        #{netbarName,jdbcType=VARCHAR},
       </if>
-      <if test="cityCode != null">
-        #{cityCode,jdbcType=VARCHAR},
+      <if test="netbarState != null" >
+        #{netbarState,jdbcType=VARCHAR},
       </if>
-      <if test="areaCode != null">
-        #{areaCode,jdbcType=VARCHAR},
+      <if test="districtCode != null" >
+        #{districtCode,jdbcType=VARCHAR},
       </if>
-      <if test="serverVersion != null">
-        #{serverVersion,jdbcType=VARCHAR},
+      <if test="regAddress != null" >
+        #{regAddress,jdbcType=VARCHAR},
       </if>
-      <if test="clientVersion != null">
-        #{clientVersion,jdbcType=VARCHAR},
+      <if test="regAddressDetail != null" >
+        #{regAddressDetail,jdbcType=VARCHAR},
       </if>
-      <if test="addressName != null">
-        #{addressName,jdbcType=VARCHAR},
+      <if test="regFund != null" >
+        #{regFund,jdbcType=VARCHAR},
       </if>
-      <if test="contactName != null">
+      <if test="economicType != null" >
+        #{economicType,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalNum != null" >
+        #{approvalNum,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalDept != null" >
+        #{approvalDept,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalDate != null" >
+        #{approvalDate,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="busiArea != null" >
+        #{busiArea,jdbcType=VARCHAR},
+      </if>
+      <if test="computerNum != null" >
+        #{computerNum,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="isdeleted != null" >
+        #{isdeleted,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
         #{contactName,jdbcType=VARCHAR},
       </if>
-      <if test="contactTel != null">
+      <if test="contactTel != null" >
         #{contactTel,jdbcType=VARCHAR},
       </if>
-      <if test="clientTotal != null">
-        #{clientTotal,jdbcType=INTEGER},
+      <if test="cityCode != null" >
+        #{cityCode,jdbcType=VARCHAR},
       </if>
-      <if test="outsideNetwork != null">
-        #{outsideNetwork,jdbcType=VARCHAR},
+      <if test="isdeployed != null" >
+        #{isdeployed,jdbcType=INTEGER},
       </if>
-      <if test="insideNetwork != null">
-        #{insideNetwork,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        #{createTime,jdbcType=VARCHAR},
       </if>
-      <if test="serverMac != null">
-        #{serverMac,jdbcType=VARCHAR},
-      </if>
-      <if test="creator != null">
-        #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        #{status,jdbcType=INTEGER},
+      <if test="syncTime != null" >
+        #{syncTime,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
   <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.NetBar">
     update t_net_bar
-    <set>
-      <if test="netBarName != null">
-        net_bar_name = #{netBarName,jdbcType=VARCHAR},
+    <set >
+      <if test="mainId != null" >
+        main_id = #{mainId,jdbcType=VARCHAR},
       </if>
-      <if test="businessRegNo != null">
-        business_reg_no = #{businessRegNo,jdbcType=VARCHAR},
+      <if test="netbarName != null" >
+        netbar_name = #{netbarName,jdbcType=VARCHAR},
       </if>
-      <if test="cityCode != null">
-        city_code = #{cityCode,jdbcType=VARCHAR},
+      <if test="netbarState != null" >
+        netbar_state = #{netbarState,jdbcType=VARCHAR},
       </if>
-      <if test="areaCode != null">
-        area_code = #{areaCode,jdbcType=VARCHAR},
+      <if test="districtCode != null" >
+        district_code = #{districtCode,jdbcType=VARCHAR},
       </if>
-      <if test="serverVersion != null">
-        server_version = #{serverVersion,jdbcType=VARCHAR},
+      <if test="regAddress != null" >
+        reg_address = #{regAddress,jdbcType=VARCHAR},
       </if>
-      <if test="clientVersion != null">
-        client_version = #{clientVersion,jdbcType=VARCHAR},
+      <if test="regAddressDetail != null" >
+        reg_address_detail = #{regAddressDetail,jdbcType=VARCHAR},
       </if>
-      <if test="addressName != null">
-        address_name = #{addressName,jdbcType=VARCHAR},
+      <if test="regFund != null" >
+        reg_fund = #{regFund,jdbcType=VARCHAR},
       </if>
-      <if test="contactName != null">
+      <if test="economicType != null" >
+        economic_type = #{economicType,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalNum != null" >
+        approval_num = #{approvalNum,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalDept != null" >
+        approval_dept = #{approvalDept,jdbcType=VARCHAR},
+      </if>
+      <if test="approvalDate != null" >
+        approval_date = #{approvalDate,jdbcType=VARCHAR},
+      </if>
+      <if test="legalName != null" >
+        legal_name = #{legalName,jdbcType=VARCHAR},
+      </if>
+      <if test="busiArea != null" >
+        busi_area = #{busiArea,jdbcType=VARCHAR},
+      </if>
+      <if test="computerNum != null" >
+        computer_num = #{computerNum,jdbcType=INTEGER},
+      </if>
+      <if test="ip != null" >
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="isdeleted != null" >
+        isdeleted = #{isdeleted,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=VARCHAR},
+      </if>
+      <if test="contactName != null" >
         contact_name = #{contactName,jdbcType=VARCHAR},
       </if>
-      <if test="contactTel != null">
+      <if test="contactTel != null" >
         contact_tel = #{contactTel,jdbcType=VARCHAR},
       </if>
-      <if test="clientTotal != null">
-        client_total = #{clientTotal,jdbcType=INTEGER},
+      <if test="cityCode != null" >
+        city_code = #{cityCode,jdbcType=VARCHAR},
       </if>
-      <if test="outsideNetwork != null">
-        outside_network = #{outsideNetwork,jdbcType=VARCHAR},
+      <if test="isdeployed != null" >
+        isdeployed = #{isdeployed,jdbcType=INTEGER},
       </if>
-      <if test="insideNetwork != null">
-        inside_network = #{insideNetwork,jdbcType=VARCHAR},
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=VARCHAR},
       </if>
-      <if test="serverMac != null">
-        server_mac = #{serverMac,jdbcType=VARCHAR},
-      </if>
-      <if test="creator != null">
-        creator = #{creator,jdbcType=VARCHAR},
-      </if>
-      <if test="createTime != null">
-        create_time = #{createTime,jdbcType=TIMESTAMP},
-      </if>
-      <if test="status != null">
-        status = #{status,jdbcType=INTEGER},
+      <if test="syncTime != null" >
+        sync_time = #{syncTime,jdbcType=VARCHAR},
       </if>
     </set>
     where id = #{id,jdbcType=VARCHAR}
   </update>
   <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.NetBar">
     update t_net_bar
-    set net_bar_name = #{netBarName,jdbcType=VARCHAR},
-      business_reg_no = #{businessRegNo,jdbcType=VARCHAR},
-      city_code = #{cityCode,jdbcType=VARCHAR},
-      area_code = #{areaCode,jdbcType=VARCHAR},
-      server_version = #{serverVersion,jdbcType=VARCHAR},
-      client_version = #{clientVersion,jdbcType=VARCHAR},
-      address_name = #{addressName,jdbcType=VARCHAR},
+    set main_id = #{mainId,jdbcType=VARCHAR},
+      netbar_name = #{netbarName,jdbcType=VARCHAR},
+      netbar_state = #{netbarState,jdbcType=VARCHAR},
+      district_code = #{districtCode,jdbcType=VARCHAR},
+      reg_address = #{regAddress,jdbcType=VARCHAR},
+      reg_address_detail = #{regAddressDetail,jdbcType=VARCHAR},
+      reg_fund = #{regFund,jdbcType=VARCHAR},
+      economic_type = #{economicType,jdbcType=VARCHAR},
+      approval_num = #{approvalNum,jdbcType=VARCHAR},
+      approval_dept = #{approvalDept,jdbcType=VARCHAR},
+      approval_date = #{approvalDate,jdbcType=VARCHAR},
+      legal_name = #{legalName,jdbcType=VARCHAR},
+      busi_area = #{busiArea,jdbcType=VARCHAR},
+      computer_num = #{computerNum,jdbcType=INTEGER},
+      ip = #{ip,jdbcType=VARCHAR},
+      isdeleted = #{isdeleted,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=VARCHAR},
       contact_name = #{contactName,jdbcType=VARCHAR},
       contact_tel = #{contactTel,jdbcType=VARCHAR},
-      client_total = #{clientTotal,jdbcType=INTEGER},
-      outside_network = #{outsideNetwork,jdbcType=VARCHAR},
-      inside_network = #{insideNetwork,jdbcType=VARCHAR},
-      server_mac = #{serverMac,jdbcType=VARCHAR},
-      creator = #{creator,jdbcType=VARCHAR},
-      create_time = #{createTime,jdbcType=TIMESTAMP},
-      status = #{status,jdbcType=INTEGER}
+      city_code = #{cityCode,jdbcType=VARCHAR},
+      isdeployed = #{isdeployed,jdbcType=INTEGER},
+      create_time = #{createTime,jdbcType=VARCHAR},
+      sync_time = #{syncTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
 </mapper>
