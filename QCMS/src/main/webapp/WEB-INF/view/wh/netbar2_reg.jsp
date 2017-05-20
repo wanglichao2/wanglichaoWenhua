@@ -114,23 +114,23 @@
                         <input type="hidden" id="id" name="id" value="{{this.id}}">
 		    			<div class="row m-b">
 			    	    	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>网吧名称：</div>
-					    	<div class="col-sm-5"><input type="text" id="net_bar_name" name="net_bar_name" value="{{this.net_bar_name}}" class="form-control" required></div>
+					    	<div class="col-sm-5"><input type="text" id="netbar_name" name="netbar_name" value="{{this.netbar_name}}" class="form-control" required></div>
 					    </div>
 						<div class="row m-b">
 			    	    	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>工商登记号：</div>
-					    	<div class="col-sm-5"><input type="text" id="business_reg_no" name="business_reg_no" value="{{this.business_reg_no}}" class="form-control" required></div>
+					    	<div class="col-sm-5"><input type="text" id="approval_num" name="approval_num" value="{{this.approval_num}}" class="form-control" required></div>
 					    </div>
 					    <div class="row m-b">	
 			            	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>网吧地址：</div>
 					    	<div class="col-sm-10">
-								<input type="hidden" id="address_name" name="address_name" value="{{this.address_name}}">
+								<input type="hidden" id="reg_address" name="reg_address" value="{{this.reg_address}}">
 								<select id="city_code" name="city_code">
 									<option selected="true" value="">==请选择城市==</option>
 					    			<c:forEach var="_areas" items="${areasList}">
 			                      		<option value="${_areas.areasid}">${_areas.areasname}</option>          		
 			                		</c:forEach>
 					    		</select>&nbsp;&nbsp;
-								<select id="area_code" name="area_code">
+								<select id="district_code" name="district_code">
 									<option selected="true" value="">==请选择区县==</option>
 								</select>
 							</div>
@@ -145,7 +145,7 @@
 			            </div>
 						<div class="row m-b">	
 			            	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>实际客户机总数：</div>
-					    	<div class="col-sm-5"><input type="text" id="client_total" name="client_total" value="{{this.client_total}}" class="form-control" required></div>
+					    	<div class="col-sm-5"><input type="text" id="computer_num" name="computer_num" value="{{this.computer_num}}" class="form-control" required></div>
 			            </div>
 						
                      </div>
@@ -222,8 +222,8 @@
 		                 icon:'fa fa-save', label:'确定',
 		               	 action: function(){
 		               		var cityName = $("#city_code").find("option:selected").text();
-    	                    var countyName = $("#area_code").find("option:selected").text();
-    	                    $("#address_name").val(cityName + " " + countyName);
+    	                    var countyName = $("#district_code").find("option:selected").text();
+    	                    $("#reg_address").val(cityName + "-" + countyName);
     	                    
 		               		$('#dataForm').submit();
 		             	 }
@@ -237,7 +237,7 @@
             			$('#dataForm', $div).validate({
             				submitHandler: function(form){//提交事件      
             					$.com.ajax({
-            				       	url:'${basePath}/netbar/add', 
+            				       	url:'${basePath}/netbar2/add', 
             				       	data:$(form).serialize(),
             				       	success: function(data){
             				       		if(data.flag){
@@ -253,42 +253,44 @@
             					});  
             			   	},
             			   	rules:{
-                            	net_bar_name:{ required:true },
-                                business_reg_no:{ required:true, number:true, maxlength:20 },
+                            	netbar_name:{ required:true },
+                                approval_num:{ required:true, number:true, maxlength:20 },
                                 city_code:{ required:true },
-                                area_code:{ required:true },
+                                district_code:{ required:true },
                                 contact_name:{ required:true },
                                 contact_tel:{ required:true, number:true, maxlength:11,minlength:11 },
-                                client_total:{ required:true, number:true, min:0 },
+                                computer_num:{ required:true, number:true, min:0 }
+                                /* ,
                                 outside_network:{ required:true },
                                 inside_network:{ required:true },
-                                server_mac:{ required:true } 
+                                server_mac:{ required:true }  */
                             },
                             messages:{
-                            	net_bar_name:{ required:"请输入网吧名称" },
-                                business_reg_no:{ required:"请输入工商登记号", number:"只能输入数字", maxlength:"最大长度不能超过20"},
+                            	netbar_name:{ required:"请输入网吧名称" },
+                                approval_num:{ required:"请输入工商登记号", number:"只能输入数字", maxlength:"最大长度不能超过20"},
                                 city_code:{ required:"请选择城市" },
-                                area_code:{ required:"请选择区县" },
+                                district_code:{ required:"请选择区县" },
                                 contact_name:{ required:"请输入联系人姓名" },
                                 contact_tel:{ required:"请输入联系人手机号", number:"只能输入数字", maxlength:"请输入长度为11位的手机号", minlength:"请输入长度为11位的手机号"},
-                                client_total:{ required:"请输入实际客户机总数", number:"只能输入数字", min:"不能小于0" },
+                                computer_num:{ required:"请输入实际客户机总数", number:"只能输入数字", min:"不能小于0" }
+                                /* ,
                                 outside_network:{ required:"请输入网吧公网IP" },
                                 inside_network:{ required:"请输入服务器内网IP" },
-                                server_mac:{ required:"请输入服务器MAC" }
+                                server_mac:{ required:"请输入服务器MAC" } */
                             }
             			});
             			$("#city_code").change(function(){
-							$("#area_code").empty();
+							$("#district_code").empty();
   	                        $.ajax({
-  	                        	url:'${basePath}/netbar/getAreas', 
+  	                        	url:'${basePath}/netbar2/getAreas', 
   	                            data:'areasid=' + $(this).val(),
   	                            success:function(data){
   	                            	var obj = data.obj;
 	                                for (i = 0; i < obj.length; i++) {
-	                                	$("#area_code").append("<option value='"+obj[i].areasid+"'>" + obj[i].areasname + "</option>");
+	                                	$("#district_code").append("<option value='"+obj[i].areasid+"'>" + obj[i].areasname + "</option>");
 	                                }
 	                                if($this.is('i.fa-edit')){//编辑页面时，显示二级的默认选项
-	                                	$("#area_code").find("option[value='"+dataJson.area_code+"']").attr("selected",true);
+	                                	$("#district_code").find("option[value='"+dataJson.district_code+"']").attr("selected",true);
 	                                }
   	                            },
   	                            error:function(){
@@ -300,9 +302,9 @@
             				$("#city_code").val(dataJson.city_code);//显示文件所在模块下拉框值
             				$("#city_code").trigger("change");//触发一级的change，获取二级的值
             				
-            				$("#business_reg_no").attr("disabled", "disabled");
+            				$("#approval_num").attr("disabled", "disabled");
             				$("#city_code").attr("disabled","disabled");
-            				$("#area_code").attr("disabled","disabled");
+            				$("#district_code").attr("disabled","disabled");
             			}
                		}
 	        	});
@@ -314,7 +316,7 @@
 	                if(result) {
 	                	$.com.ajax({
 	    			       	url: '${basePath}/netbar2/sync',
-	    		           	/* data:{pk:dataJson.id, name:'status', value:'0'}, */
+	    		           	/* data:{pk:dataJson.id, name:'status', value:'1'}, */
 	    			       	success: function(data){
 	    			           	if(data.flag){
 	    			           		BootstrapDialog.alert("同步成功！");
@@ -338,8 +340,8 @@
 	                if(result) {
 	                	var pk = tr.find('a[data-type]:first').attr('data-pk');
 	                	$.com.ajax({
-	    			       	url: '${basePath}/netbar/del',
-	    		           	data:{pk:dataJson.id, name:'status', value:'0'},
+	    			       	url: '${basePath}/netbar2/del',
+	    		           	data:{pk:dataJson.id, name:'isdeleted', value:'1'},
 	    			       	success: function(data){
 	    			           	if(data.flag){
 	    			           		dbTable.row(tr).remove().draw(false);

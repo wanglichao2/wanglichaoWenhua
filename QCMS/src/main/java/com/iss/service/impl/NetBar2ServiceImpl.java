@@ -77,6 +77,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 				id = String.valueOf(Long.parseLong(maxId) + 1);
 			}
 			entity.setId(id);
+			return iNetBarDao.saveAndFlush(entity);
 		}else{
 			NetBar2Entity netbar = iNetBarJPADao.findOne(entity.getId());
 			/*entity.setApproval_num(netbar.getApproval_num());
@@ -89,8 +90,12 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 			entity.setServer_version(netbar.getServer_version());
 			entity.setClient_version(netbar.getClient_version());*/
 			
+			netbar.setContact_name(entity.getContact_name());
+			netbar.setContact_tel(entity.getContact_tel());
+			netbar.setComputer_num(entity.getComputer_num());
+			return iNetBarDao.saveAndFlush(netbar);
 		}
-		return iNetBarDao.saveAndFlush(entity);
+		
 	}
 	
 	
@@ -226,6 +231,8 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		dbe.setEconomic_type(e.getEconomic_type());
 		dbe.setIp(e.getIp());
 		dbe.setIsdeleted(e.getIsdeleted());
+//		dbe.setClient_version(e.getClient_version());
+//		dbe.setServer_version(e.getServer_version());
 	}
 	
 	private void initId(NetBar2Entity e){

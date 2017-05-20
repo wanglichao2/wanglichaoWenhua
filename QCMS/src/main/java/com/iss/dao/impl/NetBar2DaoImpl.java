@@ -9,6 +9,7 @@ import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Repository;
 
+import com.iss.constants.DeployEnum;
 import com.iss.constants.TableConstants;
 import com.iss.dao.INetBar2JPADao;
 import com.iss.entity.NetBar2Entity;
@@ -28,7 +29,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		String columnsStr=" id,main_id,netbar_name,netbar_state,district_code,reg_address,reg_address_detail,reg_fund,economic_type,"
 				+"approval_num,approval_dept,approval_date,legal_name,busi_area,computer_num,ip,isdeleted,update_time,"
 				+ "contact_name,contact_tel,"
-				+"city_code,isdeployed,create_time,sync_time ";
+				+"city_code,isdeployed,create_time,sync_time ,client_version ,server_version ";
 		return columnsStr;
 	}
 	
@@ -114,6 +115,10 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		entity.setIsdeployed(NumberUtil.toInteger(obj[col++]));
 		entity.setCreate_time(Objects.toString(obj[col++], ""));
 		entity.setSync_time(Objects.toString(obj[col++], ""));
+		entity.setClient_version(Objects.toString(obj[col++], ""));
+		entity.setServer_version(Objects.toString(obj[col++], ""));
+		
+		
 		return entity;
 	}
 	

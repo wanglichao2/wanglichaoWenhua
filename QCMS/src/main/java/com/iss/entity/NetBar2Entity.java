@@ -57,6 +57,10 @@ public class NetBar2Entity implements Serializable, IExcelModel {
 	private String city_code;// 市代码
 	private String create_time;
 	private String sync_time;
+	private String client_version;
+	private String server_version;
+	
+//	private String isDeployedDesc;
 	
 
 	@Transient
@@ -271,6 +275,22 @@ public class NetBar2Entity implements Serializable, IExcelModel {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public String getClient_version() {
+		return client_version;
+	}
+
+	public void setClient_version(String client_version) {
+		this.client_version = client_version;
+	}
+
+	public String getServer_version() {
+		return server_version;
+	}
+
+	public void setServer_version(String server_version) {
+		this.server_version = server_version;
 	}
 
 	

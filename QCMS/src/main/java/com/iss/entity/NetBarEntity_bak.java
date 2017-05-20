@@ -20,8 +20,8 @@ import org.jeecgframework.poi.handler.inter.IExcelModel;
 /**
  * 网吧实体
  */
-@Entity
-@Table(name="t_net_bar")
+//@Entity
+//@Table(name="t_net_bar")
 public class NetBarEntity_bak implements Serializable, IExcelModel {
 	/**
 	 * @Fields serialVersionUID : long
