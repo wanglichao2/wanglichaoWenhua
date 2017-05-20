@@ -24,7 +24,7 @@ import com.iss.entity.NetBar2Entity;
 import com.iss.service.IAreasCodeService;
 import com.iss.service.IFileInfoService;
 import com.iss.service.INetBar2Service;
-import com.iss.service.INetBarService;
+//import com.iss.service.INetBarService;
 import com.iss.util.JsonUtil;
 import com.iss.vo.AjaxJson;
 import com.iss.vo.DataParam;
