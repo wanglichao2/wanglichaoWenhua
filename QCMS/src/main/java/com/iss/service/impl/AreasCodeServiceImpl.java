@@ -11,6 +11,7 @@ import com.iss.dao.IAreasCodeDao;
 import com.iss.dao.IAreasCodeJPADao;
 import com.iss.entity.AreasEntity;
 import com.iss.service.IAreasCodeService;
+import com.iss.vo.DataParam;
 import com.iss.vo.TreeNode;
 
 @Service
@@ -23,7 +24,7 @@ public class AreasCodeServiceImpl implements IAreasCodeService {
 	
 	
 	@Override
-	public String getTreeAreas(){
+	public String getTreeAreas(DataParam param){
 		List<AreasEntity> data = iAreasCodeDao.findAll();
 		if(data == null || data.size() <= 0){
 			return null;

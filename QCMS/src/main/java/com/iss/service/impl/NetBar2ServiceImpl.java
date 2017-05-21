@@ -155,8 +155,9 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		config.setUrl(syncurl);
 		config.setMethod("downloadNetbarInfo");
 		String endtime=this.queryMaxUpdateTime();
-		if(StringUtil.isEmpty(endtime))	
-			DateUtil.getDate(DateUtil.datetimeformat_str);
+		if(StringUtil.isEmpty(endtime))
+			endtime="20160101000000";
+//			DateUtil.getDate(DateUtil.datetimeformat_str);
 		//调用接口
 		List<NetBarBean> list= WebServiceUtil.netBarSyncData(config,loginKey,endtime);
 		if(list==null || list.size()==0){

@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.iss.constants.SystemConstants;
+
 /** 
  * 用户信息实体
  */
@@ -111,7 +113,8 @@ public class UserEntity extends BaseEntity implements Serializable{
 		this.salt = salt;
 	}
 	public Boolean getIsAdmin() {
-		return isAdmin;
+//		return isAdmin;
+		return SystemConstants.ADMINISTRATOR_NAME.equals(this.getLogin());
 	}
 	public void setIsAdmin(Boolean isAdmin) {
 		this.isAdmin = isAdmin;

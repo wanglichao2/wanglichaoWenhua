@@ -45,7 +45,7 @@ public class FileInfoController extends BaseController {
 
 	@RequestMapping("/list")
 	public String list(Model model) {
-		String json = iAreasCodeService.getTreeAreas();
+		String json = iAreasCodeService.getTreeAreas(null);
 		model.addAttribute("areasTree", json);
 		List<NetBar2Entity> netbarList = iNetBarService.load();
 		model.addAttribute("netbarList", netbarList);

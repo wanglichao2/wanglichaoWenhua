@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.iss.entity.UserEntity;
 import com.iss.service.IGroupService;
+import com.iss.service.IUserAreaService;
 import com.iss.service.IUserService;
 import com.iss.vo.AjaxJson;
 
@@ -31,6 +32,8 @@ public class UserController extends BaseController {
 	private IUserService iUserService;
 	@Autowired
 	private IGroupService iGroupService; 
+	@Autowired
+	private IUserAreaService userAreaService;
 	
 	/**
 	 * 加载用户列表
@@ -84,5 +87,12 @@ public class UserController extends BaseController {
 		boolean bool = iUserService.update(pk, name, value);
 		json.setFlag(bool);
 		return json;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/loadUserAreas")
+	public String[] relationNode(Integer userId){
+		return userAreaService.queryUserAreaIds(userId);
 	}
 }

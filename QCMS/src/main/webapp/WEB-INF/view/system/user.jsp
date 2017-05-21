@@ -49,6 +49,7 @@
                     	<shiro:hasPermission name="user:add">
 	                        <a id="addRow" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;添加</a>
 	                        <a id="userbtn" href="javascript:;" class="btn btn-white btn-margin-right"><i class="fa fa-user"></i>&nbsp;用户关联部门</a>
+	                        <a id="userAreaCfg" href="javascript:;" class="btn btn-white btn-margin-right"><i class="fa fa-user"></i>&nbsp;用户区域设置</a>
                     	</shiro:hasPermission>
                     	<input id="zNodes" type="hidden" value='${groupTree}'>
                     	<c:set var="groupMap" value='${groupData[2]}'/>
@@ -123,6 +124,23 @@
 	<script id="tpl" type="text/x-handlebars-template">
 		<a href="#" id="{{this.id}}" data-type="{{this.type}}"></a>
 	</script>
+	<!--定义HTML模板-->
+	<script id="tpl_area" type="text/x-handlebars-template">
+		<div class="tabs-container">
+             <ul class="nav nav-tabs">
+                 <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">区域信息</a></li>
+             </ul>
+             <div class="tab-content">
+                 <div id="tab-1" class="tab-pane active">
+                     <div class="panel-body">
+						<div class="col-sm-3">
+                    			<ul id="areaNodeTree" class="ztree" style="padding-left: 20%;"></ul>
+                    		</div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+	</script>
     <script>
     	$(document).ready(function(){
     		var url = '${basePath}/user/edit';
@@ -135,6 +153,10 @@
    				data:{simpleData:{enable:true, idKey:'id', pidKey:'pId', rootPId:0}},
    				callback: {onClick: onClick}
    			};
+    		var setting_area={
+        			check: {enable: true},
+       				data:{simpleData:{enable:true, idKey:'id', pidKey:'pId', rootPId:0}}
+       		};
     		var treeObj = $.fn.zTree.init($('#nodeTree'), setting, parseJSON($('#zNodes').val()));
     		$('#zNodes').remove();
     		$('input[type="checkbox"].checkable').uniform();
@@ -161,7 +183,8 @@
 			//表格初始化
 			oTable = $('#editable').dataTable({
 				columnDefs:[{targets:0, orderable:false},{targets:11, orderable:false}],
-				order:[[1,'asc']],scrollX:true, fixedColumns:{leftColumns: 3}
+				order:[[1,'asc']],/* scrollX:true,  */
+				fixedColumns:{leftColumns: 3}
 			});//返回JQuery对象，api()方法添加到jQuery对象,访问API.
 			dbTable = oTable.api();//$('#editable').DataTable();//返回datatable的API实例,
 	        //预编译模板
@@ -234,6 +257,104 @@
 			}).on('click', 'i.fa-edit', function(){//编辑
 				$(this).parents('tr').find('a[data-type]').editable('toggleDisabled');
 			});
+	        
+	      //预编译模板-区域
+	        var template_area = Handlebars.compile($('#tpl_area').html());
+	        var areaTreeObj=null;
+	        var dataDialog = function(){
+	        	var $this = $(this);
+	        	var rows = oTable.fnGetNodes();
+	        	var userSet = new Array()
+	    		var userIds = $('input[type="checkbox"]:checked', rows);
+	    		$.each(userIds, function(){
+	    			userSet.push($(this).val());
+	    		});
+	    		console.log(userSet);
+	    		if(userIds.length==0){
+	    			BootstrapDialog.alert({type:'type-default', message:'请从列表中选择用户！'});
+	    			return;
+	    		}
+	        	var title = '所属区域配置', dataJson = {};
+	        	var $div = $(template_area(dataJson));
+	        	BootstrapDialog.show({type:'type-default', size:'size-wide', message:$div, title:title, closable:true,
+		       		 buttons: [{
+		                 icon:'fa fa-save', label:'确定',
+		               	 action: function(){
+		               		var nodes = areaTreeObj.getCheckedNodes();
+		    	        	if(nodes.length==0){
+		    	    			BootstrapDialog.alert({type:'type-default', message:'请从层级树中选择节点！'});
+		    	    			return;
+		    	    		}
+		    	    		BootstrapDialog.confirm({type:'type-default', message:'确认操作用户的所属区域？', callback:function(result){
+		    	                if(result){
+		    	    	        	var nodeSet = new Array();
+		    	    	    		$.each(nodes, function(i, node){
+		    	    	    			nodeSet.push(node.id);
+		    	    	    		});
+		    	    	    		console.log("user====>"+userSet);
+		    	    	    		console.log("areaCode===>"+nodeSet);
+		    	    	    		/* $.com.ajax({
+		    	    			       	url: '${basePath}/role/authority', 
+		    	    		           	data:{nodes: nodeSet, roles:roleSet},
+		    	    			       	success: function(data){
+		    	    			           	if(data.flag){
+		    	    			           		BootstrapDialog.alert({type:'type-default', message:'操作成功！'});
+		    	    			           	}else{
+		    	    			           		BootstrapDialog.alert({type:'type-danger', message:'操作失败，请刷新重试！'});
+		    	    			           	}               
+		    	    		       		}
+		    	    				}); */
+		    	                }
+		    	    		}});
+		             	 }
+		             }, {
+		            	 icon:'fa fa-close', label: '取消',
+		                 action: function(dialog){
+		                	 dialog.close();
+		                 }
+	             	}],
+            		onshown: function(dialog){
+            			$.ajax({
+	                        	url:'${basePath}/netbarList/loadAreaTree', 
+	                            data:{"search":{"value":"4197"}},
+	                            success:function(data){
+	                            	areaTreeObj = $.fn.zTree.init($('#areaNodeTree'), setting_area, data);
+	                            	userAreaLoad(userSet[0]);
+	                            },
+	                            error:function(){
+	                                BootstrapDialog.alert("没有找到对应的数据～");
+	                            }
+	                        });
+            		}
+	        	});
+	        }
+	      	//添加新行
+	        $('#userAreaCfg').click(dataDialog);
+	        
+	      	var userAreaLoad=function(userId){
+	      		$.ajax({
+                	url:'${basePath}/user/loadUserAreas', 
+                    data:{userId:userId},
+                    success:function(nodes){
+                    	areaTreeObj.checkAllNodes(false);//取消所有勾选节点
+			    		if(nodes.length==0){
+			       			BootstrapDialog.alert({type:'type-default', message:'此员工未配置任何区域！'});
+			       			return;
+			       		}
+			    		//将 zTree 使用的标准 JSON 嵌套格式的数据转换为简单 Array 格式
+			    		var allNodes = areaTreeObj.transformToArray(treeObj.getNodes());
+			    		$(allNodes).each(function(i, node){
+			    			if($.inArray(node.id, nodes)!=-1){
+			    				areaTreeObj.checkNode(node, true, false);
+			    			}
+			    		});
+                    },
+                    error:function(){
+                        BootstrapDialog.alert("没有找到对应的数据～");
+                    }
+                });
+	      	};
+	        
 	        $('#userbtn').click(function(){//用户关联部门
 	        	var rows = oTable.fnGetNodes();
 	    		var users = $('input[type="checkbox"]:checked', rows);

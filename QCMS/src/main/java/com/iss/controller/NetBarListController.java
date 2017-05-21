@@ -42,11 +42,18 @@ public class NetBarListController extends BaseController {
 	
 	@RequestMapping("/list")
 	public String list(Model model){
-		String json = iAreasCodeService.getTreeAreas();
+		String json = iAreasCodeService.getTreeAreas(null);
 		model.addAttribute("areasTree", json);
 		List<ProvinceCityBarEntity> statList = iNetBarListService.loadProvinceCityBar();
 		model.addAttribute("statList", statList);
 		return "wh/netbar_list";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value="/loadAreaTree", produces="application/json;charset=UTF-8")
+	public String loadAreaTree(DataParam param){
+		String json = iAreasCodeService.getTreeAreas(param);
+		return json;
 	}
 	
 	@ResponseBody
@@ -64,6 +71,7 @@ public class NetBarListController extends BaseController {
 		DataTables<AreasBarEntity> dt = new DataTables<AreasBarEntity>(param.getDraw(), data.size(), data.size(), data);
 		return JsonUtil.toJson(dt);
 	}
+	
 	
 	@ResponseBody
 	@RequestMapping("/getChart")
