@@ -2,7 +2,7 @@ package com.iss.constants;
 
 public enum DeployEnum {
 	Yes(1,"是"),
-	No(0,"");
+	No(0,"否");
 	
 	private Integer code;
 	private String name;
