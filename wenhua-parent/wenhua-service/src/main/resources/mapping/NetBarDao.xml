@@ -71,7 +71,7 @@
   <select id="countAreaBar" resultType="java.lang.Integer">
     select
     	ifnull(count(*),0)
-    from t_net_bar
+    from t_net_bar 
     where 
     	district_code = #{areaCode, jdbcType=VARCHAR}
     and 
