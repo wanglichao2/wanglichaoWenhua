@@ -17,6 +17,7 @@
 		<property name="areasCodeDao" ref="areasCodeDao" />
 		<property name="statAreaDao" ref="statAreaDao" />
 		<property name="statNetBarDao" ref="statNetBarDao" />
+		<property name="userAreaDao" ref="userAreaDao" />
 	</bean>
 	
 	<!-- 区域实时信息的缓存 -->

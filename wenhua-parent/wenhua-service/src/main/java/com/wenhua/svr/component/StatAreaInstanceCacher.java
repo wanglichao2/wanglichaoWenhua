@@ -316,6 +316,17 @@ public class StatAreaInstanceCacher {
 		return targetList;
 	}
 	
+	public static StatAreaInstance getCity(String citycode) {
+		if(citycode==null || "".equals(citycode))return null;
+		Collection<StatAreaInstance> areas = STAT_AREA_INSTANCE_CACHER.values();
+		for(StatAreaInstance area : areas) {
+			if(!area.isCity()) continue;
+			if(area.getCode().equals(citycode))
+				return area;
+		}
+		return null;
+	}
+	
 	/**
 	 * 返回指定城市所属区的实时信息
 	 * @param cityCode

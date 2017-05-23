@@ -53,6 +53,10 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 	private static final String URL_UPDATE_AREA = "/update_area/";
 	private static final String URL_UPDATE_BAR = "/update_bar/";
 	private static final String URL_ADD_BAR = "/add_bar/";
+	private static final String URL_PROVINCE_USER="/user/province/";
+	private static final String URL_CITY_USER = "/user/city/";
+	private static final String URL_AREA_USER = "/user/area/";
+	
 	
 	private static final String SEP = "/";
 	
@@ -63,6 +67,7 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 	private String param = null;
 	
 	private AuthService authService;
+	
 
 	@Override
 	public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -142,7 +147,25 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 					//更新 区域的网吧数与PC数
 					StatAreaInstanceCacher.updateArea(areaCode, maxbar, maxPc);
 					
-				} else {
+				} else if(uri.startsWith(URL_PROVINCE_USER)) {//用户省下所属城市
+					param = uri.substring(URL_PROVINCE_USER.length(), uri.length());
+					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_PROVINCE_USER, param));
+					if(!"".equals(param))
+						list = doProvince(Long.parseLong(param));
+					else
+						logger.error("user is null ");
+					
+				} else if(uri.startsWith(URL_CITY_USER)) { //用户城市下所属区域
+					param = uri.substring(URL_CITY_USER.length(), uri.length());
+					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_CITY_USER, param));
+					String params[]=param.split(":");
+					list = doCity(Long.parseLong(params[0]),params[1]);
+					
+				} else if(uri.startsWith(URL_AREA_USER)) {
+					param = uri.substring(URL_AREA_USER.length(), uri.length());
+					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA_USER, param));
+					list = doArea(param);
+				}else {
 					invalidRequestCloseChannel(ctx);
 					return;
 				}
@@ -294,6 +317,99 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		}
 		return list;
 	}
+	
+	private List<Object> doProvince(Long userId) {
+		if(userId==null)return null;
+		List<String> citycodes= this.authService.getCityCodesByUserId(userId);
+		if(citycodes==null || citycodes.size()==0)return null;
+		List<Object> list = new ArrayList<Object>();
+		for(String citycode:citycodes){
+			StatAreaInstance city=(StatAreaInstance)StatAreaInstanceCacher.getCity(citycode);
+			List<Object> arealist=(List<Object>) this.doCity(userId, citycode);
+			int online=0,offline=0,areaMaxPc=0,loginTotal=0;
+			if(arealist!=null && !arealist.isEmpty()){
+				for(Object obj:arealist){
+					StatAreaVo area=(StatAreaVo)obj;
+					online+=area.getOnline();
+					offline+=area.getOffline();
+					areaMaxPc+=area.getPcTotal();
+					loginTotal+=area.getLogin();
+				}
+				
+			}
+			StatAreaVo v = StatAreaVo.newOne(
+					city.getCode(), 
+					city.getName(), 
+					online, 
+					offline,
+					areaMaxPc, 
+					loginTotal);
+			list.add(v);
+		}
+		
+		
+		/*List<StatAreaInstance> cities = StatAreaInstanceCacher.getAllCity();
+		for(StatAreaInstance city : cities) {
+			boolean isExist=false;
+			for(String citycode:citycodes){
+				if(city.getCode().equals(citycode)){
+					isExist=true;
+					break;
+				}
+			}
+			if(isExist){
+				StatAreaVo v = StatAreaVo.newOne(
+						city.getCode(), 
+						city.getName(), 
+						city.getOnline().get(), 
+						city.getOffline(),
+						city.getAreaMaxPc(), 
+						city.getLoginTotal());
+				list.add(v);
+			}
+		}*/
+		return list;
+	}
+	
+	private List<Object> doCity(Long userId,String cityCode) {
+		if(userId==null || "".equals(cityCode))return null;
+		List<Object> list = new ArrayList<Object>();
+		List<String> districtCodes= this.authService.getDistrictCodeByUserId(userId,cityCode);
+		StatAreaInstanceCity city = (StatAreaInstanceCity)StatAreaInstanceCacher.get(cityCode);
+		for(StatAreaInstance area : city.getAreas()) {
+			boolean isExist=false;
+			for(String dist:districtCodes){
+				if(dist.equals(area.getCode())){
+					isExist=true;
+					break;
+				}
+			}
+			if(isExist){
+				StatAreaVo v = StatAreaVo.newOne(
+						area.getCode(), 
+						area.getName(), 
+						area.getOnline().get(), 
+						area.getAreaMaxBar() - area.getOnline().get(), 
+						area.getAreaMaxPc(), 
+						area.getLoginTotal());
+				list.add(v);
+			}
+		}
+		return list;
+	}
+	
+	/*private List<Object> doArea(String areaCode) {
+
+		List<Object> list = new ArrayList<Object>();
+		
+		List<StatBarInstance> bars = StatBarInstancerCacher.getBarInArea(areaCode);
+		for(StatBarInstance bar : bars) {
+			list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion()));
+		}
+		return list;
+	}*/
+
+	
 	
 	/**
 	 * 请求不合法 关闭Channel

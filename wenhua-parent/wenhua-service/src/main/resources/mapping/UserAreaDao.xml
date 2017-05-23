@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wenhua.svr.dao.UserAreaDao" >
+  <resultMap id="BaseResultMap" type="com.wenhua.svr.domain.UserArea" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="userId" property="userid" jdbcType="BIGINT" />
+    <result column="areaCode" property="areacode" jdbcType="VARCHAR" />
+    <result column="districtCode" property="districtcode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, areaCode, districtCode
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_area
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from t_user_area
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.wenhua.svr.domain.UserArea" >
+    insert into t_user_area (id, userId, areaCode, 
+      districtCode)
+    values (#{id,jdbcType=BIGINT}, #{userid,jdbcType=BIGINT}, #{areacode,jdbcType=VARCHAR}, 
+      #{districtcode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wenhua.svr.domain.UserArea" >
+    insert into t_user_area
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="areacode != null" >
+        areaCode,
+      </if>
+      <if test="districtcode != null" >
+        districtCode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="areacode != null" >
+        #{areacode,jdbcType=VARCHAR},
+      </if>
+      <if test="districtcode != null" >
+        #{districtcode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wenhua.svr.domain.UserArea" >
+    update t_user_area
+    <set >
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=BIGINT},
+      </if>
+      <if test="areacode != null" >
+        areaCode = #{areacode,jdbcType=VARCHAR},
+      </if>
+      <if test="districtcode != null" >
+        districtCode = #{districtcode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wenhua.svr.domain.UserArea" >
+    update t_user_area
+    set userId = #{userid,jdbcType=BIGINT},
+      areaCode = #{areacode,jdbcType=VARCHAR},
+      districtCode = #{districtcode,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+
+  
+  <select id="getCityCodesByUserId" resultType="String" parameterType="long">
+  	select distinct areaCode from t_user_area where userId=#{userId}
+  </select>
+  <select id="getDistrictCodesByUserId" resultType="String" parameterType="map">
+  	select districtCode from t_user_area where userId=#{userId}
+  	<if test="cityCode !=null and cityCode !=''">
+  		and areaCode=#{cityCode}
+  	</if>
+  </select>
+  
+</mapper>

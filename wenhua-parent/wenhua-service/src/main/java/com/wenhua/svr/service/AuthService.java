@@ -191,4 +191,7 @@ public interface AuthService {
 	 */
 	public void updateStatNetBar(StatNetBar statNetBar);
 	
+	public List<String> getCityCodesByUserId(Long userId);
+	public List<String> getDistrictCodeByUserId(Long userId,String cityCode);
+	
 }

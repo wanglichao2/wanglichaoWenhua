@@ -15,6 +15,7 @@ import com.wenhua.svr.dao.PcInfoDao;
 import com.wenhua.svr.dao.ServerInfoDao;
 import com.wenhua.svr.dao.StatAreaDao;
 import com.wenhua.svr.dao.StatNetBarDao;
+import com.wenhua.svr.dao.UserAreaDao;
 import com.wenhua.svr.domain.AreasCode;
 import com.wenhua.svr.domain.BarAuthInfo;
 import com.wenhua.svr.domain.BarConfig;
@@ -55,6 +56,7 @@ public class AuthServiceImpl implements AuthService {
 	private StatAreaDao statAreaDao;
 	
 	private StatNetBarDao statNetBarDao;
+	private UserAreaDao userAreaDao;
 	
 	private String key = "hn123wh";
 	/** 客户机上报信息频率 */
@@ -395,6 +397,13 @@ public class AuthServiceImpl implements AuthService {
 	public void setStatNetBarDao(StatNetBarDao statNetBarDao) {
 		this.statNetBarDao = statNetBarDao;
 	}
+	public UserAreaDao getUserAreaDao() {
+		return userAreaDao;
+	}
+
+	public void setUserAreaDao(UserAreaDao userAreaDao) {
+		this.userAreaDao = userAreaDao;
+	}
 
 	@Override
 	public int countNetBarPcInProvince() {
@@ -414,6 +423,21 @@ public class AuthServiceImpl implements AuthService {
 		}
 		
 		return netBarDao.selectByPrimaryKey(barId);
+	}
+
+	@Override
+	public List<String> getCityCodesByUserId(Long userId) {
+		// TODO Auto-generated method stub
+		return this.userAreaDao.getCityCodesByUserId(userId);
+	}
+
+	@Override
+	public List<String> getDistrictCodeByUserId(Long userId,String cityCode) {
+		// TODO Auto-generated method stub
+		Map<String, Object> queryMap=new HashMap<String, Object>();
+		queryMap.put("userId", userId);
+		queryMap.put("cityCode", cityCode);
+		return this.userAreaDao.getDistrictCodesByUserId(queryMap);
 	}
 
 	
