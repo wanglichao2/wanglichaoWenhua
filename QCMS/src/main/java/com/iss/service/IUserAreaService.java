@@ -8,8 +8,11 @@ public interface IUserAreaService {
 	
 	 List<UserAreaEntity> queryUserAreas();
 	
-	 String[] queryUserAreaIds(Integer userId);
+	 String[] queryUserAreaIds(Long userId);
 	 
+	 String[] queryUserAreaCodes(Long[]userIds);
+	 
+	 String saveUserAreaIds(String[]areaCodes,Long[]userIds)throws Exception;
 	 
 
 }

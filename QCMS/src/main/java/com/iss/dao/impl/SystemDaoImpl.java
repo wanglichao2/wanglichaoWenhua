@@ -16,8 +16,12 @@ import java.util.Objects;
 import org.springframework.stereotype.Repository;
 
 import com.iss.dao.ISystemDao;
+import com.iss.entity.AreasEntity;
 import com.iss.entity.NodeEntity;
 import com.iss.entity.RoleEntity;
+import com.iss.entity.UserAreaEntity;
+import com.iss.util.CommonUtil;
+import com.iss.util.NumberUtil;
 
 /**
  * 系统管理持久化数据实现
@@ -138,4 +142,68 @@ public class SystemDaoImpl extends BaseJPADaoImpl<Object, Long> implements ISyst
 		executeNative(sql, parameters);
 		return true;
 	}
+
+	@Override
+	public List<UserAreaEntity> queryAreasForUsers(Long[] userIds) {
+		// TODO Auto-generated method stub
+		if(CommonUtil.isEmpty(userIds))return null;
+		String sql = "select distinct areaCode,districtCode from t_user_area "
+			+"WHERE userId in :userIds";
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("userIds",  Arrays.asList(userIds));
+		List<Object> list = findNativeQuery(sql, parameters);
+		List<UserAreaEntity> results = new ArrayList<UserAreaEntity>();
+		for (Object object : list) {
+			if(object instanceof Object[]){
+				Object[] obj = (Object[]) object;
+				UserAreaEntity ua = new UserAreaEntity();
+				ua.setAreaCode(Objects.toString(obj[0], null));
+				ua.setDistrictCode(Objects.toString(obj[1], null));
+				results.add(ua);
+			}
+		}
+		return results;
+	}
+
+	@Override
+	public void deleteUserAreas(Long userId) {
+		// TODO Auto-generated method stub
+		if(userId==null)return;
+		String sql = "delete from t_user_area where userId = :userId ";
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("userId", userId);
+		executeNative(sql, parameters);
+	}
+
+	@Override
+	public List<AreasEntity> queryUserAreaEntity(Long userId) {
+		// TODO Auto-generated method stub
+		if(userId==null)return null;
+		/*String sql = "select ac.* from t_areas_code ac "
+					+"inner join t_user_area ua on ua.districtCode=ac.areasid "
+					+"where ua.userId= :userId";*/
+		String sql="select ac.* from t_areas_code ac "
+				+"where exists (select null from t_user_area ua1 where ua1.districtCode=ac.areasid and ua1.userId= :userId1)"
+				+"or exists (select null from t_user_area ua1 where ua1.areaCode=ac.areasid and ua1.userId= :userId2)";
+		
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("userId1",  userId);
+		parameters.put("userId2",  userId);
+		List<Object> list = findNativeQuery(sql, parameters);
+		List<AreasEntity> results = new ArrayList<AreasEntity>();
+		for (Object object : list) {
+			if(object instanceof Object[]){
+				Object[] obj = (Object[]) object;
+				AreasEntity ae = new AreasEntity();
+				int i=0;
+				ae.setAreasid(Objects.toString(obj[i++], null));
+				ae.setAreasname(Objects.toString(obj[i++], null));
+				ae.setRankno((char)obj[i++]);
+				results.add(ae);
+			}
+		}
+		return results;
+	}
+	
+	
 }

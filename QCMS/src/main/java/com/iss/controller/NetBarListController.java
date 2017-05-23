@@ -20,12 +20,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.iss.constants.SystemConstants;
 import com.iss.entity.AreasBarEntity;
 import com.iss.entity.ProvinceCityBarEntity;
 import com.iss.entity.StatAreaEntity;
 import com.iss.entity.StatNetBarEntity;
+import com.iss.entity.UserEntity;
 import com.iss.service.IAreasCodeService;
 import com.iss.service.INetBarListService;
+import com.iss.util.ConstantValue;
 import com.iss.util.JsonUtil;
 import com.iss.util.StringUtil;
 import com.iss.vo.AjaxJson;
@@ -42,11 +45,19 @@ public class NetBarListController extends BaseController {
 	
 	@RequestMapping("/list")
 	public String list(Model model){
-		String json = iAreasCodeService.getTreeAreas(null);
+		UserEntity user=(UserEntity)session.getAttribute(ConstantValue.SESSION_USER);
+		String json=null;
+		if(user!=null){
+			if(SystemConstants.ADMINISTRATOR_NAME.equals(user.getLogin())){
+				json = iAreasCodeService.getTreeAreas(null);
+			}else
+				json=this.iAreasCodeService.getUserAreasTree(user.getId());
+		}
+//		String json = iAreasCodeService.getTreeAreas(null);
 		model.addAttribute("areasTree", json);
-		List<ProvinceCityBarEntity> statList = iNetBarListService.loadProvinceCityBar();
+		List<ProvinceCityBarEntity> statList = iNetBarListService.loadProvinceCityBar(user);
 		model.addAttribute("statList", statList);
-		return "wh/netbar_list";
+		return "wh/netbar2_list";
 	}
 	
 	@ResponseBody
@@ -59,7 +70,9 @@ public class NetBarListController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="/loadProvinceCityBar", produces="application/json;charset=UTF-8")
 	public String loadProvinceCityBar(DataParam param){
-		List<ProvinceCityBarEntity> data = iNetBarListService.loadProvinceCityBar(param);
+		UserEntity user=(UserEntity)session.getAttribute(ConstantValue.SESSION_USER);
+		if(user==null)return null;
+		List<ProvinceCityBarEntity> data = iNetBarListService.loadProvinceCityBar(user,param);
 		DataTables<ProvinceCityBarEntity> dt = new DataTables<ProvinceCityBarEntity>(param.getDraw(), data.size(), data.size(), data);
 		return JsonUtil.toJson(dt);
 	}
@@ -144,10 +157,10 @@ public class NetBarListController extends BaseController {
 		String title = "网吧统计列表";
         model.addAttribute(NormalExcelConstants.FILE_NAME, title);
         model.addAttribute(NormalExcelConstants.PARAMS, new ExportParams(title, title));
-        
+        UserEntity user=(UserEntity)session.getAttribute(ConstantValue.SESSION_USER);
         if(StringUtil.isEmpty(id) || StringUtil.isEmpty(parentId) 
         		|| parentId.equals("0") || parentId.equals("410000")){
-        	List<ProvinceCityBarEntity> list = iNetBarListService.loadProvinceCityBar(param);
+        	List<ProvinceCityBarEntity> list = iNetBarListService.loadProvinceCityBar(user,param);
 			model.addAttribute(NormalExcelConstants.CLASS, ProvinceCityBarEntity.class);
 	        model.addAttribute(NormalExcelConstants.DATA_LIST, list);
 	        return NormalExcelConstants.JEECG_EXCEL_VIEW;

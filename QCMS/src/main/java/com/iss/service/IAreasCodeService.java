@@ -12,4 +12,6 @@ public interface IAreasCodeService {
 	List<AreasEntity> getTwolevelAreas(String areasid);
 
 	List<AreasEntity> getThreelevelAreas(String areasid);
+	
+	String getUserAreasTree(Long userId);
 }

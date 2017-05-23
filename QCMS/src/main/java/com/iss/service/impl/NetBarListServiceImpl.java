@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSON;
+import com.iss.constants.SystemConstants;
 import com.iss.dao.INetBar2JPADao;
 //import com.iss.dao.INetBarJPADao;
 import com.iss.entity.AreasBarEntity;
 import com.iss.entity.ProvinceCityBarEntity;
 import com.iss.entity.StatAreaEntity;
 import com.iss.entity.StatNetBarEntity;
+import com.iss.entity.UserEntity;
 import com.iss.service.INetBarListService;
 import com.iss.util.HttpClientUtil;
 import com.iss.util.PropertiesUtil;
@@ -26,9 +28,13 @@ public class NetBarListServiceImpl implements INetBarListService {
 	private INetBar2JPADao iNetBarJPADao;
 	
 	@Override
-	public List<ProvinceCityBarEntity> loadProvinceCityBar() {
+	public List<ProvinceCityBarEntity> loadProvinceCityBar(UserEntity user) {
 		List<ProvinceCityBarEntity> data = new ArrayList<ProvinceCityBarEntity>();
-		String result = HttpClientUtil.netBarListHttpPost(PropertiesUtil.getPropery("provinceUrl"));
+		String url=PropertiesUtil.getPropery(SystemConstants.USER_PROVINCE_URL)+user.getId();
+		if(SystemConstants.ADMINISTRATOR_NAME.equals(user.getLogin())){
+			url=PropertiesUtil.getPropery("provinceUrl");
+		}
+		String result = HttpClientUtil.netBarListHttpPost(url);
 		//json结果转换为List集合
 		try {
 			if(StringUtil.isNotEmpty(result)){
@@ -41,14 +47,24 @@ public class NetBarListServiceImpl implements INetBarListService {
 	}
 
 	@Override
-	public List<ProvinceCityBarEntity> loadProvinceCityBar(DataParam param) {
+	public List<ProvinceCityBarEntity> loadProvinceCityBar(UserEntity user,DataParam param) {
 		String url = PropertiesUtil.getPropery("cityUrl");
 		String value = param.getSearch().get("value");
-		if(StringUtil.isEmpty(value) || value.equals("410000")){
-			url = PropertiesUtil.getPropery("provinceUrl");
+		if(SystemConstants.ADMINISTRATOR_NAME.equals(user.getLogin())){
+			if(StringUtil.isEmpty(value) || value.equals("410000")){
+				url = PropertiesUtil.getPropery("provinceUrl");
+			}else{
+				url = url + value;
+			}
 		}else{
-			url = url + value;
+			String params=user.getId()+":"+value;
+			if(StringUtil.isEmpty(value) || value.equals("410000")){
+				url = PropertiesUtil.getPropery(SystemConstants.USER_PROVINCE_URL)+user.getId();
+			}else{
+				url = PropertiesUtil.getPropery(SystemConstants.USER_CITY_URL) + params;
+			}
 		}
+		
 		List<ProvinceCityBarEntity> data = new ArrayList<ProvinceCityBarEntity>();
 		String result = HttpClientUtil.netBarListHttpPost(url);
 		//json结果转换为List集合

@@ -9,5 +9,5 @@ import com.iss.entity.UserAreaEntity;
 @Repository
 public interface IUserAreaDao extends IBaseDao<UserAreaEntity, Long> {
 	
-	List<UserAreaEntity> findByUserId(Integer userId);
+	List<UserAreaEntity> findByUserId(Long userId);
 }

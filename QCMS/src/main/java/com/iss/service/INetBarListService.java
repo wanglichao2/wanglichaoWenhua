@@ -6,13 +6,14 @@ import com.iss.entity.AreasBarEntity;
 import com.iss.entity.ProvinceCityBarEntity;
 import com.iss.entity.StatAreaEntity;
 import com.iss.entity.StatNetBarEntity;
+import com.iss.entity.UserEntity;
 import com.iss.vo.DataParam;
 
 public interface INetBarListService {
 
-	List<ProvinceCityBarEntity> loadProvinceCityBar();
+	List<ProvinceCityBarEntity> loadProvinceCityBar(UserEntity user);
 	
-	List<ProvinceCityBarEntity> loadProvinceCityBar(DataParam param);
+	List<ProvinceCityBarEntity> loadProvinceCityBar(UserEntity user, DataParam param);
 	
 	List<AreasBarEntity> loadAreasBar(DataParam param);
 	

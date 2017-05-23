@@ -293,17 +293,17 @@
 		    	    	    		});
 		    	    	    		console.log("user====>"+userSet);
 		    	    	    		console.log("areaCode===>"+nodeSet);
-		    	    	    		/* $.com.ajax({
-		    	    			       	url: '${basePath}/role/authority', 
-		    	    		           	data:{nodes: nodeSet, roles:roleSet},
+		    	    	    		$.com.ajax({
+		    	    			       	url: '${basePath}/user/save/userAreas', 
+		    	    		           	data:{areaCodes: nodeSet, userIds:userSet},
 		    	    			       	success: function(data){
 		    	    			           	if(data.flag){
 		    	    			           		BootstrapDialog.alert({type:'type-default', message:'操作成功！'});
 		    	    			           	}else{
-		    	    			           		BootstrapDialog.alert({type:'type-danger', message:'操作失败，请刷新重试！'});
+		    	    			           		BootstrapDialog.alert({type:'type-danger', message:'操作失败:'+data.msg});
 		    	    			           	}               
 		    	    		       		}
-		    	    				}); */
+		    	    				}); 
 		    	                }
 		    	    		}});
 		             	 }
@@ -316,10 +316,10 @@
             		onshown: function(dialog){
             			$.ajax({
 	                        	url:'${basePath}/netbarList/loadAreaTree', 
-	                            data:{"search":{"value":"4197"}},
+	                            data:{"search":{"value":"41"}},
 	                            success:function(data){
 	                            	areaTreeObj = $.fn.zTree.init($('#areaNodeTree'), setting_area, data);
-	                            	userAreaLoad(userSet[0]);
+	                            	userAreaLoad(userSet);
 	                            },
 	                            error:function(){
 	                                BootstrapDialog.alert("没有找到对应的数据～");
@@ -336,16 +336,21 @@
                 	url:'${basePath}/user/loadUserAreas', 
                     data:{userId:userId},
                     success:function(nodes){
+                    	console.log(nodes);
                     	areaTreeObj.checkAllNodes(false);//取消所有勾选节点
 			    		if(nodes.length==0){
 			       			BootstrapDialog.alert({type:'type-default', message:'此员工未配置任何区域！'});
 			       			return;
 			       		}
 			    		//将 zTree 使用的标准 JSON 嵌套格式的数据转换为简单 Array 格式
-			    		var allNodes = areaTreeObj.transformToArray(treeObj.getNodes());
+			    		var allNodes = areaTreeObj.transformToArray(areaTreeObj.getNodes());
 			    		$(allNodes).each(function(i, node){
-			    			if($.inArray(node.id, nodes)!=-1){
+			    			/* console.log("==>"+node.id+"--"+node); */
+			    			if($.inArray(node.id+"", nodes)!=-1){
+			    				/* console.log(node.id+"  in nodes"); */
 			    				areaTreeObj.checkNode(node, true, false);
+			    			}else{
+			    				console.log(node.id +" not in nodes ");
 			    			}
 			    		});
                     },

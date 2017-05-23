@@ -310,7 +310,8 @@
 				var i=0;
 	    		var zxwb = 0,lxwb = 0,jqzs = 0, yhzs = 0;
 	    		$('#editable tbody tr').each(function() { 
-	    			if(i != 0){
+	    			/* console.log(i+'-----'+$(this).children().eq(1).html()+"--"+$(this).children().eq(2).html()); */
+	    			/* if(i != 0){ */
 	    				var c1 = parseInt($(this).children().eq(1).html());
 	    				if(!isNaN(c1)){
 	    					zxwb = zxwb + c1;
@@ -327,9 +328,10 @@
 	    				if(!isNaN(c4)){
 	    					yhzs = yhzs + c4;
 	    				}
-	    			}
+	    			/* } */
 	    			i++;
 	    		});
+	    		console.log(zxwb+"======="+lxwb);
 	    		var tfoot = $('#editable').find('tfoot');
 	    		tfoot[0].rows[0].cells[1].textContent = zxwb;
 	    		tfoot[0].rows[0].cells[2].textContent = lxwb;

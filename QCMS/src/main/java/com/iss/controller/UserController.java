@@ -9,17 +9,21 @@ package com.iss.controller;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.iss.entity.UserEntity;
 import com.iss.service.IGroupService;
 import com.iss.service.IUserAreaService;
 import com.iss.service.IUserService;
+import com.iss.util.JsonUtil;
 import com.iss.vo.AjaxJson;
 
 /**
@@ -34,6 +38,8 @@ public class UserController extends BaseController {
 	private IGroupService iGroupService; 
 	@Autowired
 	private IUserAreaService userAreaService;
+	
+	private Logger log=LoggerFactory.getLogger(UserController.class);
 	
 	/**
 	 * 加载用户列表
@@ -92,7 +98,33 @@ public class UserController extends BaseController {
 	
 	@ResponseBody
 	@RequestMapping("/loadUserAreas")
-	public String[] relationNode(Integer userId){
-		return userAreaService.queryUserAreaIds(userId);
+	public String[] relationNode(
+			@RequestParam("userId[]")Long[] userId
+//			Integer[] userId
+			){
+		String[] codes= userAreaService.queryUserAreaCodes(userId);
+		log.info("===========>"+JsonUtil.toJson(codes));
+		return codes;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/save/userAreas")
+	public AjaxJson relation(
+			@RequestParam("areaCodes[]")String[] areaCodes,
+			@RequestParam("userIds[]")Long[] userIds){
+		AjaxJson json = new AjaxJson();
+		try {
+			String msg = this.userAreaService.saveUserAreaIds(areaCodes, userIds);
+			json.setFlag(true);
+			json.setMsg("操作成功");
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			json.setFlag(false);
+			json.setMsg(e.getMessage());
+		}
+		return json;
 	}
 }

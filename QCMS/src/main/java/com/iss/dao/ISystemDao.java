@@ -8,8 +8,10 @@ package com.iss.dao;
 
 import java.util.List;
 
+import com.iss.entity.AreasEntity;
 import com.iss.entity.NodeEntity;
 import com.iss.entity.RoleEntity;
+import com.iss.entity.UserAreaEntity;
 
 /**
  * 系统管理持久化数据接口
@@ -77,4 +79,9 @@ public interface ISystemDao{
 	 * @return
 	 */
 	boolean updateUserGroup(Long[] users, Long groupId);
+	
+	List<UserAreaEntity> queryAreasForUsers(Long[]userIds);
+	void deleteUserAreas(Long userId);
+	
+	List<AreasEntity> queryUserAreaEntity(Long userId);
 }
