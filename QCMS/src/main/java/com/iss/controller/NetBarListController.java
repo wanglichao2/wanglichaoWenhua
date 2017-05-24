@@ -13,6 +13,8 @@ import java.util.Map;
 
 import org.jeecgframework.poi.excel.entity.ExportParams;
 import org.jeecgframework.poi.excel.entity.vo.NormalExcelConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -34,14 +36,17 @@ import com.iss.util.StringUtil;
 import com.iss.vo.AjaxJson;
 import com.iss.vo.DataParam;
 import com.iss.vo.DataTables;
+import com.iss.vo.NetBarPrintVo;
 
 @Controller
 @RequestMapping("/netbarList")
 public class NetBarListController extends BaseController {
+	private Logger log=LoggerFactory.getLogger(NetBarListController.class);
 	@Autowired
 	private INetBarListService iNetBarListService;
 	@Autowired
 	private IAreasCodeService iAreasCodeService;
+	
 	
 	@RequestMapping("/list")
 	public String list(Model model){
@@ -180,4 +185,22 @@ public class NetBarListController extends BaseController {
 	        return NormalExcelConstants.JEECG_EXCEL_VIEW;
 		}
     }
+	
+	
+	
+	
+	
+	@RequestMapping("/goDeployPrint")
+	public String goDeployPrint(
+			@RequestParam("barId")String barId,
+			Model model){
+		log.info("upload barId[{}]",barId);
+		NetBarPrintVo vo= this.iNetBarListService.queryNetbarPrintInfo(barId);
+		log.info("--->"+JsonUtil.toJson(vo));
+		model.addAttribute("netbar", vo);
+		return "print/netbar_print";
+	}
+	
+	
+	
 }

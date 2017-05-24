@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
+import com.iss.constants.SystemConstants;
 import com.iss.constants.TableConstants;
 import com.iss.dao.ICommonDao;
 import com.iss.dao.INetBar2Dao;
@@ -22,6 +23,8 @@ import com.iss.dao.INetBar2JPADao;
 import com.iss.entity.NetBar2Entity;
 import com.iss.query.NetBarQuery;
 import com.iss.service.INetBar2Service;
+import com.iss.service.INetBarListService;
+import com.iss.util.CommonUtil;
 import com.iss.util.DateUtil;
 import com.iss.util.FileUtil;
 import com.iss.util.NumberUtil;
@@ -32,6 +35,9 @@ import com.iss.vo.DataParam;
 import com.iss.vo.DataTables;
 import com.iss.vo.InterfaceConfig;
 import com.iss.vo.NetBarBean;
+import com.iss.vo.NetBarPrintVo;
+import com.iss.vo.param.DeployInfo;
+import com.iss.vo.param.RelationshipNetbar;
 
 @Service
 public class NetBar2ServiceImpl implements INetBar2Service {
@@ -42,6 +48,8 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	private ICommonDao iCommonDao;
 	@Autowired
 	private INetBar2JPADao iNetBarJPADao;
+	@Autowired
+	private INetBarListService iNetBarListService;
 	
 	@Override
 	public List<NetBar2Entity> load(){
@@ -105,7 +113,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		// TODO Auto-generated method stub
 		String curtime=DateUtil.getDate(DateUtil.datetimeformat_str);
 		if(ent.getIsdeleted()==null)ent.setIsdeleted(0);
-//		if(ent.getIsdeployed()==null)ent.setIsdeployed(0);
+		if(ent.getIsdeployed()==null)ent.setIsdeployed(0);
 		if(StringUtil.isEmpty(ent.getCreate_time()))ent.setCreate_time(curtime);
 		if(StringUtil.isEmpty(ent.getSync_time()))ent.setSync_time(curtime);
 		
@@ -141,19 +149,19 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	public String syncNetBarData(String code)throws Exception {
 		// TODO Auto-generated method stub
 		Gson gson=new Gson();
-		String loginurl=PropertiesUtil.getPropery("barSyncLoginUrl");
-		String username=PropertiesUtil.getPropery("barSyncLoginName");
-		String password=PropertiesUtil.getPropery("barSyncLoginPwd");
+		String loginurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_LOGIN_URL);
+		String username=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_LOGINNAME);
+		String password=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_PASSWORD);
 		InterfaceConfig config=new InterfaceConfig();
 		config.setUrl(loginurl);
-		config.setMethod("login");
+		config.setMethod(SystemConstants.NETBAR_WEBSERVICE_LOGIN_METHOD);
 		config.setUsername(username);
 		config.setPassword(password);
 //		String loginKey=WebServiceUtil.netBarSyncLoginAxis2(config);
 		String loginKey=WebServiceUtil.netBarSyncLogin(config);
-		String syncurl=PropertiesUtil.getPropery("barSyncDownLoadUrl");
+		String syncurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_SYNC_DOWNLOAD_URL);
 		config.setUrl(syncurl);
-		config.setMethod("downloadNetbarInfo");
+		config.setMethod(SystemConstants.NETBAR_WEBSERVICE_SYNC_DOWNLOAD_METHOD);
 		String endtime=this.queryMaxUpdateTime();
 		if(StringUtil.isEmpty(endtime))
 			endtime="20160101000000";
@@ -300,4 +308,74 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		e.setCity_code(StringUtil.isEmpty(e.getDistrict_code())?"":e.getDistrict_code().substring(0,4)+"00");
 		
 	}
+
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public String printNetBar(String barId) throws Exception {
+		// TODO Auto-generated method stub
+		try {
+			if(CommonUtil.isEmpty(barId)){
+				throw new Exception("上传网吧ID为空");
+			}
+			NetBar2Entity bar=this.iNetBarJPADao.findOne(barId);
+			if(bar==null){
+				throw new Exception("网吧ID["+barId+"]不存在");
+			}
+			bar.setIsdeployed(1);
+			String loginurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_LOGIN_URL);
+			String username=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_LOGINNAME);
+			String password=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_PASSWORD);
+			InterfaceConfig config=new InterfaceConfig();
+			config.setUrl(loginurl);
+			config.setMethod(SystemConstants.NETBAR_WEBSERVICE_LOGIN_METHOD);
+			config.setUsername(username);
+			config.setPassword(password);
+			String loginKey=WebServiceUtil.netBarSyncLogin(config);
+			List<RelationshipNetbar> list=new ArrayList<RelationshipNetbar>();
+			RelationshipNetbar b=new RelationshipNetbar();
+			b.setNetbar_code(bar.getId());
+			b.setMain_id(bar.getMain_id());
+			b.setNetbar_name(bar.getNetbar_name());
+			b.setDistrict_code(bar.getDistrict_code());
+			b.setReg_address_detail(bar.getReg_address_detail());
+			b.setLegalname(bar.getLegal_name());
+			list.add(b);
+			String uploadcurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_BARINFO_UPLOAD_URL);
+			config.setUrl(uploadcurl);
+			config.setMethod(SystemConstants.NETBAR_WEBSERVICE_BARINFO_UPLOAD_METHED);
+			String resp=WebServiceUtil.netbarInfoUpload(loginKey,config, list);
+			if(SystemConstants.WS_INTERFACE_RESPONSE_SUCC.equals(resp)){
+				NetBarPrintVo vo=iNetBarListService.queryNetbarPrintInfo(barId);
+				List<DeployInfo> dinfolist=new ArrayList<DeployInfo>();
+				DeployInfo dinfo=new DeployInfo();
+				dinfo.setNetbarCode(bar.getId());
+				dinfo.setIs_deploy("0");
+				dinfo.setDetectNum(String.valueOf(vo.getOnLineCount()+vo.getOffLineCount()));
+				dinfo.setInstallNum(dinfo.getDetectNum());
+				dinfo.setOnlineNum(String.valueOf(vo.getOnLineCount()));
+				dinfo.setReportTime(vo.getUploadTime());
+				dinfolist.add(dinfo);
+				uploadcurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_BAR_DEPLOYINFO_UPLOAD_URL);
+				config.setUrl(uploadcurl);
+				config.setMethod(SystemConstants.NETBAR_WEBSERVICE_BAR_DEPLOYINFO_UPLOAD_METHED);
+				resp=WebServiceUtil.netbarInfoUpload(loginKey,config, dinfolist);
+				if(SystemConstants.WS_INTERFACE_RESPONSE_SUCC.equals(resp)){
+					return resp;
+				}else
+					throw new Exception("上报网吧实施信息失败");
+			}else{
+				throw new Exception("上报网吧信息失败");
+			}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("",e);
+			throw e;
+		}
+	
+	}
+
+	
+	
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.iss.entity.AreasEntity;
@@ -26,6 +27,7 @@ import com.iss.vo.DataParam;
 import com.iss.vo.DataTables;
 import com.iss.vo.InterfaceConfig;
 import com.iss.vo.NetBarBean;
+import com.iss.vo.NetBarPrintVo;
 
 
 @Controller
@@ -148,5 +150,24 @@ public class NetBar2Controller extends BaseController {
 		return json;
 	}
 	
+	
+	@ResponseBody
+	@RequestMapping("/deploy/print")
+	public AjaxJson printDeploy(
+			@RequestParam("barId")String barId
+			){
+		AjaxJson json = new AjaxJson();
+		try {
+			this.iNetBarService.syncNetBarData(null);
+			json.setFlag(true);
+			json.setMsg("操作成功");
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("",e);
+			json.setFlag(false);
+			json.setMsg(e.getMessage());;
+		}
+		return json;
+	}
 
 }

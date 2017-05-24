@@ -3,6 +3,7 @@ package com.iss.util;
 import java.math.BigDecimal;
 import java.util.Objects;
 
+
 /**
  * 数字类型转换处理类
  */
@@ -46,5 +47,18 @@ public class NumberUtil {
 	public static BigDecimal toDecimal(Object obj) {
 		if(obj == null) return null;
 		return new BigDecimal(Objects.toString(obj));
+	}
+	
+	public static String parseDoubleToString(Double l, Integer scale) {
+		if (l == null)
+			return "";
+		StringBuffer format = new StringBuffer("#0");
+		if (scale != null && scale > 0) {
+			format.append(".");
+			for (int i = 0; i < scale; i++)
+				format.append("0");
+		}
+		java.text.DecimalFormat df = new java.text.DecimalFormat(format.toString());
+		return df.format(l);
 	}
 }

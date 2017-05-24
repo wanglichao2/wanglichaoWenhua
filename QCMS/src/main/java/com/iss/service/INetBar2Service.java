@@ -5,6 +5,7 @@ import java.util.List;
 import com.iss.entity.NetBar2Entity;
 import com.iss.vo.DataParam;
 import com.iss.vo.DataTables;
+import com.iss.vo.NetBarPrintVo;
 
 public interface INetBar2Service {
 	
@@ -29,6 +30,7 @@ public interface INetBar2Service {
 	boolean existBusinessRegNo(String business_reg_no);
 	
 	String syncNetBarData(String code)throws Exception;
+	String printNetBar(String barId)throws Exception;
 	/**
 	 * 保存数据
 	 * @param entity
@@ -62,4 +64,5 @@ public interface INetBar2Service {
 	List<NetBar2Entity> save(List<NetBar2Entity> list);
 	
 	String queryMaxUpdateTime();
+	
 }

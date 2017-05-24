@@ -24,8 +24,7 @@ import com.iss.vo.InterfaceConfig;
 import com.iss.vo.NetBarBean;
 
 public class WebServiceUtil {
-	private static JaxWsDynamicClientFactory clientFactory = JaxWsDynamicClientFactory
-			.newInstance();
+	private static JaxWsDynamicClientFactory clientFactory = JaxWsDynamicClientFactory.newInstance();
 
 	public static Client createWsClient(InterfaceConfig config) {
 		ClientImpl client = (ClientImpl) clientFactory.createClient(config
@@ -127,8 +126,7 @@ public class WebServiceUtil {
 		return null;
 	}*/
 
-	public static String netBarSyncLogin(InterfaceConfig config)
-			throws Exception {
+	public static String netBarSyncLogin(InterfaceConfig config)throws Exception {
 		long start = System.currentTimeMillis();
 		System.out.println("start====>" + start);
 		Object[] result = null;
@@ -151,6 +149,40 @@ public class WebServiceUtil {
 		System.out.println(result[0]);
 		return result == null ? null : (String) result[0];
 	}
+	
+	//场所信息上传
+	public static String netbarInfoUpload(String key,InterfaceConfig config,List<?> list)throws Exception{
+		Client client = createWsClient(config);
+		Object[] result = null;
+		try {
+			Object[] params = new Object[] { key, list };
+			result = client.invoke(config.getMethod(), params);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw e;
+		}
+		String resp=(String)result[0];
+		return resp;
+	}
+	
+	//1.场所实施信息上传
+	public static String netbarInfoDeploy(String key,InterfaceConfig config,List<?> list)throws Exception{
+			Client client = createWsClient(config);
+			Object[] result = null;
+			try {
+				Object[] params = new Object[] { key, list };
+				result = client.invoke(config.getMethod(), params);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				throw e;
+			}
+			String resp=(String)result[0];
+			return resp;
+		}
+	
+	
 
 	public static List<NetBarBean> netBarSyncData(InterfaceConfig config,
 			String key, String endtime) throws Exception {

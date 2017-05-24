@@ -70,7 +70,7 @@
                                 	<th>IP地址</th>
 									<th>区划地址</th>
 									<th>详细地址</th>
-									<th>是否已施工完成</th>
+									<th>施工确认</th>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -187,6 +187,11 @@
     		var columnDefs = new Array();
     		var isVisible = $('#addRow').length>0 || $('#delAll').length>0;//权限按钮
     		columnDefs.push({targets:0, className:'text-center', orderable:false, render:optRenderAuth, visible:isVisible});//操作列
+    		columnDefs.push({targets:13, className:'text-center', orderable:false, render:function(value, type, row, meta){
+    			console.log(value+"=="+row.netbar_name+"=="+row+"=="+meta);
+    			if(value==null || value==1)return "";
+    			if(value==0)return "<a onclick='goDeploy("+row.id+")' style='color: blue;''>确认</a>";
+    		}});//操作列
     		//表格初始化
 			oTable = $('#editable').dataTable({//dom:dtDom
 				scrollY: $('body').height()-260,
@@ -359,6 +364,10 @@
 	    	});
 	        $('.spiner-example').hide();//移除遮罩层
 		});
+	 var goDeploy=function(barId){
+     	console.log("start deploy ===>"+barId);
+     	window.open("${basePath}/netbarList/goDeployPrint?barId="+barId,"打印", "height=600, width=1000,top=30,left=50, toolbar =no, menubar=no,scrollbars=no, resizable=no, location=no, status=no");
+     };
 	</script>
 </body>
 </html>
