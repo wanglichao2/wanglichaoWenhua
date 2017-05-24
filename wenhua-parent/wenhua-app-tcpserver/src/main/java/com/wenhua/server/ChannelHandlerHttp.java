@@ -56,6 +56,9 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 	private static final String URL_PROVINCE_USER="/user/province/";
 	private static final String URL_CITY_USER = "/user/city/";
 	private static final String URL_AREA_USER = "/user/area/";
+	private static final String URL_AREA_BAR = "/bar/area/";
+
+	
 	
 	
 	private static final String SEP = "/";
@@ -165,6 +168,13 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 					param = uri.substring(URL_AREA_USER.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA_USER, param));
 					list = doArea(param);
+				} else if(uri.startsWith(URL_AREA_BAR)) {
+					param = uri.substring(URL_AREA_BAR.length(), uri.length());
+					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA_BAR, param));
+					String params[]=param.split(":");
+					Object obj = getBarFromArea(params[0],params[1]);
+					list=new ArrayList<Object>();
+					list.add(obj);
 				}else {
 					invalidRequestCloseChannel(ctx);
 					return;
@@ -280,6 +290,21 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 			list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion()));
 		}
 		return list;
+	}
+	
+	private Object getBarFromArea(String areaCode,String barId) {
+		if(areaCode==null || "".equals(areaCode) 
+				|| barId==null || "".equals(barId)
+				)return null;
+		List<StatBarInstance> bars = StatBarInstancerCacher.getBarInArea(areaCode);
+		for(StatBarInstance bar : bars) {
+			if(barId.equals(bar.getBarId())){
+				StatBarVo vo=StatBarVo.newOne(bar.getBarId(), bar.getBarName(), 
+						bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion());
+				return vo;
+			}
+		}
+		return null;
 	}
 
 	private List<Object> doCity(String cityCode) {
