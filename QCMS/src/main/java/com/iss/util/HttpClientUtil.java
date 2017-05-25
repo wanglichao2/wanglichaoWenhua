@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alibaba.fastjson.JSON;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.iss.entity.ProvinceCityBarEntity;
@@ -69,8 +70,12 @@ public class HttpClientUtil {
 	    		return stat;
 	    	}
 	    	//json返回结果
-	        JsonObject values =  jsonObject.get("values").getAsJsonObject();
-	        stat = values.get("stat").toString();
+			JsonElement je= jsonObject.get("values");
+			if(je!=null){
+				 JsonObject values =  je.getAsJsonObject();
+			     stat = values.get("stat").toString();
+			}
+	       
 		} catch (HttpException e) {
 			logger.error(e.getMessage());
 			e.printStackTrace();
