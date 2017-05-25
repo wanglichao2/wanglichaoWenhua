@@ -44,7 +44,10 @@ public class RoleController extends BaseController {
 		String json = null;
 		List<RoleEntity> roleSet = null;
 		List<UserEntity> userSet = null;
-		if(userEntity.getIsAdmin()){
+		roleSet = iRoleService.load();
+		json = iNodeService.getTreeNode();
+		userSet = iUserService.loadUser();
+		/*if(userEntity.getIsAdmin()){
 			roleSet = iRoleService.load();
 			json = iNodeService.getTreeNode();
 			userSet = iUserService.loadUser();
@@ -53,7 +56,7 @@ public class RoleController extends BaseController {
 			roleSet = iRoleService.load(groupId);
 			json = iNodeService.getTreeNodeForUser(userEntity.getRoles());
 			userSet = iUserService.getUserForGroup(groupId);
-		}
+		}*/
 		model.addAttribute("roleSet", roleSet);
 		model.addAttribute("nodeSet", json);
 		model.addAttribute("userSet", userSet);
