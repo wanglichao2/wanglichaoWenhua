@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
+
 //import org.apache.axiom.om.OMElement;
 //import org.apache.axis2.AxisFault;
 //import org.apache.axis2.addressing.EndpointReference;
@@ -160,7 +161,7 @@ public class WebServiceUtil {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw e;
+			throw new Exception("调用上报网吧信息接口失败:"+e.getMessage());
 		}
 		String resp=(String)result[0];
 		return resp;
@@ -176,7 +177,8 @@ public class WebServiceUtil {
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-				throw e;
+				throw new Exception("调用上报网吧实施信息接口失败:"+e.getMessage());
+				
 			}
 			String resp=(String)result[0];
 			return resp;
@@ -198,6 +200,7 @@ public class WebServiceUtil {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new Exception("调用网吧数据下载接口失败:"+e.getMessage());
 		}
 		List<NetBarBean> list = (List<NetBarBean>) result[0];
 		return list;

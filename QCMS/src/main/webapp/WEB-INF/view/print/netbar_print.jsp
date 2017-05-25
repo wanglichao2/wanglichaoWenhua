@@ -139,16 +139,22 @@
 	</table>
 	
 </body>
+<script src="${basePath}/js/jquery.min.js?v=2.1.4"></script>
+<script src="${basePath}/js/bootstrap.min.js?v=3.3.6"></script>
+<script src="${basePath}/js/json3.min.js"></script>
+<script src="${basePath}/js/bootstrap-dialog/bootstrap-dialog.min.js"></script>
 <script type="text/javascript">
 	function printDeploy(){
+		console.log(111);
 		$.ajax({
-          	url:'${basePath}/netbar2/getAreas', 
+          	url:'${basePath}/netbar2/deploy/print', 
               data:'barId=${netbar.barId}' ,
               success:function(data){
+            	  console.log(data);
             	  if(data.flag){
             		  window.print() ;
 		           	}else{
-		           		BootstrapDialog.alert({type:'type-danger', message:'打印失败：'+data.msg});
+		           		BootstrapDialog.alert({type:'type-default', message:'打印失败：'+data.msg,title:"错误信息"});
 		           	}
               },
               error:function(){

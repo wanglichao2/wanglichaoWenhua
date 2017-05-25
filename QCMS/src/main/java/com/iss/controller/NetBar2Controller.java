@@ -158,7 +158,7 @@ public class NetBar2Controller extends BaseController {
 			){
 		AjaxJson json = new AjaxJson();
 		try {
-			this.iNetBarService.syncNetBarData(null);
+			this.iNetBarService.printNetBar(barId);
 			json.setFlag(true);
 			json.setMsg("操作成功");
 		} catch (Exception e) {

@@ -21,7 +21,7 @@ SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS `t_user_area`;
 CREATE TABLE `t_user_area` (
   `id` bigint(11) NOT NULL AUTO_INCREMENT,
-  `userId` int(11) DEFAULT NULL,
+  `userId` bigint(11) DEFAULT NULL,
   `areaCode` varchar(50) DEFAULT NULL,
   `districtCode` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)

@@ -21,7 +21,7 @@ public class SystemConstants {
 	public static String NETBAR_WEBSERVICE_LOGIN_URL="barSyncLoginUrl";
 	public static String NETBAR_WEBSERVICE_LOGIN_METHOD="login";
 	public static String NETBAR_WEBSERVICE_SYNC_DOWNLOAD_URL="barSyncDownLoadUrl";
-	public static String NETBAR_WEBSERVICE_SYNC_DOWNLOAD_METHOD="downlofadNetbarInfo";
+	public static String NETBAR_WEBSERVICE_SYNC_DOWNLOAD_METHOD="downloadNetbarInfo";
 	
 	public static String NETBAR_WEBSERVICE_BARINFO_UPLOAD_URL="barInfoUploadUrl";
 	public static String NETBAR_WEBSERVICE_BARINFO_UPLOAD_METHED="uploadNetbarInfo";
