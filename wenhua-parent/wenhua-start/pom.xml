@@ -1,0 +1,55 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>wenhua</groupId>
+		<artifactId>wenhua-parent</artifactId>
+		<version>${howard.version}</version>
+	</parent>
+	<groupId>wenhua-start</groupId>
+	<artifactId>wenhua-start</artifactId>
+	
+	<dependencies>
+		<dependency>
+			<groupId>wenhua-app-tcpserver</groupId>
+			<artifactId>wenhua-app-tcpserver</artifactId>
+			<version>${howard.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>${howard.version.netty}</version><!--$NO-MVN-MAN-VER$ -->
+		</dependency>
+		<!-- <dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${howard.version.jackson}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${howard.version.jackson}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${howard.version.jackson}</version>
+		</dependency> -->
+		
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>wenhua-start</finalName>
+	</build>
+	<packaging>war</packaging>
+</project>

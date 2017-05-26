@@ -94,7 +94,7 @@ public class TcpServer {
 		httpThread.start();
 		
 		tcpServer.start(tcpPort);
-		
+		System.out.println("&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&");
 	}
 
 	public void setInitializer(ChannelInitializer<SocketChannel> initializer) {
