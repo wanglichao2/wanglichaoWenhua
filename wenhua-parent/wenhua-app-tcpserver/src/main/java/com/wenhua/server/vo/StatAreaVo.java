@@ -1,6 +1,6 @@
 package com.wenhua.server.vo;
 
-public class StatAreaVo {
+public class StatAreaVo implements Comparable<StatAreaVo>{
 
 	private String areaCode;
 	private String areaName;
@@ -68,6 +68,12 @@ public class StatAreaVo {
 
 	public void setLogin(int login) {
 		this.login = login;
+	}
+
+	@Override
+	public int compareTo(StatAreaVo o) {
+		// TODO Auto-generated method stub
+		return Integer.valueOf(this.getAreaCode())-Integer.valueOf(o.getAreaCode());
 	}
 
 }

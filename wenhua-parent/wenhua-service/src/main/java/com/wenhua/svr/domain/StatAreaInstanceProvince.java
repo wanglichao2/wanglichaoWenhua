@@ -36,5 +36,5 @@ public class StatAreaInstanceProvince extends StatAreaInstance {
 	public void setAreas(Map<StatAreaInstanceCity, Object> areas) {
 		this.areas = areas;
 	}
-
+	 
 }

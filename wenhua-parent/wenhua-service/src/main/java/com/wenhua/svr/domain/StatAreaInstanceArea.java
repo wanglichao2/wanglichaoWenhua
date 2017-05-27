@@ -26,6 +26,8 @@ public class StatAreaInstanceArea extends StatAreaInstance {
 		return StatBarInstancerCacher.getLoginTotalByAreaCode(this.getCode());
 		
 	}
+
+	
 	
 //	/**
 //	 * 更新网吧对应的用户登录数
@@ -38,4 +40,6 @@ public class StatAreaInstanceArea extends StatAreaInstance {
 //		if(null == loginBefore) return loginNow;
 //		return loginNow - loginBefore;
 //	}
+	
+	
 }

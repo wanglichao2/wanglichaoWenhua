@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -105,17 +106,17 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 				} else if(uri.startsWith(URL_PROVINCE)) {
 					param = uri.substring(URL_PROVINCE.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_PROVINCE, param));
-					list = doProvince();
+					list = (List<Object>)doProvince();
 					
 				} else if(uri.startsWith(URL_CITY)) {
 					param = uri.substring(URL_CITY.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_CITY, param));
-					list = doCity(param);
+					list = (List<Object>)doCity(param);
 					
 				} else if(uri.startsWith(URL_AREA)) {
 					param = uri.substring(URL_AREA.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA, param));
-					list = doArea(param);
+					list =(List<Object>) doArea(param);
 				} else if(uri.startsWith(URL_UPDATE_BAR)) {
 					param = uri.substring(URL_UPDATE_BAR.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_UPDATE_BAR, param));
@@ -154,7 +155,7 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 					param = uri.substring(URL_PROVINCE_USER.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_PROVINCE_USER, param));
 					if(!"".equals(param))
-						list = doProvince(Long.parseLong(param));
+						list = (List<Object>)doProvince(Long.parseLong(param));
 					else
 						logger.error("user is null ");
 					
@@ -162,12 +163,12 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 					param = uri.substring(URL_CITY_USER.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_CITY_USER, param));
 					String params[]=param.split(":");
-					list = doCity(Long.parseLong(params[0]),params[1]);
+					list = (List<Object>)doCity(Long.parseLong(params[0]),params[1]);
 					
 				} else if(uri.startsWith(URL_AREA_USER)) {
 					param = uri.substring(URL_AREA_USER.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA_USER, param));
-					list = doArea(param);
+					list = (List<Object>)doArea(param);
 				} else if(uri.startsWith(URL_AREA_BAR)) {
 					param = uri.substring(URL_AREA_BAR.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA_BAR, param));
@@ -281,7 +282,7 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		StatAreaInstanceCacher.updateArea(areaCode, maxBar, maxPc);
 	}
 
-	private List<Object> doArea(String areaCode) {
+	private List<?> doArea(String areaCode) {
 
 		List<Object> list = new ArrayList<Object>();
 		
@@ -307,8 +308,8 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		return null;
 	}
 
-	private List<Object> doCity(String cityCode) {
-		List<Object> list = new ArrayList<Object>();
+	private List<?> doCity(String cityCode) {
+		List<StatAreaVo> list = new ArrayList<StatAreaVo>();
 		
 		StatAreaInstanceCity city = (StatAreaInstanceCity)StatAreaInstanceCacher.get(cityCode);
 		for(StatAreaInstance area : city.getAreas()) {
@@ -322,11 +323,12 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 			
 			list.add(v);
 		}
+		Collections.sort(list);
 		return list;
 	}
 
-	private List<Object> doProvince() {
-		List<Object> list = new ArrayList<Object>();
+	private List<?> doProvince() {
+		List<StatAreaVo> list = new ArrayList<StatAreaVo>();
 		
 		List<StatAreaInstance> cities = StatAreaInstanceCacher.getAllCity();
 		for(StatAreaInstance city : cities) {
@@ -340,14 +342,15 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 			
 			list.add(v);
 		}
+		Collections.sort(list);
 		return list;
 	}
 	
-	private List<Object> doProvince(Long userId) {
+	private List<?> doProvince(Long userId) {
 		if(userId==null)return null;
 		List<String> citycodes= this.authService.getCityCodesByUserId(userId);
 		if(citycodes==null || citycodes.size()==0)return null;
-		List<Object> list = new ArrayList<Object>();
+		List<StatAreaVo> list = new ArrayList<StatAreaVo>();
 		for(String citycode:citycodes){
 			StatAreaInstance city=(StatAreaInstance)StatAreaInstanceCacher.getCity(citycode);
 			List<Object> arealist=(List<Object>) this.doCity(userId, citycode);
@@ -371,7 +374,7 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 					loginTotal);
 			list.add(v);
 		}
-		
+		Collections.sort(list);
 		
 		/*List<StatAreaInstance> cities = StatAreaInstanceCacher.getAllCity();
 		for(StatAreaInstance city : cities) {
@@ -396,9 +399,9 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		return list;
 	}
 	
-	private List<Object> doCity(Long userId,String cityCode) {
+	private List<?> doCity(Long userId,String cityCode) {
 		if(userId==null || "".equals(cityCode))return null;
-		List<Object> list = new ArrayList<Object>();
+		List<StatAreaVo> list = new ArrayList<StatAreaVo>();
 		List<String> districtCodes= this.authService.getDistrictCodeByUserId(userId,cityCode);
 		StatAreaInstanceCity city = (StatAreaInstanceCity)StatAreaInstanceCacher.get(cityCode);
 		for(StatAreaInstance area : city.getAreas()) {
@@ -420,6 +423,7 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 				list.add(v);
 			}
 		}
+		Collections.sort(list);
 		return list;
 	}
 	

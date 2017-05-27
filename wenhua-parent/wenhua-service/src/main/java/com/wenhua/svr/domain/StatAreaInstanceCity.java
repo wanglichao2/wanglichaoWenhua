@@ -40,5 +40,5 @@ public class StatAreaInstanceCity extends StatAreaInstance {
 		
 		return list;
 	}
-
+	 
 }
