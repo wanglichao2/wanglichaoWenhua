@@ -21,6 +21,7 @@ import com.iss.entity.RoleEntity;
 import com.iss.entity.RoleNodeEntity;
 import com.iss.entity.RoleUserEntity;
 import com.iss.service.IRoleService;
+import com.iss.util.CommonUtil;
 
 /**
  * 系统角色管理服务层
@@ -63,7 +64,20 @@ public class RoleServiceImpl implements IRoleService{
 	@Override
 	@Transactional
 	public boolean authority(Long[] nodes, Long[] roles){
-		return iSystemDao.updateRoleNode(nodes, roles);
+//		return iSystemDao.updateRoleNode(nodes, roles);
+		if(CommonUtil.isEmpty(roles)){
+			return true;
+		}
+		this.iSystemDao.deleteRoleNode(nodes, roles);
+		this.iSystemDao.updateRoleNode(nodes, roles);
+		return true;
+		/*for(Long role:roles){
+			if(CommonUtil.isEmpty(nodes)){
+				
+			}
+			this.iSystemDao.queryNodesInRole(role);
+		}*/
+		
 	}
 	
 	@Override
@@ -75,7 +89,11 @@ public class RoleServiceImpl implements IRoleService{
 	@Override
 	@Transactional
 	public boolean relation(Long[] roles, Long[] users){
+		this.iSystemDao.deleteRoleUser(roles, users);
 		return iSystemDao.updateRoleUser(roles, users);
+		
+		
+		
 	}
 	
 	@Override

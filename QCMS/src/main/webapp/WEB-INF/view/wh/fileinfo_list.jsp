@@ -162,7 +162,7 @@
 											<div id="netbarDiv">
 												<input type="hidden" id="netbarIds" name="netbarIds" value="{{this.netbarIds}}">
 												<c:forEach var="_netbar" items="${netbarList}">
-        											<input type="checkbox" name="netbarId" value="${_netbar.id}"/>${_netbar.net_bar_name}&nbsp;&nbsp;
+        											<input type="checkbox" name="netbarId" value="${_netbar.id}"/>${_netbar.netbar_name}&nbsp;&nbsp;
 			                					</c:forEach>
 			                				</div>
                     					</div>
@@ -306,7 +306,7 @@
             						$('#netbarDiv').empty();   //清空resText里面的所有内容
                                     var html = ''; 
                                     $.each(data.data, function(name, value) {
-                                    	html += '<input type="checkbox" name="netbarIds" value="'+value.id+'"/>'+value.net_bar_name+'&nbsp;&nbsp;';
+                                    	html += '<input type="checkbox" name="netbarIds" value="'+value.id+'"/>'+value.netbar_name+'&nbsp;&nbsp;';
                                    	});
                                     $('#netbarDiv').html(html);
             					}

@@ -133,6 +133,37 @@ public class SystemDaoImpl extends BaseJPADaoImpl<Object, Long> implements ISyst
 		return nodes;
 	}
 	
+	
+	@Override
+	public List<NodeEntity> queryNodesInRole(Long role) {
+		// TODO Auto-generated method stub
+		StringBuffer sql = new StringBuffer();
+		sql.append("SELECT DISTINCT n.id, n.name, n.level, n.parentId, n.alias, n.sort, n.url, n.icon ")
+			.append("FROM t_role_node rn LEFT JOIN t_sys_node n ON n.id=rn.nodeId ")
+			.append("WHERE n.status=1 AND rn.roleId = :role ")
+			.append(" order by n.sort");
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		parameters.put("role", role);
+		List<Object> list = findNativeQuery(sql.toString(), parameters);
+		List<NodeEntity> nodes = new ArrayList<NodeEntity>();
+		for (Object object : list) {
+			if(object instanceof Object[]){
+				Object[] obj = (Object[]) object;
+				NodeEntity node = new NodeEntity();
+				node.setId(Long.valueOf(Objects.toString(obj[0], "0")));
+				node.setName(Objects.toString(obj[1], ""));
+				node.setLevel(Integer.valueOf(Objects.toString(obj[2], "0")));
+				node.setParentId(Long.valueOf(Objects.toString(obj[3], "0")));
+				node.setAlias(Objects.toString(obj[4], ""));
+				node.setSort(Integer.valueOf(Objects.toString(obj[5], "0")));
+				node.setUrl(Objects.toString(obj[6], ""));
+				node.setIcon(Objects.toString(obj[7], ""));
+				nodes.add(node);
+			}
+		}
+		return nodes;
+	}
+
 	@Override
 	public boolean updateUserGroup(Long[] users, Long groupId){
 		Map<String, Object> parameters = new HashMap<String, Object>();

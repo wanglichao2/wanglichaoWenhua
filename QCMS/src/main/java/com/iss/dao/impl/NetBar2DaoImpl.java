@@ -50,7 +50,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		if(search!=null){//搜索条件
 			String value = search.get("value");
 			if(StringUtils.isNotBlank(value)){
-				where.append("AND CONCAT_WS(id,netbar_name,approval_num,city_code,district_code,legal_name,contact_name,contact_tel) like :param");
+				where.append(" AND CONCAT_WS(id,netbar_name,approval_num,city_code,district_code,legal_name,contact_name,contact_tel) like :param");
 				parameters.put("param", ("%"+value+"%"));
 			}
 		}
@@ -63,10 +63,13 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		}else{
 			Map<String, String> order = param.getOrder().get(0);
 			int index = Integer.valueOf(order.get("column"));
-			if(index < 2)
+			/*if(index < 2)
 				sql.append("create_time desc");
 			else
-				sql.append(index+1).append(" "+order.get("dir"));
+				sql.append(index+1).append(" "+order.get("dir"));*/
+			String orderStr=this.getOrder(index);
+			sql.append(orderStr).append(" "+order.get("dir"));
+			
 		}
 		if(param.getLength()!=-1){//排除全部
 			sql.append(" LIMIT :start, :length");
@@ -84,6 +87,54 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 			}
 		}
 		return new DataTables<NetBar2Entity>(param.getDraw(), total, total, data);
+	}
+	
+	private String getOrder(Integer index){
+		String order="create_time";
+		switch (index) {
+		case 0:
+			order= "id";
+			break;
+		case 1:
+			order= "id";
+			break;
+		case 2:
+			order= "netbar_name";
+			break;
+		case 3:
+			order= "approval_num";
+			break;
+		case 4:
+			order= "CONVERT(reg_fund,SIGNED)";
+			break;
+		case 5:
+			order= "CONVERT(busi_area,SIGNED) ";
+			break;
+		case 6:
+			order= "contact_name";
+			break;
+		case 7:
+			order= "contact_tel";
+			break;
+		case 8:
+			order= "computer_num";
+			break;
+		case 9:
+			order= "legal_name";
+			break;
+		case 10:
+			order= "ip";
+			break;
+		case 11:
+			order= "reg_address";
+			break;
+		case 12:
+			order= "reg_address_detail";
+			break;
+		default:
+			break;
+		}
+		return order;
 	}
 	
 	private NetBar2Entity obj2Entity(Object[] obj){

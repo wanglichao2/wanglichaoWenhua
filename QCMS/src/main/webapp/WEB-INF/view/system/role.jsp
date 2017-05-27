@@ -56,7 +56,7 @@
                     		<div class="col-sm-9">
                     			<a id="addRow" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;添加角色</a>
                     			<a id="authbtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-tree"></i>&nbsp;角色赋权</a>
-                    			<a id="revokebtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-recycle"></i>&nbsp;权限回收</a>
+                    			<!-- <a id="revokebtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-recycle"></i>&nbsp;权限回收</a> -->
 		                        <table class="table table-striped table-bordered table-hover " id="editable">
 		                            <thead>
 		                                <tr>
@@ -87,7 +87,7 @@
 		                        </table>
 	                    		<div>
 	                    			<a id="userbtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-user"></i>&nbsp;用户赋权</a>
-	                    			<a id="recoverybtn" href="javascript:void(0);" class="btn btn-white"><i class="fa fa-remove"></i>&nbsp;权限回收</a>
+	                    			<!-- <a id="recoverybtn" href="javascript:void(0);" class="btn btn-white"><i class="fa fa-remove"></i>&nbsp;权限回收</a> -->
 	                    			<table class="table table-striped table-bordered table-hover " id="userTable">
 			                            <thead>
 			                                <tr>

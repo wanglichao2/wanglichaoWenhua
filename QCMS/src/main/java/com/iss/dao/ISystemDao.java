@@ -70,6 +70,7 @@ public interface ISystemDao{
 	 * @return
 	 */
 	List<NodeEntity> queryNodesForRoles(List<Long> roles, boolean isMenu, boolean isWechat);
+	List<NodeEntity> queryNodesInRole(Long role);
 	
 	/**
 	 * 用户部门关联

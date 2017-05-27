@@ -153,12 +153,13 @@
         		
         		//省级表格初始化
         		$('#editable').dataTable({
+        			 "bSort": false,
         			columns: columns,
-        			columnDefs:[{
+        			/* columnDefs:[{
         				targets:0, 
-        				orderable:false
-        			}],
-    				order: [[0, 'asc']],//定义列表的初始排序设定
+        				orderable:true
+        			}], */
+    				/* order: [[0, 'asc']], */  //定义列表的初始排序设定
     				paging:false,
     				processing: true, //控制是否在数据加载时出现”Processing”的提示
     				serverSide: true,//pipeline pages 管道式分页加载数据，减少ajax请求
@@ -218,8 +219,9 @@
     		//initDtSearch();//表格搜索框回车查询
     		//表格初始化
 			oTable = $('#editable').dataTable({
-				order:[[0, 'asc']],//scrollX:true,
-				columnDefs:[{targets:0, orderable:false}],
+				 "bSort": false,
+				/* order:[[0, 'asc']], */  //scrollX:true,
+				/* columnDefs:[{targets:0, orderable:true}], */
 				paging:false
 			});//返回JQuery对象，api()方法添加到jQuery对象,访问API.
 			dbTable = oTable.api();//返回datatable的API实例,
