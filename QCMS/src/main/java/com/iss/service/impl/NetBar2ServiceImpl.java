@@ -58,6 +58,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		param.setDraw(1);
 		param.setStart(0);
 		return iNetBarJPADao.query(param).getData();
+//		return this.iNetBarDao.findAll();
 	}
 	
 	@Override
@@ -306,7 +307,10 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		e.setIp(b.getIp());
 		e.setIsdeleted(NumberUtil.toInteger(b.getIsdeleted()));
 		e.setCity_code(StringUtil.isEmpty(e.getDistrict_code())?"":e.getDistrict_code().substring(0,4)+"00");
-		
+		int head=Integer.valueOf(e.getDistrict_code().substring(0,4));
+		if(head>=4189){
+			e.setCity_code("418000");
+		}
 	}
 
 	
