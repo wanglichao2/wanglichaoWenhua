@@ -84,7 +84,7 @@ public class NetBar2Controller extends BaseController {
 		}
 		
 		//保存网吧信息
-		entity.setIsdeleted(1);
+		entity.setIsdeleted(0);
 		entity.setIsdeployed(0);
 //		entity.setCreator(userEntity.getId());
 		entity.setCreate_time(DateUtil.getDate(DateUtil.datetimeformat_str));

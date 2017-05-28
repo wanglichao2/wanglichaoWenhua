@@ -64,6 +64,12 @@ public class UserController extends BaseController {
 	@RequestMapping("/add")
 	public AjaxJson add(UserEntity entity){
 		AjaxJson json = new AjaxJson();//密码MD5加密
+		UserEntity ue=this.iUserService.findByLogin(entity.getLogin());
+		if(ue!=null){
+			json.setFlag(false);
+			json.setMsg("登录名【"+entity.getLogin()+"】已存在");
+			return json;
+		}
 		String password = DigestUtils.md5DigestAsHex(entity.getPassword().getBytes());
 		entity.setPassword(password);
 		UserEntity user = iUserService.add(entity);
@@ -90,8 +96,32 @@ public class UserController extends BaseController {
 		if(StringUtils.equals("password", name)){//密码MD5加密
 			value = DigestUtils.md5DigestAsHex(value.getBytes());
 		}
+		if("login".equalsIgnoreCase(name)){
+			UserEntity ue= this.iUserService.findByLogin(value);
+			if(ue!=null && ue.getId().longValue()!=pk.longValue()){
+				json.setFlag(false);
+				json.setMsg("登录名【"+value+"】已存在");
+				return json;
+			}
+		}
 		boolean bool = iUserService.update(pk, name, value);
 		json.setFlag(bool);
+		return json;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/del")
+	public AjaxJson delete(Long pk) throws Exception {
+		AjaxJson json = new AjaxJson();
+		json.setFlag(false);
+		try {
+			boolean bool = iUserService.delete(pk);
+			json.setFlag(bool);
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			json.setMsg(e.getMessage());
+		} 
 		return json;
 	}
 	

@@ -42,7 +42,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 //		sql.append("select id,net_bar_name,business_reg_no,city_code,area_code,server_version,client_version,address_name,contact_name,contact_tel,client_total,outside_network,inside_network,server_mac,creator,create_time ")
 //		.append("FROM t_net_bar WHERE status=1 ");
 		sql.append("select "+getQueryColumns());
-		sql.append("from "+TableConstants.NETBAR2_TABLE);
+		sql.append(" from "+TableConstants.NETBAR2_TABLE);
 		sql.append(" where isdeleted=0");
 		
 		StringBuffer where = new StringBuffer();
@@ -237,7 +237,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select id from "+TableConstants.NETBAR2_TABLE);
-		sql.append("where district_code = :search ");
+		sql.append(" where district_code = :search ");
 		sql.append("order by id desc");
 		parameters.put("search", district_code);
 		List<Object> list = findNativeQuery(sql.toString(), parameters);
@@ -255,7 +255,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select max(id) from "+TableConstants.NETBAR2_TABLE);
-		sql.append("where id like :search ");
+		sql.append(" where id like :search ");
 //		sql.append("order by id desc");
 		parameters.put("search", idhead+"%");
 		List<Object> list = findNativeQuery(sql.toString(), parameters);

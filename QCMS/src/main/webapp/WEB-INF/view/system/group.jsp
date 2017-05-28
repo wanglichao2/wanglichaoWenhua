@@ -66,7 +66,9 @@
 												<td><a href="#" id="alias" data-type="text" data-pk="${group.id}">${group.alias}</a></td>
 												<td><a href="#" id="sort" data-type="number" data-pk="${group.id}">${group.sort}</a></td>
 												<td><a href="#" id="status" data-type="select" data-pk="${group.id}">${group.status?'启用':'禁用'}</a></td>
-												<td class="text-center"><i class="fa fa-edit fa-cursor"></i></td>
+												<td class="text-center"><i class="fa fa-edit fa-cursor">
+												&nbsp;&nbsp;&nbsp;<i class="fa fa-remove fa-cursor"></i>
+												</i></td>
 											</tr>
 		                            	</c:forEach>
 		                            </tbody>
@@ -178,7 +180,7 @@
 				        	tr.find('a[id="status"]').editable({pk:id, disabled:true, source:state, url:url});
 				        	checkVal(tr);//验证数据
 			               	$this.removeClass('fa-save').addClass('fa-edit');
-			               	tr.find('i.fa-remove').remove();
+			               /* 	tr.find('i.fa-remove').remove(); */
 			               	element.off('save');//解绑自动显示下一列编辑框事件
 			               	dbTable.columns.adjust();//重新计算列宽
 			           	}else{
@@ -188,7 +190,31 @@
 				});
 			}).on('click', 'i.fa-edit', function(){//编辑
 				$(this).parents('tr').find('a[data-type]').editable('toggleDisabled');
+			}).on('click', 'i.fa-remove:not("i.i-remove")', function(){
+				var $this = $(this);
+				var tr = $this.parents('tr');
+				var pk = tr.find('a[data-type]:first').attr('data-pk');
+				editableDelRow(pk,tr);
 			});
+	        
+	        var editableDelRow=function(pk,tr){//删除
+				BootstrapDialog.confirm({type:'type-default', message:'确认是否删除?', callback:function(result){
+		            if(result) {
+		            	$.com.ajax({
+					       	url: '${basePath}/group/del', 
+				           	data:{pk:pk},
+					       	success: function(data){
+					           	if(data.flag){
+					           		BootstrapDialog.alert({type:'type-default', message:'删除成功！'});
+					           		dbTable.row(tr).remove().draw(false);
+					           	}else{
+					           		BootstrapDialog.alert({type:'type-danger', message:'删除失败，请刷新重试！'});
+					           	}               
+				       		}
+						});
+		            }
+		        }});
+			};
 	        $('.spiner-example').remove();//移除遮罩层
 		});
 	</script>

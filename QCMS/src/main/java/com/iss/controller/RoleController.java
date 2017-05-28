@@ -101,6 +101,14 @@ public class RoleController extends BaseController {
 		json.setFlag(bool);
 		return json;
 	}
+	@ResponseBody
+	@RequestMapping("/del")
+	public AjaxJson delete(Long pk){
+		AjaxJson json = new AjaxJson();
+		boolean bool = iRoleService.delete(pk);
+		json.setFlag(bool);
+		return json;
+	}
 	
 	/**
 	 * 添加角色节点关联

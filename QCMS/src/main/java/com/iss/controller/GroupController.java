@@ -76,6 +76,15 @@ public class GroupController extends BaseController {
 		return json;
 	}
 	
+	@ResponseBody
+	@RequestMapping("/del")
+	public AjaxJson delete(Long pk){
+		AjaxJson json = new AjaxJson();
+		boolean bool = iGroupService.delete(pk);
+		json.setFlag(bool);
+		return json;
+	}
+	
 	/**
 	 * 用户关联分组信息
 	 * @author yjdai 

@@ -79,10 +79,11 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	@Transactional
 	public NetBar2Entity save(NetBar2Entity entity){
 		if(StringUtil.isEmpty(entity.getId())){
-			String addressCode = entity.getDistrict_code();
-			String maxId = iNetBarJPADao.queryMaxId(addressCode);
-			String id = addressCode + "0001";
-			if(maxId != null){
+			String addressCode = entity.getDistrict_code()+"9";
+//			String maxId = iNetBarJPADao.queryMaxId(addressCode);
+			String maxId=iNetBarJPADao.queryMaxIdById(addressCode);
+			String id = addressCode + "001";
+			if(CommonUtil.isNotEmpty(maxId)){
 				id = String.valueOf(Long.parseLong(maxId) + 1);
 			}
 			entity.setId(id);

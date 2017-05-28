@@ -38,6 +38,7 @@ public interface IGroupService {
 	 * @return
 	 */
 	boolean update(Long id, String field, String fieldValue);
+	boolean delete(Long id);
 	
 	/**
 	 * 获取状态正常的部门

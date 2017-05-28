@@ -118,7 +118,17 @@ var afterAddRow = function(tr){
 	});
 	//删除添加的行
 	tr.find('i.fa-remove').on('click', function(){
-		oTable.fnDeleteRow($(this).parents('tr'));
+		var tr=$(this).parents('tr');
+		var pk = tr.find('a[data-type]:first').attr('data-pk');
+		if(pk){
+			console.log("+++++++++++++++++"+pk);
+			editableDelRow(pk,tr);
+		}else{
+			console.log("no pkid===");
+			oTable.fnDeleteRow(tr);
+		}
+		
+//		oTable.fnDeleteRow($(this).parents('tr'));
 	});
 }
 //公共删除和编辑状态切换事件

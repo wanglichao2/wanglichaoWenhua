@@ -96,7 +96,7 @@ public class FileInfoServiceImpl implements IFileInfoService {
 			IFileBarJPADao.delByFileId(fileInfo.getId());
 			//保存文件和网吧的关联关系
 			List<FileBarEntity> fileBars = new ArrayList<FileBarEntity>();
-			if(fileInfo.getIsApply() == '0'){
+			if(fileInfo.getIsApply() == '0'){//是
 				String netbarIds = entity.getNetbarIds();
 				String[] netbarId = netbarIds.split(",");
 				if(netbarId.length > 0){
@@ -110,7 +110,7 @@ public class FileInfoServiceImpl implements IFileInfoService {
 					}
 				}
 			}else{
-				List<NetBar2Entity> netbars = iNetBarDao.findAll();
+				/*List<NetBar2Entity> netbars = iNetBarDao.findAll();
 				for(NetBar2Entity netbar : netbars){
 //					if(netbar.getStatus() == 1){
 					if(netbar.getIsdeleted()==0){
@@ -119,7 +119,7 @@ public class FileInfoServiceImpl implements IFileInfoService {
 						fileBar.setBarid(netbar.getId());
 						fileBars.add(fileBar);
 					}
-				}
+				}*/
 			}
 			iFileBarDao.save(fileBars);
 		}

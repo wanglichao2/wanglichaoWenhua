@@ -44,7 +44,7 @@
                     <div class="ibox-title">
                        	<a href="${basePath}/netbar2/regList" class="btn btn-white btn-margin-right"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
                        	<shiro:hasPermission name="netbar:add">
-                        	<a id="addRow" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;添加1</a>
+                        	<a id="addRow" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;添加</a>
                         </shiro:hasPermission>
                         <shiro:hasPermission name="netbar:sync">
                         	<a id="syncData" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;同步数据</a>

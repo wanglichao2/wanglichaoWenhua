@@ -59,6 +59,14 @@ public class NodeServiceImpl implements INodeService{
 	}
 	
 	@Override
+	public boolean delete(Long id) {
+		// TODO Auto-generated method stub
+		if(id==null)return true;
+		this.iNodeDao.delete(id);
+		return true;
+	}
+
+	@Override
 	public List<NodeEntity> loadMenu(UserEntity user, boolean isWechat){
 		List<Long> roles = new ArrayList<Long>();//迭代获取角色编号集合
 		List<RoleEntity> roleSet = user.getRoles();

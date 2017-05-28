@@ -41,6 +41,8 @@ public interface INodeService {
 	 */
 	boolean update(Long id, String field, String fieldValue);
 	
+	boolean delete(Long id);
+	
 	/**
 	 * 加载首页菜单（根据角色获取菜单）
 	 * @author yjdai

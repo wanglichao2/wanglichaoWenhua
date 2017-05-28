@@ -54,6 +54,8 @@ public interface IUserService {
 	 */
 	boolean update(Long id, String field, String fieldValue);
 	
+	boolean delete(Long id)throws Exception;
+	
 	/**
 	 * 获取当前用户所属部门下的用户
 	 * @author yjdai 

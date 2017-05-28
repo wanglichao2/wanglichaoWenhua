@@ -73,7 +73,7 @@ public class FileInfoDaoImpl extends BaseJPADaoImpl<Object, Long> implements IFi
 				entity.setLastModifier(NumberUtil.toLong(obj[10]));
 				entity.setLastModifyTime(DateUtil.toDate(obj[11]));
 				if(entity.getIsApply() == '0'){
-					String sqlStr = "select n.id,n.net_bar_name from "+TableConstants.NETBAR2_TABLE+" n left JOIN t_file_bar b on b.barid = n.id where b.fileId="+entity.getId();
+					String sqlStr = "select n.id,n.netbar_name from "+TableConstants.NETBAR2_TABLE+" n left JOIN t_file_bar b on b.barid = n.id where b.fileId="+entity.getId();
 					List<Object> netbarList = findNativeQuery(sqlStr);
 					StringBuffer netbarIds = new StringBuffer();
 					StringBuffer netbarNames = new StringBuffer();

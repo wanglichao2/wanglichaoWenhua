@@ -61,6 +61,19 @@ public class RoleServiceImpl implements IRoleService{
 		return iCommonDao.updateField(id, field, fieldValue, "t_sys_role");
 	}
 	
+	
+	
+	@Override
+	@Transactional
+	public boolean delete(Long id) {
+		// TODO Auto-generated method stub
+		if(id==null)return true;
+		this.iCommonDao.delRoleNodes(id);
+		this.iCommonDao.delRoleUsers(id);
+		this.iRoleDao.delete(id);
+		return true;
+	}
+
 	@Override
 	@Transactional
 	public boolean authority(Long[] nodes, Long[] roles){

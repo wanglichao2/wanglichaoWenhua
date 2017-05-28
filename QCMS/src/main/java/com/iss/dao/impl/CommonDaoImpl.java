@@ -14,6 +14,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.iss.dao.ICommonDao;
+import com.iss.util.CommonUtil;
 
 /**
  * 公共持久化数据实现
@@ -53,4 +54,58 @@ public class CommonDaoImpl extends BaseJPADaoImpl<Object, Long> implements IComm
 		parameters.put("ids", Arrays.asList(ids));
 		return executeNative(sql, parameters);
 	}
+
+	
+	@Override
+	public boolean delUserRoles(Long userId, Long[] roleIds) {
+		// TODO Auto-generated method stub
+		if(userId==null)return true;
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		StringBuffer sql =new StringBuffer("delete from t_role_user where userId= :userId");
+		parameters.put("userId", userId);
+		if(CommonUtil.isNotEmpty(roleIds)){
+			sql.append(" and roleId in :roleIds");
+			parameters.put("roleIds", Arrays.asList(roleIds));
+		}
+		
+		return executeNative(sql.toString(), parameters);
+	}
+
+	@Override
+	public boolean delUserAreas(Long userId, String[] areaIds) {
+		// TODO Auto-generated method stub
+		if(userId==null)return true;
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		StringBuffer sql =new StringBuffer("delete from t_user_area where userId= :userId ");
+		parameters.put("userId", userId);
+		if(CommonUtil.isNotEmpty(areaIds)){
+			sql.append(" and areaCode in :areaCodes");
+			parameters.put("areaCodes", Arrays.asList(areaIds));
+		}
+		return executeNative(sql.toString(), parameters);
+	}
+
+	@Override
+	public boolean delRoleUsers(Long roleId) {
+		// TODO Auto-generated method stub
+		if(roleId==null)return true;
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		StringBuffer sql =new StringBuffer("delete from t_role_user where roleId= :roleId ");
+		parameters.put("roleId", roleId);
+		return executeNative(sql.toString(), parameters);
+	}
+
+	@Override
+	public boolean delRoleNodes(Long roleId) {
+		// TODO Auto-generated method stub
+		if(roleId==null)return true;
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		StringBuffer sql =new StringBuffer("delete from t_role_node where roleId= :roleId ");
+		parameters.put("roleId", roleId);
+		return executeNative(sql.toString(), parameters);
+	}
+	
+	
+	
+	
 }

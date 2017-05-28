@@ -60,6 +60,17 @@ public class GroupServiceImpl implements IGroupService{
 		return iCommonDao.updateField(id, field, fieldValue, "t_sys_group");
 	}
 	
+	
+	
+	@Override
+	@Transactional
+	public boolean delete(Long id) {
+		// TODO Auto-generated method stub
+		if(id==null)return true;
+		this.iGroupDao.delete(id);
+		return true;
+	}
+
 	@Override
 	public String getTreeGroup(){
 		List<GroupEntity> list = iGroupDao.findByStatusTrueOrderBySort();

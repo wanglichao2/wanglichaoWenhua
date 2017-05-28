@@ -27,7 +27,7 @@ public class FileInfoEntity extends IdEntity implements Serializable, IExcelMode
 	private char flag;// 文件所在模块（1-服务端，2-客户端）
 	private char type;// 文件类型（0-忽略，1-dll，2-exe）
 	private char action;// 启用方式（0-忽略，1-加载dll，2-运行exe）
-	private char isApply;// 是否应用到所有网吧0-是，1-否
+	private char isApply;// 是否应用到所有网吧1-是，0-否
 	private Integer status;//状态(1:有效；0:无效)
 	private byte[] data;// 文件二进制数组
 	private Long creator;// 创建人

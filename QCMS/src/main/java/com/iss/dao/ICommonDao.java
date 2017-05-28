@@ -52,4 +52,10 @@ public interface ICommonDao{
 	 * @return
 	 */
 	boolean delBatch(String tableName, Long[] ids);
+	
+	boolean delUserRoles(Long userId,Long[] roleIds);
+	boolean delUserAreas(Long userId,String[] areaIds);
+	
+	boolean delRoleUsers(Long roleId);
+	boolean delRoleNodes(Long roleId);
 }
