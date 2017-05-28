@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://deployInfo.interfaceImp.netbar.ccm.gov/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="UploadDeployInfoServiceService" targetNamespace="http://deployInfo.interfaceImp.netbar.ccm.gov/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://deployInfo.interfaceImp.netbar.ccm.gov/" elementFormDefault="unqualified" targetNamespace="http://deployInfo.interfaceImp.netbar.ccm.gov/" version="1.0">
+
+  <xs:element name="setDeployInfo" type="tns:setDeployInfo"/>
+
+  <xs:element name="setDeployInfoResponse" type="tns:setDeployInfoResponse"/>
+
+  <xs:complexType name="setDeployInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="key" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="deployInfo" type="tns:netbarDeployInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="netbarDeployInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="detectNum" type="xs:string"/>
+      <xs:element minOccurs="0" name="installNum" type="xs:string"/>
+      <xs:element minOccurs="0" name="is_deploy" type="xs:string"/>
+      <xs:element minOccurs="0" name="netbarCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="onlineNum" type="xs:string"/>
+      <xs:element minOccurs="0" name="reportTime" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="setDeployInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="setDeployInfoResponse">
+    <wsdl:part element="tns:setDeployInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="setDeployInfo">
+    <wsdl:part element="tns:setDeployInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="UploadDeployInfoService">
+    <wsdl:operation name="setDeployInfo">
+      <wsdl:input message="tns:setDeployInfo" name="setDeployInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:setDeployInfoResponse" name="setDeployInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="UploadDeployInfoServiceServiceSoapBinding" type="tns:UploadDeployInfoService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="setDeployInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="setDeployInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="setDeployInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="UploadDeployInfoServiceService">
+    <wsdl:port binding="tns:UploadDeployInfoServiceServiceSoapBinding" name="UploadDeployInfoServicePort">
+      <soap:address location="http://192.168.70.39:8080/netbar/services/deployInfo"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

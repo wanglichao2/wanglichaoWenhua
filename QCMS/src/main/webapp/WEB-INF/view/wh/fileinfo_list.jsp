@@ -242,6 +242,7 @@
 		       		 buttons: [{
 		                 icon:'fa fa-save', label:'确定',
 		               	 action: function(){
+		               		 console.log("click sure...");
 		               		var netbarIds = "";
 		               		$("input[name='netbarId']:checked").each(function(){
 		               			netbarIds = netbarIds + "," + this.value;

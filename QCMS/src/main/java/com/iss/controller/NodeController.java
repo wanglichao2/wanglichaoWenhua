@@ -77,4 +77,13 @@ public class NodeController extends BaseController {
 		json.setFlag(bool);
 		return json;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/del")
+	public AjaxJson delete(Long pk){
+		AjaxJson json = new AjaxJson();
+		boolean bool = iNodeService.delete(pk);
+		json.setFlag(bool);
+		return json;
+	}
 }

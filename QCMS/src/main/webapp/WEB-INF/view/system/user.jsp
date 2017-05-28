@@ -44,7 +44,7 @@
             <div class="col-sm-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                    	<a href="${basePath}/user/list" class="btn btn-white btn-margin-right"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
+                    	<a id="refreshBtn" href="${basePath}/user/list" class="btn btn-white btn-margin-right"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
                         <a id="frozenBtn" href="javascript:;" class="btn btn-white btn-margin-right"><i class="fa fa-table"></i>&nbsp;<span>已</span>冻结</a>
                     	<shiro:hasPermission name="user:add">
 	                        <a id="addRow" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;添加</a>
@@ -94,7 +94,9 @@
 												<td><a href="#" id="duty" data-type="text" data-pk="${user.id}">${user.duty}</a></td>
 												<td><a href="#" id="isAdmin" data-type="select" data-pk="${user.id}">${user.isAdmin?'是':'否'}</a></td>
 												<td><a href="#" id="status" data-type="select" data-pk="${user.id}">${user.status?'启用':'禁用'}</a></td>
-												<td class="text-center"><i class="fa fa-edit fa-cursor"></i></td>
+												<td class="text-center"><i class="fa fa-edit fa-cursor"></i>
+												&nbsp;&nbsp;&nbsp;<i class="fa fa-remove fa-cursor"></i>
+												</td>
 											</tr>
 		                            	</c:forEach>
 		                            </tbody>
@@ -176,7 +178,10 @@
             	});
     		}
     		//编辑插件初始化
-    		$('a[data-type="text"]').editable({disabled:true, url:url}).on('save', adjustColumn);
+    		$('a[data-type="text"]').editable({disabled:true, url:url}).on('save', function(data){
+    			console.log("sdfadsfasdf"+data.msg);
+    			adjustColumn();
+    		});
         	$('a[id="isAdmin"]').editable({disabled:true, source:whether, url:url});
         	$('a[id="status"]').editable({disabled:true, source:state, url:url});
         	checkVal($('#editable tbody'));
@@ -235,9 +240,24 @@
 		           	data:data,
 			       	success: function(data) {
 			           	if(data.flag) {
+			           		BootstrapDialog.show({  
+			                    title: '提示',  
+			                    message: '添加成功！',  
+			                    buttons: [{  
+			                        label: '确定',  
+			                        action: function(dialog) {  
+			                        	$('#refreshBtn>i').trigger('click');  
+			                        }  
+			                    }]  
+			                });  
+			           		
 			           		element.removeClass('editable-unsaved');
 			           		element.editable('destroy');//销毁重新初始化
 			           		var id = data.obj.id;
+			           		/* var checkStr='<input type="checkbox" class="checkable" value="${user.id}" />'+
+			           		'<span class="display-none" groupId="${user.groupId}">${groupMap[user.groupId]}</span>';
+			           		tr.find('td:first').html(checkStr); */
+			           		tr.find('td:nth-child(2)').html(id);
 			           		element.attr('data-pk', id);
 			           		tr.find('a[data-type="text"]').editable({
 			           			pk:id, disabled:true, url:url
@@ -246,18 +266,43 @@
 				        	tr.find('a[id="status"]').editable({pk:id, disabled:true, source:state, url:url});
 				        	checkVal(tr);//验证数据
 			               	$this.removeClass('fa-save').addClass('fa-edit');
-			               	tr.find('i.fa-remove').remove();
+			              /*  	tr.find('i.fa-remove').remove(); */
 			               	element.off('save');//解绑自动显示下一列编辑框事件
+			               	dbTable.row(tr).draw(true);
 			               	dbTable.columns.adjust();//重新计算列宽
+			              // 	$('#refreshBtn').click();
+			               	
 			           	}else{
-			           		BootstrapDialog.alert({type:'type-danger', message:'保存失败，请刷新重试！'});
+			           		BootstrapDialog.alert({type:'type-danger', message:'保存失败:'+data.msg});
 			           	}               
 		       		}
 				});
 			}).on('click', 'i.fa-edit', function(){//编辑
 				$(this).parents('tr').find('a[data-type]').editable('toggleDisabled');
+			}).on('click', 'i.fa-remove:not("i.i-remove")', function(){
+				var $this = $(this);
+				var tr = $this.parents('tr');
+				var pk = tr.find('a[data-type]:first').attr('data-pk');
+				editableDelRow(pk,tr);
 			});
-	        
+	        var editableDelRow=function(pk,tr){//删除
+				BootstrapDialog.confirm({type:'type-default', message:'确认是否删除?', callback:function(result){
+		            if(result) {
+		            	$.com.ajax({
+					       	url: '${basePath}/user/del', 
+				           	data:{pk:pk},
+					       	success: function(data){
+					           	if(data.flag){
+					           		BootstrapDialog.alert({type:'type-default', message:'删除成功！'});
+					           		dbTable.row(tr).remove().draw(false);
+					           	}else{
+					           		BootstrapDialog.alert({type:'type-danger', message:'删除失败，【'+data.msg+'】'});
+					           	}               
+				       		}
+						});
+		            }
+		        }});
+			};
 	      //预编译模板-区域
 	        var template_area = Handlebars.compile($('#tpl_area').html());
 	        var areaTreeObj=null;

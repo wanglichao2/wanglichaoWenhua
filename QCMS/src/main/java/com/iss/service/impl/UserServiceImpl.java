@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.google.gson.Gson;
+import com.iss.constants.SystemConstants;
 import com.iss.dao.ICommonDao;
 import com.iss.dao.IUserDao;
 import com.iss.entity.UserEntity;
@@ -62,6 +63,24 @@ public class UserServiceImpl implements IUserService{
 		return iCommonDao.updateField(id, field, fieldValue, "t_sys_user");
 	}
 	
+	
+	
+	@Override
+	@Transactional(rollbackFor=Exception.class)
+	public boolean delete(Long id)throws Exception {
+		// TODO Auto-generated method stub
+		if(id==null)return true;
+		UserEntity user=this.iUserDao.findOne(id);
+		if(user==null)throw new Exception("上传用户ID【"+id+"】不存在");
+		if(SystemConstants.ADMINISTRATOR_NAME.equals(user.getLogin())){
+			throw new Exception("当前用户为超级管理员不能删除");
+		}
+		this.iCommonDao.delUserRoles(id, null);
+		this.iCommonDao.delUserAreas(id, null);
+		this.iUserDao.delete(id);
+		return true;
+	}
+
 	@Override
 	public List<UserEntity> getUserForGroup(Long groupId){
 		return iUserDao.findByStatusTrueAndGroupId(groupId);

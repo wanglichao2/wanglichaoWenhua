@@ -1,0 +1,236 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://placeInfo.interfaceImp.netbar.ccm.gov/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="NetbarInfoService" targetNamespace="http://placeInfo.interfaceImp.netbar.ccm.gov/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://placeInfo.interfaceImp.netbar.ccm.gov/" elementFormDefault="unqualified" targetNamespace="http://placeInfo.interfaceImp.netbar.ccm.gov/" version="1.0">
+
+  <xs:element name="downloadLawInfo" type="tns:downloadLawInfo"/>
+
+  <xs:element name="downloadLawInfoResponse" type="tns:downloadLawInfoResponse"/>
+
+  <xs:element name="downloadNetbarInfo" type="tns:downloadNetbarInfo"/>
+
+  <xs:element name="downloadNetbarInfoResponse" type="tns:downloadNetbarInfoResponse"/>
+
+  <xs:element name="uploadCloseInfo" type="tns:uploadCloseInfo"/>
+
+  <xs:element name="uploadCloseInfoResponse" type="tns:uploadCloseInfoResponse"/>
+
+  <xs:element name="uploadNetbarInfo" type="tns:uploadNetbarInfo"/>
+
+  <xs:element name="uploadNetbarInfoResponse" type="tns:uploadNetbarInfoResponse"/>
+
+  <xs:complexType name="uploadNetbarInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="key" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="relationship" type="tns:relationshipNetbar"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="relationshipNetbar">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="district_code" type="xs:string"/>
+      <xs:element minOccurs="0" name="legalname" type="xs:string"/>
+      <xs:element minOccurs="0" name="main_id" type="xs:string"/>
+      <xs:element minOccurs="0" name="netbar_code" type="xs:string"/>
+      <xs:element minOccurs="0" name="netbar_name" type="xs:string"/>
+      <xs:element minOccurs="0" name="reg_address_detail" type="xs:string"/>
+      <xs:element minOccurs="0" name="report_time" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="uploadNetbarInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="downloadLawInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="key" type="xs:string"/>
+      <xs:element minOccurs="0" name="download_date" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="downloadLawInfoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:punishiInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="punishiInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="id" type="xs:string"/>
+      <xs:element minOccurs="0" name="main_id" type="xs:string"/>
+      <xs:element minOccurs="0" name="punish_reason" type="xs:string"/>
+      <xs:element minOccurs="0" name="punish_result" type="xs:string"/>
+      <xs:element minOccurs="0" name="punish_time" type="xs:string"/>
+      <xs:element minOccurs="0" name="punish_way" type="xs:string"/>
+      <xs:element minOccurs="0" name="stop_begindate" type="xs:string"/>
+      <xs:element minOccurs="0" name="stop_enddate" type="xs:string"/>
+      <xs:element minOccurs="0" name="update_time" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="downloadNetbarInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="key" type="xs:string"/>
+      <xs:element minOccurs="0" name="download_date" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="downloadNetbarInfoResponse">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="return" type="tns:netbarBaseInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="netbarBaseInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="approval_date" type="xs:string"/>
+      <xs:element minOccurs="0" name="approval_dept" type="xs:string"/>
+      <xs:element minOccurs="0" name="approval_num" type="xs:string"/>
+      <xs:element minOccurs="0" name="busi_area" type="xs:string"/>
+      <xs:element minOccurs="0" name="computer_num" type="xs:string"/>
+      <xs:element minOccurs="0" name="district_code" type="xs:string"/>
+      <xs:element minOccurs="0" name="economic_type" type="xs:string"/>
+      <xs:element minOccurs="0" name="ip" type="xs:string"/>
+      <xs:element minOccurs="0" name="isdeleted" type="xs:string"/>
+      <xs:element minOccurs="0" name="legalname" type="xs:string"/>
+      <xs:element minOccurs="0" name="main_id" type="xs:string"/>
+      <xs:element minOccurs="0" name="netbar_name" type="xs:string"/>
+      <xs:element minOccurs="0" name="netbar_state" type="xs:string"/>
+      <xs:element minOccurs="0" name="reg_address" type="xs:string"/>
+      <xs:element minOccurs="0" name="reg_address_detail" type="xs:string"/>
+      <xs:element minOccurs="0" name="reg_fund" type="xs:string"/>
+      <xs:element minOccurs="0" name="update_time" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="uploadCloseInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="key" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="closesinfos" type="tns:closeNetbarInfo"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="closeNetbarInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="close_reason" type="xs:string"/>
+      <xs:element minOccurs="0" name="close_status" type="xs:string"/>
+      <xs:element minOccurs="0" name="end_time" type="xs:string"/>
+      <xs:element minOccurs="0" name="main_id" type="xs:string"/>
+      <xs:element minOccurs="0" name="netbar_code" type="xs:string"/>
+      <xs:element minOccurs="0" name="start_time" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="uploadCloseInfoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="uploadNetbarInfoResponse">
+    <wsdl:part element="tns:uploadNetbarInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="uploadCloseInfoResponse">
+    <wsdl:part element="tns:uploadCloseInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="downloadNetbarInfo">
+    <wsdl:part element="tns:downloadNetbarInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="downloadLawInfo">
+    <wsdl:part element="tns:downloadLawInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="uploadNetbarInfo">
+    <wsdl:part element="tns:uploadNetbarInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="downloadNetbarInfoResponse">
+    <wsdl:part element="tns:downloadNetbarInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="uploadCloseInfo">
+    <wsdl:part element="tns:uploadCloseInfo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="downloadLawInfoResponse">
+    <wsdl:part element="tns:downloadLawInfoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="NetbarInfo">
+    <wsdl:operation name="uploadNetbarInfo">
+      <wsdl:input message="tns:uploadNetbarInfo" name="uploadNetbarInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:uploadNetbarInfoResponse" name="uploadNetbarInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="downloadLawInfo">
+      <wsdl:input message="tns:downloadLawInfo" name="downloadLawInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:downloadLawInfoResponse" name="downloadLawInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="downloadNetbarInfo">
+      <wsdl:input message="tns:downloadNetbarInfo" name="downloadNetbarInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:downloadNetbarInfoResponse" name="downloadNetbarInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="uploadCloseInfo">
+      <wsdl:input message="tns:uploadCloseInfo" name="uploadCloseInfo">
+    </wsdl:input>
+      <wsdl:output message="tns:uploadCloseInfoResponse" name="uploadCloseInfoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NetbarInfoServiceSoapBinding" type="tns:NetbarInfo">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="downloadLawInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="downloadLawInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="downloadLawInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="uploadNetbarInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="uploadNetbarInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="uploadNetbarInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="downloadNetbarInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="downloadNetbarInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="downloadNetbarInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="uploadCloseInfo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="uploadCloseInfo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="uploadCloseInfoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NetbarInfoService">
+    <wsdl:port binding="tns:NetbarInfoServiceSoapBinding" name="NetbarInfoPort">
+      <soap:address location="http://192.168.70.39:8080/netbar/services/NetbarInfo"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

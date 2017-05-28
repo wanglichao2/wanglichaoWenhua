@@ -45,6 +45,7 @@ public interface IRoleService {
 	 * @return
 	 */
 	boolean update(Long id, String field, String fieldValue);
+	boolean delete(Long id);
 	
 	/**
 	 * 角色节点赋权
