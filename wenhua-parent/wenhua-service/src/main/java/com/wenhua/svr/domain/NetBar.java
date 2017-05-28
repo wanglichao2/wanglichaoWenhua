@@ -33,11 +33,11 @@ public class NetBar extends BaseNetBar {
 	 * @return
 	 */
 	public boolean isValid() {
-		Integer status = getIsdeleted();
-		if(null == status) {
+		Integer isdelete = getIsdeleted();
+		if(null == isdelete) {
 			return false;
 		}
-		if(0 == status) {
+		if(1 == isdelete) {
 			return false;
 		}
 		return true;

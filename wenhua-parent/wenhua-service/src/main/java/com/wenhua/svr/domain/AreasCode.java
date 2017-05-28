@@ -2,6 +2,7 @@ package com.wenhua.svr.domain;
 
 import com.wenhua.svr.domain.base.BaseAreasCode;
 import com.wenhua.util.BarIdUtils;
+import com.wenhua.util.constants.SystemConstant;
 
 public class AreasCode extends BaseAreasCode {
 
@@ -53,7 +54,7 @@ public class AreasCode extends BaseAreasCode {
 	 * @return
 	 */
 	public boolean isMine(String code) {
-
+		System.out.println(this.getAreasid()+"--"+code+"---------------------------------------");
 		if(null == code) return false;
 		if(!isValidCode(code)) return false;
 		
@@ -62,7 +63,12 @@ public class AreasCode extends BaseAreasCode {
 		}
 		
 		if(isCity()) {
-			return this.getAreasid().substring(0, 4).equals(code.substring(0, 4));
+			if(SystemConstant.District_Center.equals(this.getAreasid())){
+				int head=Integer.valueOf(code.substring(0,4));
+				return head>=4189;
+			}else{
+				return this.getAreasid().substring(0, 4).equals(code.substring(0, 4));
+			}
 		}
 		
 		if(isProvince()) {
@@ -86,6 +92,9 @@ public class AreasCode extends BaseAreasCode {
 		
 		if(father.endsWith("0000")) {
 			return father.substring(0, 2).equals(child.substring(0, 2));
+		} else if(SystemConstant.District_Center.equals(father)){
+			int head=Integer.valueOf(child.substring(0,4));
+			return head>=SystemConstant.District_Head;
 		} else if(father.endsWith("00")) {
 			return father.substring(0, 4).equals(child.substring(0, 4));
 		}
@@ -126,7 +135,11 @@ public class AreasCode extends BaseAreasCode {
 	public static String getCityCode(String code) {
 		if(!isValidCode(code)) return null;
 		if(code.endsWith("0000")) return null;
-		return code.substring(0, 4) + "00";
+		int head=Integer.valueOf(code.substring(0,4));
+		if(head>=4189){
+			return SystemConstant.District_Center;
+		}else
+			return code.substring(0, 4) + "00";
 	}
 	
 	/**
