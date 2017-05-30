@@ -21,6 +21,8 @@ public interface INetBar2JPADao {
 	
 	NetBar2Entity findOne(String id);
 	NetBar2Entity findByMainId(String mainId);
+	List<NetBar2Entity> findByCityCode(String cityCode);
+	List<NetBar2Entity> findByDistrictCode(String districtCode);
 	
 	int existBusinessRegNo(String business_reg_no);
 	

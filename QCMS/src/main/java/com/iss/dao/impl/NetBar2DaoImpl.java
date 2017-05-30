@@ -179,7 +179,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select "+getQueryColumns())
-		.append("FROM "+TableConstants.NETBAR2_TABLE+" WHERE id= :id ");
+		.append(" FROM "+TableConstants.NETBAR2_TABLE+" WHERE id= :id ");
 		parameters.put("id", id);
 		List<Object> list = findNativeQuery(sql.toString(), parameters);
 		for (Object object : list) {
@@ -202,7 +202,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select "+getQueryColumns())
-		.append("FROM "+TableConstants.NETBAR2_TABLE+" WHERE main_id= :id ");
+		.append(" FROM "+TableConstants.NETBAR2_TABLE+" WHERE main_id= :id ");
 		parameters.put("id", mainId);
 		List<Object> list = findNativeQuery(sql.toString(), parameters);
 		for (Object object : list) {
@@ -216,6 +216,54 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 			return null;
 		}
 		return data.get(0);
+	}
+	
+	
+
+	@Override
+	public List<NetBar2Entity> findByCityCode(String cityCode) {
+		// TODO Auto-generated method stub
+		List<NetBar2Entity> data = new ArrayList<NetBar2Entity>();
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select "+getQueryColumns())
+		.append(" FROM "+TableConstants.NETBAR2_TABLE+" WHERE city_code= :cityCode ");
+		parameters.put("cityCode", cityCode);
+		List<Object> list = findNativeQuery(sql.toString(), parameters);
+		for (Object object : list) {
+			if(object instanceof Object[]){
+				Object[] obj = (Object[]) object;
+				NetBar2Entity entity=this.obj2Entity(obj);
+				data.add(entity);
+			}
+		}
+		if(data == null || data.size() <= 0){
+			return null;
+		}
+		return data;
+	}
+
+	@Override
+	public List<NetBar2Entity> findByDistrictCode(String districtCode) {
+		// TODO Auto-generated method stub
+		List<NetBar2Entity> data = new ArrayList<NetBar2Entity>();
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		StringBuffer sql = new StringBuffer();
+		sql.append("select "+getQueryColumns())
+		.append(" FROM "+TableConstants.NETBAR2_TABLE+" WHERE district_code= :districtCode ");
+		parameters.put("districtCode", districtCode);
+		List<Object> list = findNativeQuery(sql.toString(), parameters);
+		for (Object object : list) {
+			if(object instanceof Object[]){
+				Object[] obj = (Object[]) object;
+				NetBar2Entity entity=this.obj2Entity(obj);
+				data.add(entity);
+			}
+		}
+		if(data == null || data.size() <= 0){
+			return null;
+		}
+		return data;
 	}
 
 	@Override

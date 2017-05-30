@@ -162,7 +162,7 @@
 											<div id="netbarDiv">
 												<input type="hidden" id="netbarIds" name="netbarIds" value="{{this.netbarIds}}">
 												<c:forEach var="_netbar" items="${netbarList}">
-        											<input type="checkbox" name="netbarId" value="${_netbar.id}"/>${_netbar.netbar_name}&nbsp;&nbsp;
+        											<input type="checkbox" name="netbarId" value="${_netbar.id}"/>${_netbar.netbar_name}&nbsp;&nbsp;<br/>
 			                					</c:forEach>
 			                				</div>
                     					</div>
@@ -238,7 +238,12 @@
 					dataJson = dbTable.row(tr).data();
 	        	}
 	        	var $div = $(template(dataJson));
-	        	BootstrapDialog.show({type:'type-default', size:'size-wide', message:$div, title:title, closable:true,
+	        	BootstrapDialog.show({type:'type-default', 
+	        		size:'size-wide', 
+	        		message:$div, 
+	        		
+	        		title:title, 
+	        		closable:true,
 		       		 buttons: [{
 		                 icon:'fa fa-save', label:'确定',
 		               	 action: function(){
@@ -290,6 +295,7 @@
 	                        $("#action").val(dataJson.action);//显示启用方式下拉框值
 	                        //显示文件关联的网吧
 							var netbarIds = dataJson.netbarIds;
+							console.log("------->"+netbarIds);
 	                        if(netbarIds != null && netbarIds != ""){
 	                        	$.each(netbarIds.split(","), function(name, value) {
 	                        		//根据Value值设置checkbox为选中值
@@ -307,9 +313,19 @@
             						$('#netbarDiv').empty();   //清空resText里面的所有内容
                                     var html = ''; 
                                     $.each(data.data, function(name, value) {
-                                    	html += '<input type="checkbox" name="netbarIds" value="'+value.id+'"/>'+value.netbar_name+'&nbsp;&nbsp;';
+                                    	html += '<input type="checkbox" name="netbarIds" value="'+value.id+'"/>'+value.netbar_name+'&nbsp;&nbsp;<br/>';
                                    	});
                                     $('#netbarDiv').html(html);
+                                    
+                                  //显示文件关联的网吧
+        							var netbarIds = dataJson.netbarIds;
+        							console.log("===========>"+netbarIds);
+        	                        if(netbarIds != null && netbarIds != ""){
+        	                        	$.each(netbarIds.split(","), function(name, value) {
+        	                        		//根据Value值设置checkbox为选中值
+        			                        $("input:checkbox[value='"+value+"']").attr('checked','true');
+                                       	});
+        	                        }
             					}
             				});
                 		}

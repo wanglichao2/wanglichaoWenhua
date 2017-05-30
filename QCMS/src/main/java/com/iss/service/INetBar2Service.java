@@ -14,6 +14,7 @@ public interface INetBar2Service {
 	 * @return
 	 */
 	List<NetBar2Entity> load();
+	List<NetBar2Entity> loadAsync();
 	
 	/**
 	 * 加载分页数据
@@ -21,6 +22,8 @@ public interface INetBar2Service {
 	 * @return
 	 */
 	DataTables<NetBar2Entity> load(DataParam param);
+	List<NetBar2Entity> queryByCityCode(String cityCode);
+	List<NetBar2Entity> queryByDistrictCode(String districtCode);
 	
 	/**
 	 * 校验工商登记号是否存在

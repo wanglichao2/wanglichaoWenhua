@@ -62,10 +62,33 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	}
 	
 	@Override
+	public List<NetBar2Entity> loadAsync() {
+		// TODO Auto-generated method stub
+		
+		
+		return null;
+	}
+
+
+
+
+	@Override
 	public DataTables<NetBar2Entity> load(DataParam param){
 		return iNetBarJPADao.query(param);
 	}
 	
+	@Override
+	public List<NetBar2Entity> queryByCityCode(String cityCode) {
+		// TODO Auto-generated method stub
+		return this.iNetBarJPADao.findByCityCode(cityCode);
+	}
+
+	@Override
+	public List<NetBar2Entity> queryByDistrictCode(String districtCode) {
+		// TODO Auto-generated method stub
+		return this.iNetBarJPADao.findByDistrictCode(districtCode);
+	}
+
 	@Override
 	public boolean existBusinessRegNo(String business_reg_no){
 		int count = iNetBarJPADao.existBusinessRegNo(business_reg_no);
