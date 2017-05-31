@@ -167,11 +167,11 @@ public class NetBarListServiceImpl implements INetBarListService {
 			vo.setInstallNum(ae.getOnline()+ae.getOffline());//已安装终端: 在线终端数 + 离线终端数
 			vo.setUnInstallNum(comNum-vo.getInstallNum());//未安装终端: 终端总数 - 已安装终端
 //			在线率: 在线 / 终端总数 * 100%     (保留到小数点后1位)
-			double onlineRage=vo.getOnLineCount()/comNum;
-			vo.setOnLineRate(NumberUtil.parseDoubleToString(onlineRage, 2));
+			double onlineRage=(vo.getOnLineCount()/comNum)*100;
+			vo.setOnLineRate(NumberUtil.parseDoubleToString(onlineRage, 1));
 //			安装率: 已安装终端 / 终端总数 * 100%	(保留到小数点后1位)
-			double installRate=vo.getInstallNum()/comNum;
-			vo.setInstallRate(NumberUtil.parseDoubleToString(installRate, 2));
+			double installRate=(vo.getInstallNum()/comNum)*100;
+			vo.setInstallRate(NumberUtil.parseDoubleToString(installRate, 1));
 		}
 		return vo;
 	}
