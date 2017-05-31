@@ -366,21 +366,26 @@ public class StatAreaInstanceCacher {
 		if(null != provinceInstance) {
 			provinceCurrent = provinceInstance.online(barId);
 		}
+		try {
+			logger.info(
+					String.format(
+							"##ActiveBar id: %s,Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
+							barId,
+							provinceCode,
+							provinceInstance.getName(),
+							provinceCurrent,
+							areaCode,
+							areaInstance.getName(),
+							areaCurrent,
+							cityCode,
+							cityInstance.getName(),
+							cityCurrent
+							));
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("",e);
+		}
 		
-		logger.info(
-				String.format(
-						"##ActiveBar id: %s,Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
-						barId,
-						provinceCode,
-						provinceInstance.getName(),
-						provinceCurrent,
-						areaCode,
-						areaInstance.getName(),
-						areaCurrent,
-						cityCode,
-						cityInstance.getName(),
-						cityCurrent
-						));
 	}
 
 	public static void inactiveBar(String barId) {
@@ -409,21 +414,26 @@ public class StatAreaInstanceCacher {
 		if(null != provinceInstance) {
 			provinceCurrent = provinceInstance.offline(barId);
 		}
+		try {
+			logger.info(
+					String.format(
+							"##InactiveBar id: %s, Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
+							barId,
+							provinceCode,
+							provinceInstance.getName(),
+							provinceCurrent,
+							areaCode,
+							areaInstance.getName(),
+							areaCurrent,
+							cityCode,
+							cityInstance.getName(),
+							cityCurrent
+							));
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("",e);
+		}
 		
-		logger.info(
-				String.format(
-						"##InactiveBar id: %s, Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
-						barId,
-						provinceCode,
-						provinceInstance.getName(),
-						provinceCurrent,
-						areaCode,
-						areaInstance.getName(),
-						areaCurrent,
-						cityCode,
-						cityInstance.getName(),
-						cityCurrent
-						));
 	}
 
 	public AuthService getAuthService() {

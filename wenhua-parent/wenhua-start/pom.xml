@@ -25,6 +25,11 @@
 			<artifactId>netty-all</artifactId>
 			<version>${howard.version.netty}</version><!--$NO-MVN-MAN-VER$ -->
 		</dependency>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>${howard.version.protobuf}</version><!--$NO-MVN-MAN-VER$ -->
+		</dependency>
 		<!-- <dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
