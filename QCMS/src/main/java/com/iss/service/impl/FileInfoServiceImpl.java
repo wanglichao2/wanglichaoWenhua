@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,12 +25,15 @@ import com.iss.entity.FileInfoEntity;
 import com.iss.entity.NetBar2Entity;
 //import com.iss.entity.NetBarEntity;
 import com.iss.service.IFileInfoService;
+import com.iss.util.CommonUtil;
 import com.iss.util.StringUtil;
 import com.iss.vo.DataParam;
 import com.iss.vo.DataTables;
 
 @Service
 public class FileInfoServiceImpl implements IFileInfoService {
+	private Logger log=LoggerFactory.getLogger(FileInfoServiceImpl.class);
+	
 	@Autowired
 	private IFileInfoDao iFileInfoDao;
 	@Autowired
@@ -93,23 +98,35 @@ public class FileInfoServiceImpl implements IFileInfoService {
 		//更新文件和网吧的关联关系
 		if(StringUtil.isNotEmpty(fileInfo.getId())){
 			//删除已经存在的该文件的网吧关联关系
-			IFileBarJPADao.delByFileId(fileInfo.getId());
+//			IFileBarJPADao.delByFileId(fileInfo.getId());
 			//保存文件和网吧的关联关系
 			List<FileBarEntity> fileBars = new ArrayList<FileBarEntity>();
-			if(fileInfo.getIsApply() == '0'){//是
+			if(fileInfo.getIsApply() == '0'){//否
+				String areaId=entity.getAreaId();
 				String netbarIds = entity.getNetbarIds();
-				String[] netbarId = netbarIds.split(",");
-				if(netbarId.length > 0){
-					for(String barid : netbarId){
-						if(StringUtil.isNotEmpty(barid)){
-							FileBarEntity fileBar = new FileBarEntity();
-							fileBar.setFileId(fileInfo.getId());
-							fileBar.setBarid(barid);
-							fileBars.add(fileBar);
+				String areaBarIdStr=entity.getAreaBarIds();
+				log.info("modify barIds ===>"+netbarIds);
+				log.info("all barIds in areaId===>"+areaBarIdStr);
+				if(CommonUtil.isEmpty(netbarIds)
+						&& CommonUtil.isEmpty(areaBarIdStr)){
+					log.error("not modify.....");
+				}else{
+					String[] netbarId = netbarIds.split(",");
+					String[] areaBarIds = areaBarIdStr.split(",");
+					IFileBarJPADao.delByFileId(fileInfo.getId(),areaBarIds);
+					if(netbarId.length > 0){
+						for(String barid : netbarId){
+							if(StringUtil.isNotEmpty(barid)){
+								FileBarEntity fileBar = new FileBarEntity();
+								fileBar.setFileId(fileInfo.getId());
+								fileBar.setBarid(barid);
+								fileBars.add(fileBar);
+							}
 						}
 					}
 				}
 			}else{
+				IFileBarJPADao.delByFileId(fileInfo.getId(),null);
 				/*List<NetBar2Entity> netbars = iNetBarDao.findAll();
 				for(NetBar2Entity netbar : netbars){
 //					if(netbar.getStatus() == 1){
@@ -121,7 +138,8 @@ public class FileInfoServiceImpl implements IFileInfoService {
 					}
 				}*/
 			}
-			iFileBarDao.save(fileBars);
+			if(CommonUtil.isNotEmpty(fileBars))
+				iFileBarDao.save(fileBars);
 		}
 		return fileInfo;
 	}
@@ -156,7 +174,7 @@ public class FileInfoServiceImpl implements IFileInfoService {
 	@Transactional
 	public boolean update(Long id, String field, String fieldValue) {
 		//删除已经存在的该文件的网吧关联关系
-		IFileBarJPADao.delByFileId(id);
+		IFileBarJPADao.delByFileId(id,null);
 		return iCommonDao.updateField(id, field, fieldValue, "t_file_info");
 	}
 	
@@ -176,7 +194,7 @@ public class FileInfoServiceImpl implements IFileInfoService {
 	@Transactional
 	public List<FileBarEntity> saveFileBars(List<FileBarEntity> list){
 		if(list != null && list.size() > 0){
-			IFileBarJPADao.delByFileId(list.get(0).getFileId());
+			IFileBarJPADao.delByFileId(list.get(0).getFileId(),null);
 			return iFileBarDao.save(list);
 		}
 		return list;

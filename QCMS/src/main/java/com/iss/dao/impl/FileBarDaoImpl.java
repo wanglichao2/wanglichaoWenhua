@@ -1,6 +1,7 @@
 package com.iss.dao.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.iss.dao.IFileBarJPADao;
 import com.iss.entity.FileBarEntity;
+import com.iss.util.CommonUtil;
 import com.iss.util.NumberUtil;
 
 @Repository
@@ -36,10 +38,14 @@ public class FileBarDaoImpl extends BaseJPADaoImpl<Object, Long> implements IFil
 	}
 	
 	@Override
-	public boolean delByFileId(Long fileId){
+	public boolean delByFileId(Long fileId,String[]barIds){
 		Map<String, Object> parameters = new HashMap<String, Object>();
-		String sql = "delete from t_file_bar where fileId= :fileId";
+		String sql = "delete from t_file_bar where fileId= :fileId ";
 		parameters.put("fileId", fileId);
+		if(CommonUtil.isNotEmpty(barIds)){
+			sql+=" and barid in :barIds";
+			parameters.put("barIds", Arrays.asList(barIds));
+		}
 		return executeNative(sql, parameters);
 	}
 }

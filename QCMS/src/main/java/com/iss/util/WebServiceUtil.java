@@ -1,10 +1,18 @@
 package com.iss.util;
 
+import gov.ccm.netbar.interfaceImp.deployInfo.NetbarDeployInfo;
+import gov.ccm.netbar.interfaceImp.deployInfo.UploadDeployInfoServiceProxy;
+import gov.ccm.netbar.interfaceImp.placeInfo.NetbarInfoProxy;
+import gov.ccm.netbar.interfaceImp.placeInfo.RelationshipNetbar;
+
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
+
+
+
 
 
 //import org.apache.axiom.om.OMElement;
@@ -152,8 +160,8 @@ public class WebServiceUtil {
 	}
 	
 	//场所信息上传
-	public static String netbarInfoUpload(String key,InterfaceConfig config,List<?> list)throws Exception{
-		Client client = createWsClient(config);
+	public static String netbarInfoUpload(String key,InterfaceConfig config,List<RelationshipNetbar> list)throws Exception{
+		/*Client client = createWsClient(config);
 		Object[] result = null;
 		try {
 			Object[] params = new Object[] { key, list };
@@ -164,24 +172,38 @@ public class WebServiceUtil {
 			throw new Exception("调用上报网吧信息接口失败:"+e.getMessage());
 		}
 		String resp=(String)result[0];
-		return resp;
+		return resp;*/
+		
+		try {
+			RelationshipNetbar[] relationship=list.toArray(new RelationshipNetbar[]{});
+			NetbarInfoProxy infoProxy=new NetbarInfoProxy(config.getUrl());
+			String resp=infoProxy.uploadNetbarInfo(key, relationship);
+			return resp;
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			throw e;
+		}
+		
+		
 	}
 	
 	//1.场所实施信息上传
-	public static String netbarInfoDeploy(String key,InterfaceConfig config,List<?> list)throws Exception{
-			Client client = createWsClient(config);
-			Object[] result = null;
+	public static String netbarInfoDeploy(String key,InterfaceConfig config,List<NetbarDeployInfo> list)throws Exception{
+			
 			try {
-				Object[] params = new Object[] { key, list };
-				result = client.invoke(config.getMethod(), params);
+				NetbarDeployInfo[] deployInfo=list.toArray(new NetbarDeployInfo[]{});
+				UploadDeployInfoServiceProxy deployService=new UploadDeployInfoServiceProxy(config.getUrl());
+				
+				String resp=deployService.setDeployInfo(key, deployInfo);
+				return resp;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 				throw new Exception("调用上报网吧实施信息接口失败:"+e.getMessage());
 				
 			}
-			String resp=(String)result[0];
-			return resp;
+			 
 		}
 	
 	

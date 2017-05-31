@@ -42,7 +42,7 @@
                     		<div class="col-sm-3">
                     			<ul id="nodeTree" class="ztree" style="padding-left: 20%;"></ul>
                     		</div>
-                    		<div class="col-sm-9">
+                    		<div id="stat_div" class="col-sm-9">
 		                        <table class="table table-striped table-bordered table-hover " id="editable">
 		                            <thead>
 		                                <tr>
@@ -50,17 +50,17 @@
 											<th>在线网吧数</th>
 											<th>离线网吧数</th>
 											<th>机器总数</th>
-											<th>当前用户总数</th>
+											<!--  <th id="t_head" >当前用户总数</th> -->
 		                                </tr>
 		                            </thead>
-		                            <tbody>
+		                            <tbody id="tbody_stat">
 		                            	<c:forEach var="stat" items="${statList}">
 		                            		<tr>
 												<td>${stat.areaName}</td>
 												<td>${stat.online}</td>
 												<td>${stat.offline}</td>
 												<td>${stat.pcTotal}</td>
-												<td>${stat.login}</td>
+												<%-- <td id="t_body" class="t_body_">${stat.login}</td> --%>
 											</tr>
 		                            	</c:forEach>
 		                            </tbody>
@@ -70,7 +70,45 @@
 											<th></th>
 											<th></th>
 											<th></th>
+											<!--  <th id="t_foot" ></th> -->
+										</tr>
+										<tr>
+		                                    <th colspan="10" style="text-align:right;">
+		                                    	<span id="showChart">历史曲线图</span>
+		                                    </th>
+		                                </tr>
+	                                </tfoot>
+		                        </table>
+                    		</div>
+                    		<div id="bar_div" class="col-sm-9" style="display: none;">
+		                        <table class="table table-striped table-bordered table-hover " id="editable_">
+		                            <thead>
+		                                <tr>
+		                                    <th>市</th>
+											<th>在线网吧数</th>
+											<th>离线网吧数</th>
+											<th>机器总数</th>
+											 <th>服务端版本号</th>
+		                                </tr>
+		                            </thead>
+		                            <tbody id="tbody_stat">
+		                            	<c:forEach var="stat" items="${statList}">
+		                            		<tr>
+												<td>${stat.areaName}</td>
+												<td>${stat.online}</td>
+												<td>${stat.offline}</td>
+												<td>${stat.pcTotal}</td>
+												<td id="t_body" class="t_body_">${stat.login}</td>
+											</tr>
+		                            	</c:forEach>
+		                            </tbody>
+		                            <tfoot>
+			                            <tr>
+			                            	<th>河南省  总计</th>
 											<th></th>
+											<th></th>
+											<th></th>
+											 <th></th>
 										</tr>
 										<tr>
 		                                    <th colspan="10" style="text-align:right;">
@@ -111,35 +149,59 @@
     		var id = "";
     		var parentId = "";
     		var areaName = "";
+    		
     		var onClick = function(event, treeId, treeNode, clickFlag) {
 				var url = '${basePath}/netbarList/loadProvinceCityBar';
 				id = treeNode.id;
 				parentId = treeNode.pId;
 				areaName = treeNode.name;
-				var columns = [{data:'areaName'},{data:'online'},{data:'offline'},{data:'pcTotal'},{data:'login'}];
+				var columns = [{data:'areaName'},{data:'online'},{data:'offline'},{data:'pcTotal'}];//,{data:'login'}
+				editableNm="editable";
+				if(treeNode.pId == 0){
+					$('#bar_div').css('display','none');
+					$('#stat_div').css('display','block');
+	        	}else if(treeNode.pId == 410000){
+	        		$('#bar_div').css('display','none');
+					$('#stat_div').css('display','block');
+	        	}else{
+	        		//修改表头
+	        		$('#bar_div').css('display','block');
+					$('#stat_div').css('display','none');
+					editableNm="editable_";
+	        	}
 				//再次查询时先删除editable，如果少了以下语句每次只能查询一次，第二次点击查询就不执行。
-				var table = $('#editable').dataTable();
+				var table = $('#'+editableNm).dataTable();
 				if(table){
 					table.fnDestroy();
 				}
     			//获取dataTable的第一行所有单元格
     			var cells = table[0].rows[0].cells;
+    			console.log(cells.length+"---"+treeNode.pId);
+
 				if(treeNode.pId == 0){
+					$('#bar_div').css('display','none');
+					$('#stat_div').css('display','block');
     				//修改表头
     				cells[0].textContent = '市';
     				cells[1].textContent = '在线网吧数';
 	        		cells[2].textContent = '离线网吧数';
 	        		cells[3].textContent = '机器总数';
-	        		cells[4].textContent = '当前用户总数';
+	        	//	cells[4].textContent = '';//当前用户总数
+	        		
 	        	}else if(treeNode.pId == 410000){
+	        		$('#bar_div').css('display','none');
+					$('#stat_div').css('display','block');
 	        		//修改表头
 	        		cells[0].textContent = '县';
 	        		cells[1].textContent = '在线网吧数';
 	        		cells[2].textContent = '离线网吧数';
 	        		cells[3].textContent = '机器总数';
-	        		cells[4].textContent = '当前用户总数';
+	        	//	cells[4].textContent = '';//当前用户总数
+	        		
 	        	}else{
 	        		//修改表头
+	        		$('#bar_div').css('display','block');
+					$('#stat_div').css('display','none');
 	        		cells[0].textContent = '网吧列表';
 	        		cells[1].textContent = '在线终端数';
 	        		cells[2].textContent = '离线终端数';
@@ -152,7 +214,7 @@
 	        	}
         		
         		//省级表格初始化
-        		$('#editable').dataTable({
+        		$('#'+editableNm).dataTable({
         			 "bSort": false,
         			columns: columns,
         			/* columnDefs:[{
@@ -163,12 +225,6 @@
     				paging:false,
     				processing: true, //控制是否在数据加载时出现”Processing”的提示
     				serverSide: true,//pipeline pages 管道式分页加载数据，减少ajax请求
-    				/* ajax: $.fn.dataTable.pipeline({
-    					url:url,
-    					type:'POST', 
-    					data: {"search":{"value":id}},
-    					dataSrc:drawData
-    				}), */
    				 	ajax: {
     			    	url: url, 
     			    	data: {"search":{"value":id}},
@@ -185,16 +241,18 @@
     			    			}
     			    			login = login + parseInt(value.login);
     			    		});
-    			    		var tfoot = $('#editable').find('tfoot');
+    			    		console.log("login==>"+login);
+    			    		var tfoot = $('#'+editableNm).find('tfoot');
     			    		tfoot[0].rows[0].cells[0].textContent = areaName+" 总计";
     			    		tfoot[0].rows[0].cells[1].textContent = online;
     			    		tfoot[0].rows[0].cells[2].textContent = offline;
     			    		tfoot[0].rows[0].cells[3].textContent = pcTotal;
     			    		if(parentId == 410000 || parentId == 0){
-    			    			tfoot[0].rows[0].cells[4].textContent = login;
+    			    		//	tfoot[0].rows[0].cells[4].textContent = login;
     			    		}else{
-    			    			tfoot[0].rows[0].cells[4].textContent = "";
-    			    		}
+    			    			tfoot[0].rows[0].cells[4].textContent = "33";
+    			    		} 
+    			    		
     			    		return drawData(result);
    			    		}
    			    	},//dataSrc表格数据渲染数据加工的方法
@@ -204,8 +262,11 @@
     	           		var tr = $('tbody tr.newRow');//初始化新增行的编辑插件
     	           		afterAddRow(tr);
     	           		optTag = null;//重置操作标识
+    	           		
     			     }
         		});//返回JQuery对象，api()方法添加到jQuery对象,访问API. 
+        		$('.dataTables_filter').css('display','none');
+        		
     		}
     		var setting = {
    				view:{selectedMulti: false},
@@ -226,7 +287,7 @@
 			});//返回JQuery对象，api()方法添加到jQuery对象,访问API.
 			dbTable = oTable.api();//返回datatable的API实例,
 			total();
-			
+			$('.dataTables_filter').css('display','none');
 			$('#export').click(function(){
 				window.location.href="${basePath}/netbarList/export?id="+id+"&parentId="+parentId+"&areaName="+areaName;
 			});
@@ -308,6 +369,7 @@
                     }
 	        	});
 			});
+			
 			function total(){
 				var i=0;
 	    		var zxwb = 0,lxwb = 0,jqzs = 0, yhzs = 0;
@@ -338,10 +400,18 @@
 	    		tfoot[0].rows[0].cells[1].textContent = zxwb;
 	    		tfoot[0].rows[0].cells[2].textContent = lxwb;
 	    		tfoot[0].rows[0].cells[3].textContent = jqzs;
-	    		tfoot[0].rows[0].cells[4].textContent = yhzs;
+	    		//tfoot[0].rows[0].cells[4].textContent = yhzs;
 			}
 	        $('.spiner-example').remove();//移除遮罩层
     	});
+    	var hideColumn=function(val){
+			$("#t_head").css("display",val); 
+		//	$("#t_body").attr("display",val); 
+			$("td.t_body_").css("display",val); 
+			
+			$("#t_foot").css("display",val); 
+			
+		}
 	</script>
 </body>
 </html>

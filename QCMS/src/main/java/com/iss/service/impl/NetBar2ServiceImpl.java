@@ -1,5 +1,8 @@
 package com.iss.service.impl;
 
+import gov.ccm.netbar.interfaceImp.deployInfo.NetbarDeployInfo;
+import gov.ccm.netbar.interfaceImp.placeInfo.RelationshipNetbar;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,7 +10,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,6 @@ import com.iss.vo.InterfaceConfig;
 import com.iss.vo.NetBarBean;
 import com.iss.vo.NetBarPrintVo;
 import com.iss.vo.param.DeployInfo;
-import com.iss.vo.param.RelationshipNetbar;
 
 @Service
 public class NetBar2ServiceImpl implements INetBar2Service {
@@ -360,6 +361,8 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 			config.setUsername(username);
 			config.setPassword(password);
 			String loginKey=WebServiceUtil.netBarSyncLogin(config);
+			
+			
 			List<RelationshipNetbar> list=new ArrayList<RelationshipNetbar>();
 			RelationshipNetbar b=new RelationshipNetbar();
 			b.setNetbar_code(bar.getId());
@@ -372,11 +375,12 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 			String uploadcurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_BARINFO_UPLOAD_URL);
 			config.setUrl(uploadcurl);
 			config.setMethod(SystemConstants.NETBAR_WEBSERVICE_BARINFO_UPLOAD_METHED);
+			
 			String resp=WebServiceUtil.netbarInfoUpload(loginKey,config, list);
 			if(SystemConstants.WS_INTERFACE_RESPONSE_SUCC.equals(resp)){
 				NetBarPrintVo vo=iNetBarListService.queryNetbarPrintInfo(barId);
-				List<DeployInfo> dinfolist=new ArrayList<DeployInfo>();
-				DeployInfo dinfo=new DeployInfo();
+				List<NetbarDeployInfo> dinfolist=new ArrayList<NetbarDeployInfo>();
+				NetbarDeployInfo dinfo=new NetbarDeployInfo();
 				dinfo.setNetbarCode(bar.getId());
 				dinfo.setIs_deploy("0");
 				dinfo.setDetectNum(String.valueOf(vo.getOnLineCount()+vo.getOffLineCount()));
@@ -387,8 +391,10 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 				uploadcurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_BAR_DEPLOYINFO_UPLOAD_URL);
 				config.setUrl(uploadcurl);
 				config.setMethod(SystemConstants.NETBAR_WEBSERVICE_BAR_DEPLOYINFO_UPLOAD_METHED);
-				resp=WebServiceUtil.netbarInfoUpload(loginKey,config, dinfolist);
+				resp=WebServiceUtil.netbarInfoDeploy(loginKey,config, dinfolist);
 				if(SystemConstants.WS_INTERFACE_RESPONSE_SUCC.equals(resp)){
+					this.iNetBarDao.saveAndFlush(bar);
+					
 					return resp;
 				}else
 					throw new Exception("上报网吧实施信息失败");

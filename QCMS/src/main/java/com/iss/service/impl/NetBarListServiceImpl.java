@@ -106,6 +106,10 @@ public class NetBarListServiceImpl implements INetBarListService {
 		// TODO Auto-generated method stub
 		if(StringUtil.isEmpty(areaCode) || StringUtil.isEmpty(barId))return null;
 		List<AreasBarEntity> data = new ArrayList<AreasBarEntity>();
+		String head=areaCode.substring(0, 4);
+		if(Integer.valueOf(head)>=4189){
+			areaCode=head+"00";
+		}
 		String param=areaCode+":"+barId;
 		String result = HttpClientUtil.netBarListHttpPost(PropertiesUtil.getPropery(SystemConstants.BAR_AREA_URL)+param);
 		//json结果转换为List集合
@@ -164,10 +168,10 @@ public class NetBarListServiceImpl implements INetBarListService {
 			vo.setUnInstallNum(comNum-vo.getInstallNum());//未安装终端: 终端总数 - 已安装终端
 //			在线率: 在线 / 终端总数 * 100%     (保留到小数点后1位)
 			double onlineRage=vo.getOnLineCount()/comNum;
-			vo.setOnLineRate(NumberUtil.parseDoubleToString(onlineRage, 1));
+			vo.setOnLineRate(NumberUtil.parseDoubleToString(onlineRage, 2));
 //			安装率: 已安装终端 / 终端总数 * 100%	(保留到小数点后1位)
 			double installRate=vo.getInstallNum()/comNum;
-			vo.setInstallRate(NumberUtil.parseDoubleToString(installRate, 1));
+			vo.setInstallRate(NumberUtil.parseDoubleToString(installRate, 2));
 		}
 		return vo;
 	}

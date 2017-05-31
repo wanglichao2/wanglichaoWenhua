@@ -35,6 +35,8 @@ public class FileInfoEntity extends IdEntity implements Serializable, IExcelMode
 	private Long lastModifier;// 最后修改人
 	private Date lastModifyTime;// 最后修改时间
 	
+	private String areaId;
+	private String areaBarIds;
 	private String netbarIds;//接收页面选择的网吧ID
 	private String netbarNames;//返回至页面
 
@@ -176,6 +178,23 @@ public class FileInfoEntity extends IdEntity implements Serializable, IExcelMode
 
 	public void setNetbarIds(String netbarIds) {
 		this.netbarIds = netbarIds;
+	}
+
+	@Transient
+	public String getAreaId() {
+		return areaId;
+	}
+
+	public void setAreaId(String areaId) {
+		this.areaId = areaId;
+	}
+	@Transient
+	public String getAreaBarIds() {
+		return areaBarIds;
+	}
+
+	public void setAreaBarIds(String areaBarIds) {
+		this.areaBarIds = areaBarIds;
 	}
 
 	@Transient
