@@ -8,6 +8,7 @@ import java.util.Objects;
 
 import org.springframework.stereotype.Repository;
 
+import com.iss.constants.SystemConstants;
 import com.iss.dao.IAreasCodeJPADao;
 import com.iss.entity.AreasEntity;
 
@@ -21,9 +22,16 @@ public class AreasCodeJPADaoImpl extends BaseJPADaoImpl<Object, Long>  implement
 		StringBuffer sql = new StringBuffer();
 		sql.append("select areasid, areasname from t_areas_code where rankno=").append(rankno);
 		if(rankno.equals("3")){
-			sql.append(" and areasid like :search");
-			areasid = areasid.substring(0,4);
-			parameters.put("search", ("%"+areasid+"%"));
+			if(SystemConstants.District_Center.equals(areasid)){
+				sql.append(" and areasid > :search");
+//				areasid = areasid.substring(0,4);
+				parameters.put("search", areasid);
+			}else{
+				sql.append(" and areasid like :search");
+				areasid = areasid.substring(0,4);
+				parameters.put("search", ("%"+areasid+"%"));
+			}
+			
 		}
 		List<Object> list = findNativeQuery(sql.toString(), parameters);
 		for (Object object : list) {

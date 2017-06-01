@@ -82,14 +82,13 @@ public class NetBar2Controller extends BaseController {
 		}else{
 			url = PropertiesUtil.getPropery("updateBarUrl");
 		}
-		
+		entity.setComputer_num(entity.getComputer_num()==null?0:entity.getComputer_num());
 		//保存网吧信息
 		entity.setIsdeleted(0);
 		entity.setIsdeployed(0);
 //		entity.setCreator(userEntity.getId());
 		entity.setCreate_time(DateUtil.getDate(DateUtil.datetimeformat_str));
 		NetBar2Entity fixed = iNetBarService.save(entity);
-		
 		//调用接口
 		HttpClientUtil.netBarHttpPost(url+fixed.getId());
 		
@@ -134,11 +133,29 @@ public class NetBar2Controller extends BaseController {
 	}
 	
 	@ResponseBody
-	@RequestMapping("/sync")
+	@RequestMapping("/sync")//增量同步
 	public AjaxJson syncFromWs(){
 		AjaxJson json = new AjaxJson();
 		try {
 			this.iNetBarService.syncNetBarData(null);
+			json.setFlag(true);
+			json.setMsg("操作成功");
+		} catch (Exception e) {
+			// TODO: handle exception
+			log.error("",e);
+			json.setFlag(false);
+			json.setMsg(e.getMessage());;
+		}
+		return json;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/sync/all")//全量同步
+	public AjaxJson syncAllFromWs(){
+		AjaxJson json = new AjaxJson();
+		try {
+			this.iNetBarService.delAll();
+			this.iNetBarService.syncNetBarData("all");
 			json.setFlag(true);
 			json.setMsg("操作成功");
 		} catch (Exception e) {

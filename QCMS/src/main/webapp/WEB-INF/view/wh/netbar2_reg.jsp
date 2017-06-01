@@ -49,6 +49,9 @@
                         <shiro:hasPermission name="netbar:sync">
                         	<a id="syncData" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;同步数据</a>
                         </shiro:hasPermission>
+                        <shiro:hasPermission name="netbar:syncall">
+                        	<a id="syncAllData" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;修复数据</a>
+                        </shiro:hasPermission>
                         <shiro:hasPermission name="netbar:del">
                         	<a id="delAll" href="javascript:void(0);" class="btn btn-white btn-margin-right" style="display: none;"><i class="fa fa-remove"></i>&nbsp;批量删除</a>
                         </shiro:hasPermission>
@@ -336,6 +339,27 @@
 	                }
 	            }});
 	      	});
+	      	$('#syncAllData').on('click',function(){
+	      		BootstrapDialog.confirm({type:'type-default', message:'确认是否修复全部网吧数据?', callback:function(result){
+	                if(result) {
+	                	$.com.ajax({
+	    			       	url: '${basePath}/netbar2/sync/all',
+	    		           	/* data:{pk:dataJson.id, name:'status', value:'1'}, */
+	    			       	success: function(data){
+	    			           	if(data.flag){
+	    			           		BootstrapDialog.alert("修复操作成功！");
+	    			           	}else{
+	    			           		BootstrapDialog.alert({type:'type-danger', message:'修复网吧数据失败：'+data.msg});
+	    			           	}
+	    		       		},
+                          	error:function(){
+                          		BootstrapDialog.alert({type:'type-danger', message:'操作失败，请刷新重试！'});
+                            }
+	    				});
+	                }
+	            }});
+	      	});
+	      	
 	        $('#editable tbody').on('click', 'i.fa-edit', dataDialog);
 	        $('#editable tbody').on('click', 'i.fa-remove:not("i.i-remove")', function(){//删除
 	    		var $this = $(this);

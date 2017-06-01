@@ -31,6 +31,6 @@ public class SystemConstants {
 	public static String WS_INTERFACE_RESPONSE_SUCC="successful";
 	public static String WS_INTERFACE_RESPONSE_FAIL="failing";
 
-	
+	public static String District_Center="418000";
 	
 }

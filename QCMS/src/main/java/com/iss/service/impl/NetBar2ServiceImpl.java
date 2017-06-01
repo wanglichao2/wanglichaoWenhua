@@ -160,6 +160,14 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	
 	@Override
 	@Transactional
+	public void delAll() {
+//		this.iNetBarDao.deleteAll();
+		
+		 iCommonDao.delTableData(TableConstants.NETBAR2_TABLE);
+	}  
+	
+	@Override
+	@Transactional
 	public List<NetBar2Entity> save(List<NetBar2Entity> list){
 		return iNetBarDao.save(list);
 	}
@@ -188,10 +196,12 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 		String syncurl=PropertiesUtil.getPropery(SystemConstants.NETBAR_WEBSERVICE_SYNC_DOWNLOAD_URL);
 		config.setUrl(syncurl);
 		config.setMethod(SystemConstants.NETBAR_WEBSERVICE_SYNC_DOWNLOAD_METHOD);
-		String endtime=this.queryMaxUpdateTime();
+		String endtime="20160101000000";
+		if(!"all".equals(code)){
+			endtime=this.queryMaxUpdateTime();
+		}
 		if(StringUtil.isEmpty(endtime))
 			endtime="20160101000000";
-//			DateUtil.getDate(DateUtil.datetimeformat_str);
 		//调用接口
 		List<NetBarBean> list= WebServiceUtil.netBarSyncData(config,loginKey,endtime);
 		if(list==null || list.size()==0){
@@ -214,6 +224,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 	private void saveSync(List<NetBar2Entity> nblist){
 		if(nblist==null || nblist.isEmpty())return ;
 		String filename=FileUtil.NETBAR_DATA_LOG_HEAD+DateUtil.getDate(DateUtil.datetimeformat_str_cn)+".log";
+		String errorLog=FileUtil.NETBAR_DATA_LOG_HEAD+"错误信息"+DateUtil.getDate(DateUtil.datetimeformat_str_cn)+".log";
 		String fileurl=PropertiesUtil.getLogUrl()+"log"+File.separator;
 		Gson gson=new Gson();
 		int total=this.iNetBarJPADao.countNetBar(new NetBarQuery());
@@ -243,6 +254,7 @@ public class NetBar2ServiceImpl implements INetBar2Service {
 					// TODO: handle exception
 					log.error("",e2);
 					FileUtil.writeContent(fileurl,filename, gson.toJson(e));
+					FileUtil.writeContent(fileurl,errorLog, e2.getMessage());
 				}
 			}
 		}

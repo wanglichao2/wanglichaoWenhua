@@ -57,6 +57,15 @@ public class CommonDaoImpl extends BaseJPADaoImpl<Object, Long> implements IComm
 
 	
 	@Override
+	public boolean delTableData(String tableName) {
+		// TODO Auto-generated method stub
+		Map<String, Object> parameters = new HashMap<String, Object>();
+		StringBuffer sql =new StringBuffer("truncate table "+tableName+" ");
+		
+		return executeNative(sql.toString(), parameters);
+	}
+
+	@Override
 	public boolean delUserRoles(Long userId, Long[] roleIds) {
 		// TODO Auto-generated method stub
 		if(userId==null)return true;

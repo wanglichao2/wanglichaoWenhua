@@ -58,6 +58,7 @@ public interface INetBar2Service {
 	 * @return
 	 */
 	boolean delBatch(Long[] ids);
+	void delAll();
 	
 	/**
 	 * 批量导入数据
