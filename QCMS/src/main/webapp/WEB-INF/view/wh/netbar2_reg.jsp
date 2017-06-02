@@ -120,11 +120,11 @@
 					    	<div class="col-sm-5"><input type="text" id="netbar_name" name="netbar_name" value="{{this.netbar_name}}" class="form-control" required></div>
 					    </div>
 						<div class="row m-b">
-			    	    	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>工商登记号：</div>
+			    	    	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>许可证号：</div>
 					    	<div class="col-sm-5"><input type="text" id="approval_num" name="approval_num" value="{{this.approval_num}}" class="form-control" required></div>
 					    </div>
 					    <div class="row m-b">	
-			            	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>网吧地址：</div>
+			            	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>区划地址：</div>
 					    	<div class="col-sm-10">
 								<input type="hidden" id="reg_address" name="reg_address" value="{{this.reg_address}}">
 								<select id="city_code" name="city_code">
@@ -147,7 +147,7 @@
 					    	<div class="col-sm-5"><input type="text" id="contact_tel" name="contact_tel" value="{{this.contact_tel}}" class="form-control" required></div>
 			            </div>
 						<div class="row m-b">	
-			            	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>实际客户机总数：</div>
+			            	<div class="col-sm-2 text-nowrap l-h"><span class="red">*</span>核定终端台数：</div>
 					    	<div class="col-sm-5"><input type="text" id="computer_num" name="computer_num" value="{{this.computer_num}}" class="form-control" required></div>
 			            </div>
 						

@@ -100,6 +100,7 @@
     	$(document).ready(function(){
     		var url = '${basePath}/group/edit';
     		var onClick = function(event, treeId, treeNode, clickFlag) {
+    			console.log(123123123);
     			dbTable.columns(3).search('^'+treeNode.id+'$', true, false).draw();//正则表达式搜索
     		}
     		var setting={

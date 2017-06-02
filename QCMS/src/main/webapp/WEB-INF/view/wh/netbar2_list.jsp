@@ -149,7 +149,7 @@
     		var id = "";
     		var parentId = "";
     		var areaName = "";
-    		
+    		var editableNm="editable";
     		var onClick = function(event, treeId, treeNode, clickFlag) {
 				var url = '${basePath}/netbarList/loadProvinceCityBar';
 				id = treeNode.id;
@@ -265,7 +265,7 @@
     	           		
     			     }
         		});//返回JQuery对象，api()方法添加到jQuery对象,访问API. 
-        		$('.dataTables_filter').css('display','none');
+        		/* $('.dataTables_filter').css('display','none'); */
         		
     		}
     		var setting = {
@@ -279,7 +279,7 @@
 
     		//initDtSearch();//表格搜索框回车查询
     		//表格初始化
-			oTable = $('#editable').dataTable({
+			oTable = $('#'+editableNm).dataTable({
 				 "bSort": false,
 				/* order:[[0, 'asc']], */  //scrollX:true,
 				/* columnDefs:[{targets:0, orderable:true}], */
@@ -287,7 +287,7 @@
 			});//返回JQuery对象，api()方法添加到jQuery对象,访问API.
 			dbTable = oTable.api();//返回datatable的API实例,
 			total();
-			$('.dataTables_filter').css('display','none');
+			/* $('.dataTables_filter').css('display','none'); */
 			$('#export').click(function(){
 				window.location.href="${basePath}/netbarList/export?id="+id+"&parentId="+parentId+"&areaName="+areaName;
 			});
@@ -373,7 +373,7 @@
 			function total(){
 				var i=0;
 	    		var zxwb = 0,lxwb = 0,jqzs = 0, yhzs = 0;
-	    		$('#editable tbody tr').each(function() { 
+	    		$('#'+editableNm+' tbody tr').each(function() { 
 	    			/* console.log(i+'-----'+$(this).children().eq(1).html()+"--"+$(this).children().eq(2).html()); */
 	    			/* if(i != 0){ */
 	    				var c1 = parseInt($(this).children().eq(1).html());
@@ -396,7 +396,7 @@
 	    			i++;
 	    		});
 	    		console.log(zxwb+"======="+lxwb);
-	    		var tfoot = $('#editable').find('tfoot');
+	    		var tfoot = $('#'+editableNm).find('tfoot');
 	    		tfoot[0].rows[0].cells[1].textContent = zxwb;
 	    		tfoot[0].rows[0].cells[2].textContent = lxwb;
 	    		tfoot[0].rows[0].cells[3].textContent = jqzs;
