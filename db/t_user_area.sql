@@ -30,3 +30,26 @@ CREATE TABLE `t_user_area` (
 -- ----------------------------
 -- Records of t_user_area
 -- ----------------------------
+
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `t_netbar_deploy`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_netbar_deploy`;
+CREATE TABLE `t_netbar_deploy` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `netbarCode` varchar(50)  DEFAULT NULL,
+  `detectNum` varchar(20) DEFAULT NULL,
+  `installNum` varchar(20) DEFAULT NULL,
+  `is_deploy` varchar(20) DEFAULT NULL,
+  `onlineNum` varchar(20) DEFAULT NULL,
+  `reportTime` varchar(20) DEFAULT NULL,
+  `status` int DEFAULT NULL,
+   `deployTime` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- ----------------------------
+-- Records of t_netbar_deploy
+-- ----------------------------

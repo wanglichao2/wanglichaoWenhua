@@ -21,13 +21,9 @@ import com.iss.util.HttpClientUtil;
 import com.iss.util.JsonUtil;
 import com.iss.util.PropertiesUtil;
 import com.iss.util.StringUtil;
-import com.iss.util.WebServiceUtil;
 import com.iss.vo.AjaxJson;
 import com.iss.vo.DataParam;
 import com.iss.vo.DataTables;
-import com.iss.vo.InterfaceConfig;
-import com.iss.vo.NetBarBean;
-import com.iss.vo.NetBarPrintVo;
 
 
 @Controller
@@ -168,7 +164,7 @@ public class NetBar2Controller extends BaseController {
 	}
 	
 	
-	@ResponseBody
+	/*@ResponseBody
 	@RequestMapping("/deploy/print")
 	public AjaxJson printDeploy(
 			@RequestParam("barId")String barId
@@ -185,6 +181,6 @@ public class NetBar2Controller extends BaseController {
 			json.setMsg(e.getMessage());;
 		}
 		return json;
-	}
+	}*/
 
 }

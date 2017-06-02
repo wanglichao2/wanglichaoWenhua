@@ -33,7 +33,7 @@ public interface INetBar2Service {
 	boolean existBusinessRegNo(String business_reg_no);
 	
 	String syncNetBarData(String code)throws Exception;
-	String printNetBar(String barId)throws Exception;
+	
 	/**
 	 * 保存数据
 	 * @param entity

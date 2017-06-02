@@ -111,7 +111,9 @@ public class FileInfoServiceImpl implements IFileInfoService {
 						&& CommonUtil.isEmpty(areaBarIdStr)){
 					log.error("not modify.....");
 				}else{
-					String[] netbarId = netbarIds.split(",");
+					String[] netbarId = new String[]{};
+					if(CommonUtil.isNotEmpty(netbarIds))
+						netbarId=netbarIds.split(",");
 					String[] areaBarIds = areaBarIdStr.split(",");
 					IFileBarJPADao.delByFileId(fileInfo.getId(),areaBarIds);
 					if(netbarId.length > 0){
