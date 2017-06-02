@@ -102,7 +102,8 @@ public class StatBarInstancerCacher {
 		if(null == bars || 0 == bars.size()) return;
 		
 		for(NetBar bar : bars) {
-			StatBarInstance instance = StatBarInstance.newOne(bar.getId(), bar.getNetbarName(), bar.getServerVersion(), bar.getClientVersion(), bar.getComputerNum());
+			StatBarInstance instance = StatBarInstance.newOne(bar.getId(), bar.getNetbarName(), 
+					bar.getServerVersion(), bar.getClientVersion(), 0);//bar.getComputerNum()
 			
 			barInstanceCacher.put(bar.getId(), instance);
 		}

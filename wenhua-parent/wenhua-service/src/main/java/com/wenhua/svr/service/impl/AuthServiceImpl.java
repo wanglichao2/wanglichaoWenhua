@@ -37,6 +37,7 @@ import com.wenhua.svr.exception.FileNotExistException;
 import com.wenhua.svr.exception.SystemException;
 import com.wenhua.svr.service.AuthService;
 import com.wenhua.util.BarIdUtils;
+import com.wenhua.util.constants.SystemConstant;
 
 public class AuthServiceImpl implements AuthService {
 	
@@ -314,6 +315,10 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public int countNetBarByAreaCode(String areaCode) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		String headStr=areaCode.substring(0,4);
+		if(Integer.valueOf(headStr)>=SystemConstant.District_Head){
+			areaCode=headStr;
+		}
 		params.put("areaCode", areaCode);
 		return this.netBarDao.countAreaBar(params);
 	}
@@ -321,6 +326,10 @@ public class AuthServiceImpl implements AuthService {
 	@Override
 	public int countNetBarPcByAreaCode(String areaCode) {
 		Map<String, Object> params = new HashMap<String, Object>();
+		String headStr=areaCode.substring(0,4);
+		if(Integer.valueOf(headStr)>=SystemConstant.District_Head){
+			areaCode=headStr;
+		}
 		params.put("areaCode", areaCode);
 		return this.netBarDao.countAreaPc(params);
 	}
