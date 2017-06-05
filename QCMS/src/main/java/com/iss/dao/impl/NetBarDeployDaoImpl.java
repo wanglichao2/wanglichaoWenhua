@@ -33,7 +33,7 @@ public class NetBarDeployDaoImpl extends BaseJPADaoImpl<Object, Long> implements
 		.append(" FROM "+TableConstants.NETBAR_DEPLOY_TABLE+" d WHERE d.netbarCode= :netbarCode ");
 		parameters.put("netbarCode", barId);
 		if(CommonUtil.isNotEmpty(isDeploy)){
-			sql.append(" and d.isDeploy= :isDeploy");
+			sql.append(" and d.is_deploy= :isDeploy");
 			parameters.put("isDeploy", isDeploy);
 		}
 		List<Object> list = findNativeQuery(sql.toString(), parameters);
@@ -60,7 +60,7 @@ public class NetBarDeployDaoImpl extends BaseJPADaoImpl<Object, Long> implements
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		StringBuffer sql = new StringBuffer();
 		sql.append("select "+getQueryColumns())
-		.append(" FROM "+TableConstants.NETBAR_DEPLOY_TABLE+" d WHERE d.isDeploy= :isDeploy ");
+		.append(" FROM "+TableConstants.NETBAR_DEPLOY_TABLE+" d WHERE d.is_deploy= :isDeploy ");
 		parameters.put("isDeploy", "1");
 		
 		List<Object> list = findNativeQuery(sql.toString(), parameters);

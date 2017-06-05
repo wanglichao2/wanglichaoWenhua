@@ -16,7 +16,7 @@ public interface INetBarListService {
 	
 	List<ProvinceCityBarEntity> loadProvinceCityBar(UserEntity user, DataParam param);
 	
-	List<AreasBarEntity> loadAreasBar(DataParam param);
+	List<AreasBarEntity> loadAreasBar(UserEntity user, DataParam param);
 	
 	List<AreasBarEntity> loadAreasBar(String areaCode, String barId);
 	

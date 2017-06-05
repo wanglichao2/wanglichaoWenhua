@@ -7,6 +7,7 @@
 package com.iss.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,7 @@ import com.iss.entity.StatNetBarEntity;
 import com.iss.entity.UserEntity;
 import com.iss.service.IAreasCodeService;
 import com.iss.service.INetBarListService;
+import com.iss.util.CommonUtil;
 import com.iss.util.ConstantValue;
 import com.iss.util.JsonUtil;
 import com.iss.util.StringUtil;
@@ -85,8 +87,14 @@ public class NetBarListController extends BaseController {
 	@ResponseBody
 	@RequestMapping(value="/loadAreasBar", produces="application/json;charset=UTF-8")
 	public String loadAreasBar(DataParam param){
-		List<AreasBarEntity> data = iNetBarListService.loadAreasBar(param);
-		DataTables<AreasBarEntity> dt = new DataTables<AreasBarEntity>(param.getDraw(), data.size(), data.size(), data);
+		List<AreasBarEntity> data=null;
+		UserEntity user=(UserEntity)session.getAttribute(ConstantValue.SESSION_USER);
+		if(user==null)return null;
+		if(param==null || CommonUtil.isEmpty(param.getSearch())){
+			data=new ArrayList<AreasBarEntity>();
+		}else
+			data = iNetBarListService.loadAreasBar(user,param);
+		DataTables<AreasBarEntity> dt = new DataTables<AreasBarEntity>(param.getDraw(), data==null?0:data.size(), data==null?0:data.size(), data);
 		return JsonUtil.toJson(dt);
 	}
 	
@@ -170,7 +178,7 @@ public class NetBarListController extends BaseController {
 	        model.addAttribute(NormalExcelConstants.DATA_LIST, list);
 	        return NormalExcelConstants.JEECG_EXCEL_VIEW;
 		}else{
-	        List<AreasBarEntity> list = iNetBarListService.loadAreasBar(param);
+	        List<AreasBarEntity> list = iNetBarListService.loadAreasBar(user,param);
 //	        StatAreaEntity entity = new StatAreaEntity();
 //	        entity.setArea_code(areaName);
 //	        entity.setOnline(0L);

@@ -36,6 +36,7 @@
                        	<a href="${basePath}/netbarList/list" class="btn btn-white btn-margin-right"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
                        	<a id="export" href="javascript:void(0);" class="btn btn-white"><i class="fa fa-download"></i>&nbsp;导出Excel</a>
                        	<input id="zNodes" type="hidden" value='${areasTree}'>
+                       	<input id="defineKey" type="hidden" value=''>
                     </div>
                     <div class="ibox-content">
                     	<div class="row">
@@ -145,11 +146,12 @@
     	</div>
     </script>
     <script>
+    var editableNm="editable";
     	$(document).ready(function(){
     		var id = "";
     		var parentId = "";
     		var areaName = "";
-    		var editableNm="editable";
+    		initDtSearch();
     		var onClick = function(event, treeId, treeNode, clickFlag) {
 				var url = '${basePath}/netbarList/loadProvinceCityBar';
 				id = treeNode.id;
@@ -250,7 +252,7 @@
     			    		if(parentId == 410000 || parentId == 0){
     			    		//	tfoot[0].rows[0].cells[4].textContent = login;
     			    		}else{
-    			    			tfoot[0].rows[0].cells[4].textContent = "33";
+    			    			tfoot[0].rows[0].cells[4].textContent = "";
     			    		} 
     			    		
     			    		return drawData(result);
@@ -283,6 +285,7 @@
 				 "bSort": false,
 				/* order:[[0, 'asc']], */  //scrollX:true,
 				/* columnDefs:[{targets:0, orderable:true}], */
+				/*  ajax: {url:'${basePath}/netbarList/loadAreasBar', type:'POST'}, */
 				paging:false
 			});//返回JQuery对象，api()方法添加到jQuery对象,访问API.
 			dbTable = oTable.api();//返回datatable的API实例,
@@ -403,14 +406,70 @@
 	    		//tfoot[0].rows[0].cells[4].textContent = yhzs;
 			}
 	        $('.spiner-example').remove();//移除遮罩层
+	        
     	});
+    	function searchByKey(val){
+        	console.log("searchByKey==>"+val);
+        	$('#bar_div').css('display','block');
+			$('#stat_div').css('display','none');
+			editableNm="editable_";
+		var table = $('#'+editableNm).dataTable();
+		if(table){
+			table.fnDestroy();
+		}
+		var cells = table[0].rows[0].cells;
+		console.log(cells.length+"---");
+		$('#bar_div').css('display','block');
+		$('#stat_div').css('display','none');
+    	cells[0].textContent = '网吧列表';
+    	cells[1].textContent = '在线终端数';
+    	cells[2].textContent = '离线终端数';
+    	cells[3].textContent = '有效终端数';
+    	cells[4].textContent = '服务端版本';
+    	//更换URL，并传递节点ID参数
+    	url = '${basePath}/netbarList/loadAreasBar';
+    	columns = [{data:'barName'},{data:'online'},{data:'offline'},{data:'valid'},{data:'serverVersion'}];
+    	$.com.ajax({
+        		url: '${basePath}/netbarList/loadAreasBar',
+		       	data: {"search":{"value":val,"querytype":"keywords"}},
+		       	success: function(result){
+		       		var online = 0,offline = 0,pcTotal = 0, login = 0;
+		    		$.each(result.data,function(index,value){
+		    			online = online + parseInt(value.online);
+		    			offline = offline + parseInt(value.offline);
+		    			pcTotal = pcTotal + parseInt(value.valid);
+		    			login = login + parseInt(value.login);
+		    		});
+		    		console.log("login==>"+login);
+		    		var tfoot = $('#'+editableNm).find('tfoot');
+		    		tfoot[0].rows[0].cells[0].textContent = " 总计";
+		    		tfoot[0].rows[0].cells[1].textContent = online;
+		    		tfoot[0].rows[0].cells[2].textContent = offline;
+		    		tfoot[0].rows[0].cells[3].textContent = pcTotal;
+		    		
+		    		var str= drawData(result);
+		    		console.log("++"+JSON.stringify(str));
+		       		$('#'+editableNm).dataTable({
+						/* dataSrc: str */
+						columns: columns,
+    					paging:false,
+						"data": str,
+				        "columns":columns
+		   			});
+	       		},
+              	error:function(){
+              		BootstrapDialog.alert({type:'type-danger', message:'操作失败，请刷新重试！'});
+                }
+			});
+			
+    	}
+    	
     	var hideColumn=function(val){
 			$("#t_head").css("display",val); 
 		//	$("#t_body").attr("display",val); 
 			$("td.t_body_").css("display",val); 
 			
 			$("#t_foot").css("display",val); 
-			
 		}
 	</script>
 </body>

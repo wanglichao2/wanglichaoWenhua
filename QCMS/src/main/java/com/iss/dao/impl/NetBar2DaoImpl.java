@@ -268,7 +268,7 @@ public class NetBar2DaoImpl extends BaseJPADaoImpl<Object, Long> implements INet
 
 	@Override
 	public int existBusinessRegNo(String business_reg_no){
-		String sql = "select count(*) FROM "+TableConstants.NETBAR2_TABLE+" WHERE approval_num="+business_reg_no;
+		String sql = "select count(*) FROM "+TableConstants.NETBAR2_TABLE+" WHERE approval_num= '"+business_reg_no+"'";
 		return findNativeCount(sql);
 	}
 	

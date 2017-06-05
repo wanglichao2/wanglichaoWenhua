@@ -55,6 +55,7 @@
                         <shiro:hasPermission name="netbar:del">
                         	<a id="delAll" href="javascript:void(0);" class="btn btn-white btn-margin-right" style="display: none;"><i class="fa fa-remove"></i>&nbsp;批量删除</a>
                         </shiro:hasPermission>
+                        <a id="upLoadDeployInfo" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;网吧信息上报</a>
                     </div>
                     <div class="ibox-content">
                         <table class="table table-striped table-bordered table-hover " id="editable">
@@ -191,7 +192,7 @@
     		var isVisible = $('#addRow').length>0 || $('#delAll').length>0;//权限按钮
     		columnDefs.push({targets:0, className:'text-center', orderable:false, render:optRenderAuth, visible:isVisible});//操作列
     		columnDefs.push({targets:13, className:'text-center', orderable:false, render:function(value, type, row, meta){
-    			console.log(value+"=="+row.netbar_name+"=="+row+"=="+meta);
+    			// console.log(value+"=="+row.netbar_name+"=="+row+"=="+meta);
     			if(value==null || value==1)return "";
     			if(value==0)return "<a onclick='goDeploy("+row.id+")' style='color: blue;''>确认</a>";
     		}});//操作列
@@ -350,6 +351,26 @@
 	    			           		BootstrapDialog.alert("修复操作成功！");
 	    			           	}else{
 	    			           		BootstrapDialog.alert({type:'type-danger', message:'修复网吧数据失败：'+data.msg});
+	    			           	}
+	    		       		},
+                          	error:function(){
+                          		BootstrapDialog.alert({type:'type-danger', message:'操作失败，请刷新重试！'});
+                            }
+	    				});
+	                }
+	            }});
+	      	});
+	      	$('#upLoadDeployInfo').on('click',function(){
+	      		BootstrapDialog.confirm({type:'type-default', message:'确认是否上报全部网吧信息?', callback:function(result){
+	                if(result) {
+	                	$.com.ajax({
+	    			       	url: '${basePath}/netbar2/deploy/upload',
+	    		           	/* data:{pk:dataJson.id, name:'status', value:'1'}, */
+	    			       	success: function(data){
+	    			           	if(data.flag){
+	    			           		BootstrapDialog.alert("网吧信息上报成功！");
+	    			           	}else{
+	    			           		BootstrapDialog.alert({type:'type-danger', message:'网吧信息上报失败：'+data.msg});
 	    			           	}
 	    		       		},
                           	error:function(){

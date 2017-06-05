@@ -1,7 +1,9 @@
 package com.iss.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,7 +41,7 @@ public class NetBarListServiceImpl implements INetBarListService {
 		if(SystemConstants.ADMINISTRATOR_NAME.equals(user.getLogin())){
 			url=PropertiesUtil.getPropery("provinceUrl");
 		}
-		String result = HttpClientUtil.netBarListHttpPost(url);
+		String result = HttpClientUtil.netBarListHttpPost(url,new HashMap<String, Object>());
 		//json结果转换为List集合
 		try {
 			if(StringUtil.isNotEmpty(result)){
@@ -71,7 +73,7 @@ public class NetBarListServiceImpl implements INetBarListService {
 		}
 		
 		List<ProvinceCityBarEntity> data = new ArrayList<ProvinceCityBarEntity>();
-		String result = HttpClientUtil.netBarListHttpPost(url);
+		String result = HttpClientUtil.netBarListHttpPost(url,new HashMap<String, Object>());
 		//json结果转换为List集合
 		try {
 			if(StringUtil.isNotEmpty(result)){
@@ -84,10 +86,26 @@ public class NetBarListServiceImpl implements INetBarListService {
 	}
 
 	@Override
-	public List<AreasBarEntity> loadAreasBar(DataParam param) {
+	public List<AreasBarEntity> loadAreasBar(UserEntity user, DataParam param) {
 		List<AreasBarEntity> data = new ArrayList<AreasBarEntity>();
+		String querytype=param.getSearch().get("querytype");
 		String value = param.getSearch().get("value");
-		String result = HttpClientUtil.netBarListHttpPost(PropertiesUtil.getPropery("areaUrl")+value);
+		Map<String, Object> parammap=new HashMap<String, Object>();
+		if(CommonUtil.isNotEmpty(querytype)){
+			if(CommonUtil.isEmpty(value))
+				return data;
+		}else querytype="code";
+		String url=PropertiesUtil.getPropery("areaUrl");
+		if(SystemConstants.ADMINISTRATOR_NAME.equals(user.getLogin())){
+			url=url+querytype;
+			parammap.put("keyword", value);
+		}else{
+//			String params=user.getId()+":"+querytype+":"+value;
+			url = url + querytype;
+			parammap.put("keyword", value);
+			parammap.put("userId", user.getId());
+		}
+		String result = HttpClientUtil.netBarListHttpPost(url,parammap);
 		//json结果转换为List集合
 		try {
 			if(StringUtil.isNotEmpty(result)){
@@ -111,7 +129,9 @@ public class NetBarListServiceImpl implements INetBarListService {
 			areaCode=head+"00";
 		}
 		String param=areaCode+":"+barId;
-		String result = HttpClientUtil.netBarListHttpPost(PropertiesUtil.getPropery(SystemConstants.BAR_AREA_URL)+param);
+		String result = HttpClientUtil.netBarListHttpPost(
+				PropertiesUtil.getPropery(SystemConstants.BAR_AREA_URL)+param
+				,new HashMap<String, Object>());
 		//json结果转换为List集合
 		try {
 			if(StringUtil.isNotEmpty(result)){

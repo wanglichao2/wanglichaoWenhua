@@ -86,7 +86,7 @@ public class NetBar2Controller extends BaseController {
 		entity.setCreate_time(DateUtil.getDate(DateUtil.datetimeformat_str));
 		NetBar2Entity fixed = iNetBarService.save(entity);
 		//调用接口
-		HttpClientUtil.netBarHttpPost(url+fixed.getId());
+		HttpClientUtil.netBarHttpPost(url+fixed.getId(),null);
 		
 		if(fixed != null){
 			json.setFlag(true);
@@ -123,7 +123,7 @@ public class NetBar2Controller extends BaseController {
 		AjaxJson json = new AjaxJson();
 		boolean bool = iNetBarService.update(pk, name, value);
 		//调用接口
-		HttpClientUtil.netBarHttpPost(PropertiesUtil.getPropery("updateBarUrl")+pk);
+		HttpClientUtil.netBarHttpPost(PropertiesUtil.getPropery("updateBarUrl")+pk,null);
 		json.setFlag(bool);
 		return json;
 	}
