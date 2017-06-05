@@ -9,7 +9,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,11 +37,16 @@ import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.codec.http.DefaultFullHttpResponse;
+import io.netty.handler.codec.http.DefaultLastHttpContent;
+import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 import io.netty.handler.codec.http.HttpContent;
 import io.netty.handler.codec.http.HttpHeaderNames;
+import io.netty.handler.codec.http.HttpMethod;
 import io.netty.handler.codec.http.HttpRequest;
 import io.netty.handler.codec.http.HttpUtil;
+import io.netty.handler.codec.http.multipart.HttpPostRequestDecoder;
+import io.netty.handler.codec.http.multipart.InterfaceHttpData;
 import io.netty.handler.timeout.TimeoutException;
 import io.netty.util.Attribute;
 import io.netty.util.AttributeKey;
@@ -84,20 +91,33 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		return ip;
 	}
 
+	private HttpPostRequestDecoder decoder=null;
 	@Override
 	public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
 
 		List<Object> list = null;
-		
+		 Map<String, String> paramMap = new HashMap<>();
 		if (msg instanceof HttpRequest) {
 			request = (HttpRequest) msg;
 
 			uri = request.uri();
-			logger.info(String.format("##Http reqest uri: %s, remoteIp: %s", uri, getRemoteIp(ctx)));
+			logger.info(String.format("##Http reqest uri: %s, remoteIp: %s  =="+request.method(), uri, getRemoteIp(ctx)));
+			decoder = new HttpPostRequestDecoder((HttpRequest)msg);
 		}
+		
 		if (msg instanceof HttpContent) {
-			
 			try {
+				HttpContent fhr=(HttpContent)msg;
+				if(request.method()==HttpMethod.POST){
+		            decoder.offer(fhr); 
+		            List<InterfaceHttpData> parmList = decoder.getBodyHttpDatas();
+		            for (InterfaceHttpData parm : parmList) {
+		                io.netty.handler.codec.http.multipart.Attribute data = (io.netty.handler.codec.http.multipart.Attribute) parm;
+		                String val=data.getValue();
+		                paramMap.put(data.getName(), val);
+		                logger.info("-->"+val);
+		            }
+				}
 				
 				if(null == uri) {
 					invalidRequestCloseChannel(ctx);
@@ -115,8 +135,9 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 					
 				} else if(uri.startsWith(URL_AREA)) {
 					param = uri.substring(URL_AREA.length(), uri.length());
+					
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA, param));
-					list =(List<Object>) doArea(param);
+					list =(List<Object>) doArea(param,paramMap);
 				} else if(uri.startsWith(URL_UPDATE_BAR)) {
 					param = uri.substring(URL_UPDATE_BAR.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_UPDATE_BAR, param));
@@ -168,7 +189,7 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 				} else if(uri.startsWith(URL_AREA_USER)) {
 					param = uri.substring(URL_AREA_USER.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA_USER, param));
-					list = (List<Object>)doArea(param);
+					list = (List<Object>)doArea(param,paramMap);
 				} else if(uri.startsWith(URL_AREA_BAR)) {
 					param = uri.substring(URL_AREA_BAR.length(), uri.length());
 					logger.info(String.format("##Uri begin with: %s, param is: %s", URL_AREA_BAR, param));
@@ -282,13 +303,31 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		StatAreaInstanceCacher.updateArea(areaCode, maxBar, maxPc);
 	}
 
-	private List<?> doArea(String areaCode) {
-
-		List<Object> list = new ArrayList<Object>();
+	private List<?> doArea(String areaCode,Map<String, String> paramMap) {
 		
-		List<StatBarInstance> bars = StatBarInstancerCacher.getBarInArea(areaCode);
-		for(StatBarInstance bar : bars) {
-			list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion()));
+		List<Object> list = new ArrayList<Object>();
+		String type=areaCode;
+		String keyword=paramMap.get("keyword");
+		String userIdStr=paramMap.get("userId");
+		if("code".equals(type)){//编号查询
+			List<StatBarInstance> bars = StatBarInstancerCacher.getBarInArea(keyword);
+			for(StatBarInstance bar : bars) {
+				list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion()));
+			}
+		}else{
+			// 关键字
+			Map<String, Object> queryMap = new HashMap<String, Object>();
+			queryMap.put("keyword", keyword);
+			if (userIdStr != null && !"".equals(userIdStr)) {
+				queryMap.put("userId", Long.valueOf(userIdStr));
+			} 
+			List<String> barIds = this.authService.getBarIdsByMap(queryMap);
+			List<StatBarInstance> bars = StatBarInstancerCacher.getBarsInIds(barIds);
+			for (StatBarInstance bar : bars) {
+				list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(),
+						bar.getOnline(), bar.getOffline(), bar.getValid(),
+						bar.getServerVersion()));
+			}
 		}
 		return list;
 	}

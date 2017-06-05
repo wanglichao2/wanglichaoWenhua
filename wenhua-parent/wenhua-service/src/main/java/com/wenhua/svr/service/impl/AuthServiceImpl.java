@@ -448,6 +448,15 @@ public class AuthServiceImpl implements AuthService {
 		queryMap.put("cityCode", cityCode);
 		return this.userAreaDao.getDistrictCodesByUserId(queryMap);
 	}
+	
 
+	@Override
+	public List<String> getBarIdsByMap(Map<String, Object> queryMap) {
+		// TODO Auto-generated method stub
+		return this.netBarDao.selectBarIdsByMap(queryMap);
+		
+	}
+
+	
 	
 }

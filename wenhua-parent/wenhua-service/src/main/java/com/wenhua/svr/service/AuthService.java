@@ -2,6 +2,7 @@ package com.wenhua.svr.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import com.wenhua.svr.domain.AreasCode;
 import com.wenhua.svr.domain.BarAuthInfo;
@@ -193,5 +194,6 @@ public interface AuthService {
 	
 	public List<String> getCityCodesByUserId(Long userId);
 	public List<String> getDistrictCodeByUserId(Long userId,String cityCode);
+	public List<String> getBarIdsByMap(Map<String, Object> queryMap);
 	
 }

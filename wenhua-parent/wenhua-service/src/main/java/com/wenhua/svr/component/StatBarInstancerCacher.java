@@ -75,18 +75,28 @@ public class StatBarInstancerCacher {
 	 * @return
 	 */
 	public static List<StatBarInstance> getBarInArea(String areaCode) {
-
 		List<StatBarInstance> list = new ArrayList<StatBarInstance>();
 		if(null == areaCode || !AreasCode.isValidCode(areaCode)) return list;
-		
 		Set<String> barIds = barInstanceCacher.keySet();
 		for(String barId : barIds) {
-			
 			if(!AreasCode.isBarMine(areaCode, barId)) continue;
-			
 			list.add(barInstanceCacher.get(barId));
 		}
-		
+		return list;
+	}
+	
+	public static List<StatBarInstance> getBarsInIds(List<String> barIdList){
+		List<StatBarInstance> list = new ArrayList<StatBarInstance>();
+		if(barIdList==null|| barIdList.size()==0)return list;
+		Set<String> barIds = barInstanceCacher.keySet();
+		for(String barId : barIds) {
+			for(String id:barIdList){
+				if(barId.equals(id)){
+					list.add(barInstanceCacher.get(barId));
+					break;
+				}
+			}
+		}
 		return list;
 	}
 	

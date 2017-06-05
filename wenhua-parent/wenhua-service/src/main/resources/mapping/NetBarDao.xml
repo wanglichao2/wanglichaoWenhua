@@ -382,4 +382,24 @@
       sync_time = #{syncTime,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR}
   </update>
+  
+  <select id="selectBarIdsByMap" parameterType="map" resultType="java.lang.String">
+    select 
+   distinct b.id
+    from t_net_bar b
+    <if test="userId !=null">
+    	left join t_user_area ua on ua.districtCode=b.district_code
+    </if>
+    where 1=1
+    <if test="keyword !=null and keyword !=''">
+    	and (b.netbar_name like concat('%',#{keyword},'%')
+    		or b.approval_num like concat('%',#{keyword},'%')
+    		or b.id like concat('%',#{keyword},'%')
+    	)
+    </if>
+    <if test="userId !=null">
+    	and ua.userId=#{userId}
+    </if>
+  </select>
+  
 </mapper>
