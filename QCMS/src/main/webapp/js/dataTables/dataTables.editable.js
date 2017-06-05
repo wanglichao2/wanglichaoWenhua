@@ -166,6 +166,7 @@ var initEvent= function(url){
 }
 //扩展DT的搜索文本框回车查询默认配置
 var initDtSearch = function(){
+	console.log("initDtSearch");
 	$.extend($.fn.dataTable.defaults, {
 	    //DT初始化完毕回调函数
 	    initComplete: function(settings) {
@@ -177,6 +178,9 @@ var initDtSearch = function(){
 	        $(_$this.selector + '_wrapper .dataTables_filter input').bind('keyup',
 	        function(e) {
 	            if (e.keyCode == 13 || (e.keyCode == 8 && (this.value.length == 0))) {
+	            	console.log("search");
+	            	if($('#defineKey'))
+	            		searchByKey(this.value);
 	                _$this.api().search(this.value).draw();
 	            }
 	        });
