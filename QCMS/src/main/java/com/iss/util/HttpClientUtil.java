@@ -56,26 +56,37 @@ public class HttpClientUtil {
 	 * @throws HttpException 
 	 */
     public static JsonObject httpPost(String url,Map<String, Object> params) throws HttpException, IOException{
-		//创建client对象
+    	StringBuffer buf = new StringBuffer();
+    	//创建client对象
 		HttpClient client = new HttpClient();
 		//获取method
     	PostMethod method = new PostMethod(url);
-    	method.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET,"utf-8");
-    	NameValuePair[] param=initParams(params);
-    	if(param!=null && param.length!=0)
-    		method.setRequestBody(param);
-//    	method.addParameter(paramName, paramValue);
-    	//执行method
-		client.executeMethod(method);
-		//获取method返回的流
-		InputStream stream = method.getResponseBodyAsStream(); 
-		//读取流
-		BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));  
-	    StringBuffer buf = new StringBuffer();  
-	    String line;  
-	    while (null != (line = br.readLine())) {  
-	         buf.append(line).append("\n");  
-	    }
+    	try {
+        	method.getParams().setParameter(HttpMethodParams.HTTP_CONTENT_CHARSET,"utf-8");
+        	NameValuePair[] param=initParams(params);
+        	if(param!=null && param.length!=0)
+        		method.setRequestBody(param);
+//        	method.addParameter(paramName, paramValue);
+        	//执行method
+    		client.executeMethod(method);
+    		//获取method返回的流
+    		InputStream stream = method.getResponseBodyAsStream(); 
+    		//读取流
+    		BufferedReader br = new BufferedReader(new InputStreamReader(stream, "UTF-8"));  
+    	    String line;  
+    	    while (null != (line = br.readLine())) {  
+    	         buf.append(line).append("\n");  
+    	    }
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("",e);
+			throw e;
+		}finally{
+			if(method!=null){
+				method.releaseConnection();
+				method=null;
+			}
+		}
 	    //转换为json
 	    JsonParser parse = new JsonParser();
 	    return (JsonObject) parse.parse(buf.toString());

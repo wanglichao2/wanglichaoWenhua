@@ -85,11 +85,11 @@
 		                        <table class="table table-striped table-bordered table-hover " id="editable_">
 		                            <thead>
 		                                <tr>
-		                                    <th>市</th>
-											<th>在线网吧数</th>
-											<th>离线网吧数</th>
-											<th>机器总数</th>
-											 <th>服务端版本号</th>
+		                                    <th >市</th>
+											<th style="width:100px">在线网吧数</th>
+											<th style="width:100px">离线网吧数</th>
+											<th style="width:100px">机器总数</th>
+											 <th style="width:100px">服务端版本号</th>
 		                                </tr>
 		                            </thead>
 		                            <tbody id="tbody_stat">
@@ -207,12 +207,17 @@
 	        		cells[0].textContent = '网吧列表';
 	        		cells[1].textContent = '在线终端数';
 	        		cells[2].textContent = '离线终端数';
-	        		cells[3].textContent = '有效终端数';
-	        		cells[4].textContent = '服务端版本';
+	        		/* cells[3].textContent = '有效终端数';
+	        		cells[4].textContent = '服务端版本'; */
+	        		cells[3].textContent = '今日累计在线';//有效终端数
+	            	cells[4].textContent = '昨天累计在线';//服务端版本
 	        		
 	        		//更换URL，并传递节点ID参数
 	        		url = '${basePath}/netbarList/loadAreasBar';
-	        		columns = [{data:'barName'},{data:'online'},{data:'offline'},{data:'valid'},{data:'serverVersion'}];
+	        		columns = [{data:'barName'},{data:'online'},{data:'offline'},
+	        		           /* {data:'valid'},{data:'serverVersion'} */
+	        		           {data:'onlineNumToday'},{data:'onlineNumYsday'}
+	        		           ];
 	        	}
         		
         		//省级表格初始化
@@ -237,11 +242,15 @@
     			    			online = online + parseInt(value.online);
     			    			offline = offline + parseInt(value.offline);
     			    			if(parentId == 410000 || parentId == 0){
+        			    			console.log("offline:"+value.online+"===offline:"+value.online+"===pcTotal:"+value.pcTotal+"===login:"+value.login);
     			    				pcTotal = pcTotal + parseInt(value.pcTotal);
+    			    				login = login + parseInt(value.login);
     			    			}else{
-    			    				pcTotal = pcTotal + parseInt(value.valid);
+        			    			console.log("offline:"+value.online+"===offline:"+value.online+"===onlineNumToday:"+value.onlineNumToday+"===onlineNumYsday:"+value.onlineNumYsday);
+    			    				pcTotal = pcTotal + parseInt(value.onlineNumToday);
+    			    				login = login + parseInt(value.onlineNumYsday);
     			    			}
-    			    			login = login + parseInt(value.login);
+    			    			
     			    		});
     			    		console.log("login==>"+login);
     			    		var tfoot = $('#'+editableNm).find('tfoot');
@@ -252,7 +261,7 @@
     			    		if(parentId == 410000 || parentId == 0){
     			    		//	tfoot[0].rows[0].cells[4].textContent = login;
     			    		}else{
-    			    			tfoot[0].rows[0].cells[4].textContent = "";
+    			    			tfoot[0].rows[0].cells[4].textContent = login;
     			    		} 
     			    		
     			    		return drawData(result);
@@ -313,23 +322,23 @@
           						{
           							label: obj.name[0],
           							fillColor: "rgba(0,0,0,0)",//"rgba(220,220,220,0.2)",// 填充颜色
-          				            strokeColor: "rgba(30,144,255,1)",// 线的颜色
-          				            pointColor: "rgba(30,144,255,1)",// 点的填充颜色
+          				            strokeColor: "rgba(0,255,0,1)",// 线的颜色
+          				            pointColor: "rgba(0,255,0,1)",// 点的填充颜色
           				            pointStrokeColor: "#fff",// 点的边线颜色
           							data : obj.y1, //Y轴（数量）
           							spanGaps: false,
           						},{
           							label: obj.name[1],
           							fillColor: "rgba(0,0,0,0)",//"rgba(230,230,250,0.2)",
-  				            		strokeColor: "rgba(255,255,0,1)",
-  				            		pointColor: "rgba(255,255,0,1)",
+  				            		strokeColor: "rgba(180,180,180,1)",
+  				            		pointColor: "rgba(180,180,180,1)",
   				            		pointStrokeColor: "#fff",
           							data : obj.y2, //Y轴（数量）
           							spanGaps: false,
           						},{
           							label: obj.name[2],
           							fillColor: "rgba(0,0,0,0)",//"rgba(151,187,205,0.2)",
-          				            strokeColor: "rgba(255,165,0,1)",
+          				            strokeColor: "rgba(255,200,200,1)",
           				            pointColor: "rgba(255,165,0,1)",
           				            pointStrokeColor: "#fff",
           							data : obj.y3, //Y轴（数量）
@@ -360,7 +369,7 @@
 		          				var html = '<ul style= "width:800px;height:60px;list-style:none;margin-left:50px">';
 		          				$.each(chartLine.datasets,function(index,value){
 		          					html = html + '<li style="float:left;display:inline;margin-left:30px;line-height:30px;width:100px;border:1px solid rgba(0,0,0,0);background-color:'
-		          					+value.strokeColor+'">&nbsp;&nbsp;&nbsp;&nbsp;'+value.label+'<br/></li>';
+		          					+value.strokeColor+'">&nbsp;&nbsp;&nbsp;&nbsp;<font style="font-weight: bold;">'+value.label+'</font><br/></li>';
 		          				});
 		          				html = html + '</ul>';
 		          				document.getElementById('chart_line_legend').innerHTML = html;
@@ -424,29 +433,34 @@
     	cells[0].textContent = '网吧列表';
     	cells[1].textContent = '在线终端数';
     	cells[2].textContent = '离线终端数';
-    	cells[3].textContent = '有效终端数';
-    	cells[4].textContent = '服务端版本';
+    	cells[3].textContent = '今日累计在线';//有效终端数
+    	cells[4].textContent = '昨天累计在线';//服务端版本
     	//更换URL，并传递节点ID参数
     	url = '${basePath}/netbarList/loadAreasBar';
-    	columns = [{data:'barName'},{data:'online'},{data:'offline'},{data:'valid'},{data:'serverVersion'}];
+    	columns = [{data:'barName'},{data:'online'},{data:'offline'},
+    	           /* {data:'valid'},{data:'serverVersion'} */
+    	           {data:'onlineNumToday'},{data:'onlineNumYsday'}
+    	           ];
     	$.com.ajax({
         		url: '${basePath}/netbarList/loadAreasBar',
 		       	data: {"search":{"value":val,"querytype":"keywords"}},
 		       	success: function(result){
 		       		var online = 0,offline = 0,pcTotal = 0, login = 0;
 		    		$.each(result.data,function(index,value){
+		    			console.log("offline:"+value.online+"===offline:"+value.online+"===onlineNumToday:"+value.onlineNumToday+"===onlineNumYsday:"+value.onlineNumYsday);
 		    			online = online + parseInt(value.online);
 		    			offline = offline + parseInt(value.offline);
-		    			pcTotal = pcTotal + parseInt(value.valid);
-		    			login = login + parseInt(value.login);
+		    			pcTotal = pcTotal + parseInt(value.onlineNumToday);
+		    			login = login + parseInt(value.onlineNumYsday);
 		    		});
+		    		
 		    		console.log("login==>"+login);
 		    		var tfoot = $('#'+editableNm).find('tfoot');
 		    		tfoot[0].rows[0].cells[0].textContent = " 总计";
 		    		tfoot[0].rows[0].cells[1].textContent = online;
 		    		tfoot[0].rows[0].cells[2].textContent = offline;
 		    		tfoot[0].rows[0].cells[3].textContent = pcTotal;
-		    		
+		    		tfoot[0].rows[0].cells[4].textContent = login;
 		    		var str= drawData(result);
 		    		console.log("++"+JSON.stringify(str));
 		       		$('#'+editableNm).dataTable({
