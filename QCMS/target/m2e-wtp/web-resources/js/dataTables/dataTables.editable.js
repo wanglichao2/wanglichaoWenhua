@@ -118,7 +118,17 @@ var afterAddRow = function(tr){
 	});
 	//删除添加的行
 	tr.find('i.fa-remove').on('click', function(){
-		oTable.fnDeleteRow($(this).parents('tr'));
+		var tr=$(this).parents('tr');
+		var pk = tr.find('a[data-type]:first').attr('data-pk');
+		if(pk){
+			console.log("+++++++++++++++++"+pk);
+			editableDelRow(pk,tr);
+		}else{
+			console.log("no pkid===");
+			oTable.fnDeleteRow(tr);
+		}
+		
+//		oTable.fnDeleteRow($(this).parents('tr'));
 	});
 }
 //公共删除和编辑状态切换事件
@@ -156,6 +166,7 @@ var initEvent= function(url){
 }
 //扩展DT的搜索文本框回车查询默认配置
 var initDtSearch = function(){
+	console.log("initDtSearch");
 	$.extend($.fn.dataTable.defaults, {
 	    //DT初始化完毕回调函数
 	    initComplete: function(settings) {
@@ -167,6 +178,9 @@ var initDtSearch = function(){
 	        $(_$this.selector + '_wrapper .dataTables_filter input').bind('keyup',
 	        function(e) {
 	            if (e.keyCode == 13 || (e.keyCode == 8 && (this.value.length == 0))) {
+	            	console.log("search");
+	            	if($('#defineKey'))
+	            		searchByKey(this.value);
 	                _$this.api().search(this.value).draw();
 	            }
 	        });

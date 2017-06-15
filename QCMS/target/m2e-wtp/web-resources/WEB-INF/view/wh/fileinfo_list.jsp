@@ -155,14 +155,17 @@
     								</div>
     								<div class="panel-body">
 										<input id="zNodes" type="hidden" value='${areasTree}'>
+										<input type="hidden" id="areaId" name="areaId" value="all">
+										<input type="hidden" id="areaBarIds" name="areaBarIds" value="">
 										<div class="col-sm-3">
                     						<ul id="nodeTree" class="ztree" style="padding-left: 20%;"></ul>
                     					</div>
                     					<div class="col-sm-9">
 											<div id="netbarDiv">
 												<input type="hidden" id="netbarIds" name="netbarIds" value="{{this.netbarIds}}">
+
 												<c:forEach var="_netbar" items="${netbarList}">
-        											<input type="checkbox" name="netbarId" value="${_netbar.id}"/>${_netbar.net_bar_name}&nbsp;&nbsp;
+        											<input type="checkbox" name="netbarId" value="${_netbar.id}"/>${_netbar.netbar_name}&nbsp;&nbsp;<br/>
 			                					</c:forEach>
 			                				</div>
                     					</div>
@@ -238,17 +241,23 @@
 					dataJson = dbTable.row(tr).data();
 	        	}
 	        	var $div = $(template(dataJson));
-	        	BootstrapDialog.show({type:'type-default', size:'size-wide', message:$div, title:title, closable:true,
+	        	BootstrapDialog.show({type:'type-default', 
+	        		size:'size-wide', 
+	        		message:$div, 
+	        		
+	        		title:title, 
+	        		closable:true,
 		       		 buttons: [{
 		                 icon:'fa fa-save', label:'确定',
 		               	 action: function(){
+		               		 console.log("click sure..."+$('#areaId').val());
 		               		var netbarIds = "";
 		               		$("input[name='netbarId']:checked").each(function(){
 		               			netbarIds = netbarIds + "," + this.value;
 	                        });
 		               		$('#netbarIds').val(netbarIds);
 		               		
-		               		$('#dataForm').submit();
+		               		 $('#dataForm').submit();
 		             	 }
 		             }, {
 		            	 icon:'fa fa-close', label: '取消',
@@ -289,6 +298,7 @@
 	                        $("#action").val(dataJson.action);//显示启用方式下拉框值
 	                        //显示文件关联的网吧
 							var netbarIds = dataJson.netbarIds;
+							console.log("------->"+netbarIds);
 	                        if(netbarIds != null && netbarIds != ""){
 	                        	$.each(netbarIds.split(","), function(name, value) {
 	                        		//根据Value值设置checkbox为选中值
@@ -298,6 +308,8 @@
             			}
             			//地区导航树加载及事件
             			var onClick = function(event, treeId, treeNode, clickFlag) {
+            				$('#areaId').val(treeNode.id);
+            				console.log($('#areaId').val()+"-----"+treeNode.id);
             				$.ajax({
             					type: 'POST', 
             					data:{"search":{"value":treeNode.id}},
@@ -305,10 +317,22 @@
             					success:function(data){
             						$('#netbarDiv').empty();   //清空resText里面的所有内容
                                     var html = ''; 
+            						var areaBarIds="";
                                     $.each(data.data, function(name, value) {
-                                    	html += '<input type="checkbox" name="netbarIds" value="'+value.id+'"/>'+value.net_bar_name+'&nbsp;&nbsp;';
-                                   	});
+                                    	html += '<input type="checkbox" name="netbarIds" value="'+value.id+'"/>'+value.netbar_name+'&nbsp;&nbsp;<br/>';
+                                   		areaBarIds+=value.id+",";
+                                    });
                                     $('#netbarDiv').html(html);
+                                    $('#areaBarIds').val(areaBarIds);
+                                  //显示文件关联的网吧
+        							var netbarIds = dataJson.netbarIds;
+        							console.log("===========>"+netbarIds);
+        	                        if(netbarIds != null && netbarIds != ""){
+        	                        	$.each(netbarIds.split(","), function(name, value) {
+        	                        		//根据Value值设置checkbox为选中值
+        			                        $("input:checkbox[value='"+value+"']").attr('checked','true');
+                                       	});
+        	                        }
             					}
             				});
                 		}

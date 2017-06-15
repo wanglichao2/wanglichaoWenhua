@@ -35,7 +35,8 @@
                     <div class="ibox-title">
                        	<a href="${basePath}/netbarList/list" class="btn btn-white btn-margin-right"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
                        	<a id="export" href="javascript:void(0);" class="btn btn-white"><i class="fa fa-download"></i>&nbsp;导出Excel</a>
-                       	<input id="zNodes" type="hidden" value='${areasTree}'>
+                      <input id="zNodes" type="hidden" value='${areasTree}'>
+
                     </div>
                     <div class="ibox-content">
                     	<div class="row">

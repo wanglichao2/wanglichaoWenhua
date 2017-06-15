@@ -56,13 +56,13 @@
                     		<div class="col-sm-9">
                     			<a id="addRow" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;添加角色</a>
                     			<a id="authbtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-tree"></i>&nbsp;角色赋权</a>
-                    			<a id="revokebtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-recycle"></i>&nbsp;权限回收</a>
+                    			<!-- <a id="revokebtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-recycle"></i>&nbsp;权限回收</a> -->
 		                        <table class="table table-striped table-bordered table-hover " id="editable">
 		                            <thead>
 		                                <tr>
 		                                	<th><input type="checkbox" class="checkable"/></th>
 		                                    <th>角色编号</th>
-											<th>所属部门</th>
+											<!-- <th>所属部门</th> -->
 											<th>角色名称</th>
 											<th>角色标识符</th>
 											<th>角色描述</th>
@@ -75,19 +75,21 @@
 		                            		<tr>
 		                            			<td><input type="checkbox" class="checkable" value="${role.id}" /></td>
 												<td>${role.id}</td>
-												<td><a href="#" id="groupId" data-type="select2" data-pk="${role.id}">${groupMap[role.groupId]}</a></td>
+												<%-- <td><a href="#" id="groupId" data-type="select2" data-pk="${role.id}">${groupMap[role.groupId]}</a></td> --%>
 												<td><a href="#" id="name" data-type="text" data-pk="${role.id}" title="点击查看关联节点">${role.name}</a></td>
 												<td><a href="#" id="role" data-type="text" data-pk="${role.id}">${role.role}</a></td>
 												<td><a href="#" id="description" data-type="text" data-pk="${role.id}">${role.description}</a></td>
 												<td><a href="#" id="status" data-type="select" data-pk="${role.id}">${role.status?'启用':'禁用'}</a></td>
-												<td><i class="fa fa-edit fa-cursor"></i></td>
+												<td><i class="fa fa-edit fa-cursor"></i>
+												&nbsp;&nbsp;&nbsp;<i class="fa fa-remove fa-cursor"></i>
+												</td>
 											</tr>
 		                            	</c:forEach>
 		                            </tbody>
 		                        </table>
 	                    		<div>
 	                    			<a id="userbtn" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-user"></i>&nbsp;用户赋权</a>
-	                    			<a id="recoverybtn" href="javascript:void(0);" class="btn btn-white"><i class="fa fa-remove"></i>&nbsp;权限回收</a>
+	                    			<!-- <a id="recoverybtn" href="javascript:void(0);" class="btn btn-white"><i class="fa fa-remove"></i>&nbsp;权限回收</a> -->
 	                    			<table class="table table-striped table-bordered table-hover " id="userTable">
 			                            <thead>
 			                                <tr>
@@ -158,35 +160,35 @@
     		//编辑插件初始化
     		$('a[data-type="text"]').editable({disabled:true, url:url});
         	$('a[id="status"]').editable({disabled:true, source:state, url:url});
-        	$('a[id="groupId"]').editable({
+        	/* $('a[id="groupId"]').editable({
 				disabled:true, url:url, emptytext:'选择', source:groupSource,
 				select2:{placeholder:'选择所属部门',allowClear:true,language:'zh-CN'}
-			});
+			}); */
         	checkVal($('#editable tbody'));
 			//表格初始化
 			oTable = $('#editable').dataTable({
-				columnDefs:[{targets:0, orderable:false},{targets:7, orderable:false},
-				            {targets:2,visible:${sessionUser.isAdmin}}], order:[[1, 'asc']]
+				columnDefs:[{targets:0, orderable:false},{targets:6, orderable:false},
+				            {targets:1,visible:true}], order:[[1, 'asc']]
 			});//返回JQuery对象，api()方法添加到jQuery对象,访问API.
 			dbTable = oTable.api();//返回datatable的API实例,
 	        //预编译模板
 	        var template = Handlebars.compile($('#tpl').html());
 	        //添加新行
 	        $('#addRow').click(function(){
-	        	var groupId = template({id:'groupId', type:'select2'});
+	        	/* var groupId = template({id:'groupId', type:'select2'}); */
 	        	var name = template({id:'name', type:'text'});
 	        	var role = template({id:'role', type:'text'});
 	        	var description = template({id:'description', type:'text'});
 	        	var status = template({id:'status', type:'select'});
 	        	var operate = '<td class="text-center"><i class="fa fa-save fa-cursor"></i>&nbsp;&nbsp;&nbsp;<i class="fa fa-remove fa-cursor"></i></td>';
-	        	var nRow = oTable.fnAddData(['', '', groupId, name, role, description, status, operate]);
+	        	var nRow = oTable.fnAddData(['', '', /* groupId, */ name, role, description, status, operate]);
 	        	var tr = $(oTable.fnGetNodes(nRow));
 	        	tr.find('a[data-type="text"]').editable();
 	        	tr.find('a[id="status"]').editable({value:0, source: state});
-	        	$('a[id="groupId"]', tr).editable({
+	        	/* $('a[id="groupId"]', tr).editable({
     				emptytext:'选择', source:groupSource,
     				select2:{placeholder:'选择所属部门',allowClear:true,language:'zh-CN'}
-    			});
+    			}); */
 	        	checkVal(tr);//验证数据
 				afterAddRow(tr);
 	        });//保存
@@ -216,13 +218,13 @@
 			           			pk:id, disabled:true, url:url
 			    			});
 				        	tr.find('a[id="status"]').editable({pk:id, disabled:true, source:state, url:url});
-				        	$('a[id="groupId"]', tr).editable({
+				        	/* $('a[id="groupId"]', tr).editable({
 			    				pk:id, disabled:true, url:url, emptytext:'选择', source:groupSource,
 			    				select2:{placeholder:'选择所属部门',allowClear:true,language:'zh-CN'}
-			    			});
+			    			}); */
 				        	checkVal(tr);//验证数据
 			               	$this.removeClass('fa-save').addClass('fa-edit');
-			               	tr.find('i.fa-remove').remove();
+			               	/* tr.find('i.fa-remove').remove(); */
 			               	element.off('save');//解绑自动显示下一列编辑框事件
 			               	dbTable.columns.adjust();//重新计算列宽
 			           	}else{
@@ -232,6 +234,11 @@
 				});
 			}).on('click', 'i.fa-edit', function(){//编辑
 				$(this).parents('tr').find('a[data-type]').editable('toggleDisabled');
+			}).on('click', 'i.fa-remove:not("i.i-remove")', function(){
+				var $this = $(this);
+				var tr = $this.parents('tr');
+				var pk = tr.find('a[data-type]:first').attr('data-pk');
+				editableDelRow(pk,tr);
 			}).on('click', 'a[id="name"]', function(){//查询节点
 				var $this = $(this);
 				if($this.hasClass('editable-disabled')){
@@ -257,6 +264,24 @@
 					});
 				}
 			});
+	        var editableDelRow=function(pk,tr){//删除
+				BootstrapDialog.confirm({type:'type-default', message:'确认是否删除?', callback:function(result){
+		            if(result) {
+		            	$.com.ajax({
+					       	url: '${basePath}/role/del', 
+				           	data:{pk:pk},
+					       	success: function(data){
+					           	if(data.flag){
+					           		BootstrapDialog.alert({type:'type-default', message:'删除成功！'});
+					           		dbTable.row(tr).remove().draw(false);
+					           	}else{
+					           		BootstrapDialog.alert({type:'type-danger', message:'删除失败，请刷新重试！'});
+					           	}               
+				       		}
+						});
+		            }
+		        }});
+			};
 	        $('#authbtn').click(function(){//节点权限
 	        	var rows = oTable.fnGetNodes();
 	    		var roles = $('input[type="checkbox"]:checked', rows);
@@ -427,7 +452,7 @@
 				var tr = $this.parents('tr');
 				var userId = tr.find('input[type="checkbox"].checkable1').val();
 				var text = $('td:last', tr).text();
-				dbTable.columns(2).search(text).draw();//过滤角色表
+				/* dbTable.columns(2).search(text).draw(); *///过滤角色表
 				$.com.ajax({
 			       	url: '${basePath}/role/relationRole', 
 		           	data:{userId: userId},

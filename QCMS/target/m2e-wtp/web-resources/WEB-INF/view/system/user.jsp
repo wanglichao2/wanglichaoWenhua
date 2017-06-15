@@ -44,11 +44,12 @@
             <div class="col-sm-12">
                 <div class="ibox float-e-margins">
                     <div class="ibox-title">
-                    	<a href="${basePath}/user/list" class="btn btn-white btn-margin-right"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
+                    	<a id="refreshBtn" href="${basePath}/user/list" class="btn btn-white btn-margin-right"><i class="fa fa-refresh"></i>&nbsp;刷新</a>
                         <a id="frozenBtn" href="javascript:;" class="btn btn-white btn-margin-right"><i class="fa fa-table"></i>&nbsp;<span>已</span>冻结</a>
                     	<shiro:hasPermission name="user:add">
 	                        <a id="addRow" href="javascript:void(0);" class="btn btn-white btn-margin-right"><i class="fa fa-plus"></i>&nbsp;添加</a>
 	                        <a id="userbtn" href="javascript:;" class="btn btn-white btn-margin-right"><i class="fa fa-user"></i>&nbsp;用户关联部门</a>
+	                        <a id="userAreaCfg" href="javascript:;" class="btn btn-white btn-margin-right"><i class="fa fa-user"></i>&nbsp;用户区域设置</a>
                     	</shiro:hasPermission>
                     	<input id="zNodes" type="hidden" value='${groupTree}'>
                     	<c:set var="groupMap" value='${groupData[2]}'/>
@@ -93,7 +94,9 @@
 												<td><a href="#" id="duty" data-type="text" data-pk="${user.id}">${user.duty}</a></td>
 												<td><a href="#" id="isAdmin" data-type="select" data-pk="${user.id}">${user.isAdmin?'是':'否'}</a></td>
 												<td><a href="#" id="status" data-type="select" data-pk="${user.id}">${user.status?'启用':'禁用'}</a></td>
-												<td class="text-center"><i class="fa fa-edit fa-cursor"></i></td>
+												<td class="text-center"><i class="fa fa-edit fa-cursor"></i>
+												&nbsp;&nbsp;&nbsp;<i class="fa fa-remove fa-cursor"></i>
+												</td>
 											</tr>
 		                            	</c:forEach>
 		                            </tbody>
@@ -123,6 +126,23 @@
 	<script id="tpl" type="text/x-handlebars-template">
 		<a href="#" id="{{this.id}}" data-type="{{this.type}}"></a>
 	</script>
+	<!--定义HTML模板-->
+	<script id="tpl_area" type="text/x-handlebars-template">
+		<div class="tabs-container">
+             <ul class="nav nav-tabs">
+                 <li class="active"><a data-toggle="tab" href="#tab-1" aria-expanded="true">区域信息</a></li>
+             </ul>
+             <div class="tab-content">
+                 <div id="tab-1" class="tab-pane active">
+                     <div class="panel-body">
+						<div class="col-sm-3">
+                    			<ul id="areaNodeTree" class="ztree" style="padding-left: 20%;"></ul>
+                    		</div>
+                     </div>
+                 </div>
+             </div>
+        </div>
+	</script>
     <script>
     	$(document).ready(function(){
     		var url = '${basePath}/user/edit';
@@ -135,6 +155,10 @@
    				data:{simpleData:{enable:true, idKey:'id', pidKey:'pId', rootPId:0}},
    				callback: {onClick: onClick}
    			};
+    		var setting_area={
+        			check: {enable: true},
+       				data:{simpleData:{enable:true, idKey:'id', pidKey:'pId', rootPId:0}}
+       		};
     		var treeObj = $.fn.zTree.init($('#nodeTree'), setting, parseJSON($('#zNodes').val()));
     		$('#zNodes').remove();
     		$('input[type="checkbox"].checkable').uniform();
@@ -154,14 +178,18 @@
             	});
     		}
     		//编辑插件初始化
-    		$('a[data-type="text"]').editable({disabled:true, url:url}).on('save', adjustColumn);
+    		$('a[data-type="text"]').editable({disabled:true, url:url}).on('save', function(data){
+    			console.log("sdfadsfasdf"+data.msg);
+    			adjustColumn();
+    		});
         	$('a[id="isAdmin"]').editable({disabled:true, source:whether, url:url});
         	$('a[id="status"]').editable({disabled:true, source:state, url:url});
         	checkVal($('#editable tbody'));
 			//表格初始化
 			oTable = $('#editable').dataTable({
 				columnDefs:[{targets:0, orderable:false},{targets:11, orderable:false}],
-				order:[[1,'asc']],scrollX:true, fixedColumns:{leftColumns: 3}
+				order:[[1,'asc']],/* scrollX:true,  */
+				fixedColumns:{leftColumns: 3}
 			});//返回JQuery对象，api()方法添加到jQuery对象,访问API.
 			dbTable = oTable.api();//$('#editable').DataTable();//返回datatable的API实例,
 	        //预编译模板
@@ -212,9 +240,24 @@
 		           	data:data,
 			       	success: function(data) {
 			           	if(data.flag) {
+			           		BootstrapDialog.show({  
+			                    title: '提示',  
+			                    message: '添加成功！',  
+			                    buttons: [{  
+			                        label: '确定',  
+			                        action: function(dialog) {  
+			                        	$('#refreshBtn>i').trigger('click');  
+			                        }  
+			                    }]  
+			                });  
+			           		
 			           		element.removeClass('editable-unsaved');
 			           		element.editable('destroy');//销毁重新初始化
 			           		var id = data.obj.id;
+			           		/* var checkStr='<input type="checkbox" class="checkable" value="${user.id}" />'+
+			           		'<span class="display-none" groupId="${user.groupId}">${groupMap[user.groupId]}</span>';
+			           		tr.find('td:first').html(checkStr); */
+			           		tr.find('td:nth-child(2)').html(id);
 			           		element.attr('data-pk', id);
 			           		tr.find('a[data-type="text"]').editable({
 			           			pk:id, disabled:true, url:url
@@ -223,17 +266,145 @@
 				        	tr.find('a[id="status"]').editable({pk:id, disabled:true, source:state, url:url});
 				        	checkVal(tr);//验证数据
 			               	$this.removeClass('fa-save').addClass('fa-edit');
-			               	tr.find('i.fa-remove').remove();
+			              /*  	tr.find('i.fa-remove').remove(); */
 			               	element.off('save');//解绑自动显示下一列编辑框事件
+			               	dbTable.row(tr).draw(true);
 			               	dbTable.columns.adjust();//重新计算列宽
+			              // 	$('#refreshBtn').click();
+			               	
 			           	}else{
-			           		BootstrapDialog.alert({type:'type-danger', message:'保存失败，请刷新重试！'});
+			           		BootstrapDialog.alert({type:'type-danger', message:'保存失败:'+data.msg});
 			           	}               
 		       		}
 				});
 			}).on('click', 'i.fa-edit', function(){//编辑
 				$(this).parents('tr').find('a[data-type]').editable('toggleDisabled');
+			}).on('click', 'i.fa-remove:not("i.i-remove")', function(){
+				var $this = $(this);
+				var tr = $this.parents('tr');
+				var pk = tr.find('a[data-type]:first').attr('data-pk');
+				editableDelRow(pk,tr);
 			});
+	        var editableDelRow=function(pk,tr){//删除
+				BootstrapDialog.confirm({type:'type-default', message:'确认是否删除?', callback:function(result){
+		            if(result) {
+		            	$.com.ajax({
+					       	url: '${basePath}/user/del', 
+				           	data:{pk:pk},
+					       	success: function(data){
+					           	if(data.flag){
+					           		BootstrapDialog.alert({type:'type-default', message:'删除成功！'});
+					           		dbTable.row(tr).remove().draw(false);
+					           	}else{
+					           		BootstrapDialog.alert({type:'type-danger', message:'删除失败，【'+data.msg+'】'});
+					           	}               
+				       		}
+						});
+		            }
+		        }});
+			};
+	      //预编译模板-区域
+	        var template_area = Handlebars.compile($('#tpl_area').html());
+	        var areaTreeObj=null;
+	        var dataDialog = function(){
+	        	var $this = $(this);
+	        	var rows = oTable.fnGetNodes();
+	        	var userSet = new Array()
+	    		var userIds = $('input[type="checkbox"]:checked', rows);
+	    		$.each(userIds, function(){
+	    			userSet.push($(this).val());
+	    		});
+	    		console.log(userSet);
+	    		if(userIds.length==0){
+	    			BootstrapDialog.alert({type:'type-default', message:'请从列表中选择用户！'});
+	    			return;
+	    		}
+	        	var title = '所属区域配置', dataJson = {};
+	        	var $div = $(template_area(dataJson));
+	        	BootstrapDialog.show({type:'type-default', size:'size-wide', message:$div, title:title, closable:true,
+		       		 buttons: [{
+		                 icon:'fa fa-save', label:'确定',
+		               	 action: function(){
+		               		var nodes = areaTreeObj.getCheckedNodes();
+		    	        	if(nodes.length==0){
+		    	    			BootstrapDialog.alert({type:'type-default', message:'请从层级树中选择节点！'});
+		    	    			return;
+		    	    		}
+		    	    		BootstrapDialog.confirm({type:'type-default', message:'确认操作用户的所属区域？', callback:function(result){
+		    	                if(result){
+		    	    	        	var nodeSet = new Array();
+		    	    	    		$.each(nodes, function(i, node){
+		    	    	    			nodeSet.push(node.id);
+		    	    	    		});
+		    	    	    		console.log("user====>"+userSet);
+		    	    	    		console.log("areaCode===>"+nodeSet);
+		    	    	    		$.com.ajax({
+		    	    			       	url: '${basePath}/user/save/userAreas', 
+		    	    		           	data:{areaCodes: nodeSet, userIds:userSet},
+		    	    			       	success: function(data){
+		    	    			           	if(data.flag){
+		    	    			           		BootstrapDialog.alert({type:'type-default', message:'操作成功！'});
+		    	    			           	}else{
+		    	    			           		BootstrapDialog.alert({type:'type-danger', message:'操作失败:'+data.msg});
+		    	    			           	}               
+		    	    		       		}
+		    	    				}); 
+		    	                }
+		    	    		}});
+		             	 }
+		             }, {
+		            	 icon:'fa fa-close', label: '取消',
+		                 action: function(dialog){
+		                	 dialog.close();
+		                 }
+	             	}],
+            		onshown: function(dialog){
+            			$.ajax({
+	                        	url:'${basePath}/netbarList/loadAreaTree', 
+	                            data:{"search":{"value":"41"}},
+	                            success:function(data){
+	                            	areaTreeObj = $.fn.zTree.init($('#areaNodeTree'), setting_area, data);
+	                            	userAreaLoad(userSet);
+	                            },
+	                            error:function(){
+	                                BootstrapDialog.alert("没有找到对应的数据～");
+	                            }
+	                        });
+            		}
+	        	});
+	        }
+	      	//添加新行
+	        $('#userAreaCfg').click(dataDialog);
+	        
+	      	var userAreaLoad=function(userId){
+	      		$.ajax({
+                	url:'${basePath}/user/loadUserAreas', 
+                    data:{userId:userId},
+                    success:function(nodes){
+                    	console.log(nodes);
+                    	areaTreeObj.checkAllNodes(false);//取消所有勾选节点
+			    		if(nodes.length==0){
+			       			BootstrapDialog.alert({type:'type-default', message:'此员工未配置任何区域！'});
+			       			return;
+			       		}
+			    		//将 zTree 使用的标准 JSON 嵌套格式的数据转换为简单 Array 格式
+			    		var allNodes = areaTreeObj.transformToArray(areaTreeObj.getNodes());
+			    		$(allNodes).each(function(i, node){
+			    			/* console.log("==>"+node.id+"--"+node); */
+			    			if($.inArray(node.id+"", nodes)!=-1){
+			    				/* console.log(node.id+"  in nodes"); */
+			    				areaTreeObj.checkNode(node, true, false);
+			    			}else{
+			    				console.log(node.id +" not in nodes ");
+			    			}
+			    		});
+                    },
+                    error:function(){
+                        BootstrapDialog.alert("没有找到对应的数据～");
+                    }
+                });
+	      	};
+	        
 	        $('#userbtn').click(function(){//用户关联部门
 	        	var rows = oTable.fnGetNodes();
 	    		var users = $('input[type="checkbox"]:checked', rows);

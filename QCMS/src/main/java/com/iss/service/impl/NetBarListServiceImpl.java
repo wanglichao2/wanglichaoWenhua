@@ -182,10 +182,10 @@ public class NetBarListServiceImpl implements INetBarListService {
 		List<AreasBarEntity> list=loadAreasBar(e.getDistrict_code(), barId);
 		if(CommonUtil.isNotEmpty(list)){
 			AreasBarEntity ae=list.get(0);
-			vo.setOnLineCount(ae.getOnline());
-			vo.setOffLineCount(ae.getOffline());
-			vo.setInstallNum(ae.getOnline()+ae.getOffline());//已安装终端: 在线终端数 + 离线终端数
+			vo.setInstallNum(ae.getOnline()+ae.getOffline());//已安装终端: OnlineStatistic.onlineNum + OnlineStatistic.offlineNum
 			vo.setUnInstallNum(comNum-vo.getInstallNum());//未安装终端: 终端总数 - 已安装终端
+			vo.setOnLineCount(ae.getOnlineNumToday());//在线=OnlineStatistic.onlineNumToday
+			vo.setOffLineCount(vo.getInstallNum()-vo.getOnLineCount()); //不在线=已安装终端 - 在线
 //			在线率: 在线 / 终端总数 * 100%     (保留到小数点后1位)
 //			vo.setOnLineCount(1l);
 //			vo.setInstallNum(1l);

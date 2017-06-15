@@ -29,10 +29,15 @@ public class AreasBarEntity implements Serializable, IExcelModel{
 	private Long online;
 	@Excel(name = "离线终端数", orderNum = "3")
 	private Long offline;
-	@Excel(name = "有效终端数", orderNum = "4")
+	@Excel(name = "今日累计在线", orderNum = "4")
+	private Long onlineNumToday;
+	@Excel(name = "昨天累计在线", orderNum = "5")
+	private Long onlineNumYsday;
+	
+	/*@Excel(name = "有效终端数", orderNum = "4")
 	private Long valid;
 	@Excel(name = "服务端版本号", orderNum = "5")
-	private String serverVersion;
+	private String serverVersion;*/
 
 	public String getBarId() {
 		return barId;
@@ -66,7 +71,7 @@ public class AreasBarEntity implements Serializable, IExcelModel{
 		this.online = online;
 	}
 
-	public String getServerVersion() {
+	/*public String getServerVersion() {
 		return serverVersion;
 	}
 
@@ -80,7 +85,7 @@ public class AreasBarEntity implements Serializable, IExcelModel{
 
 	public void setValid(Long valid) {
 		this.valid = valid;
-	}
+	}*/
 	
 	@Transient
 	public Long getRowId() {
@@ -98,5 +103,22 @@ public class AreasBarEntity implements Serializable, IExcelModel{
 	public void setErrorMsg(String errorMsg) {
 		this.errorMsg = errorMsg;
 	}
+
+	public Long getOnlineNumToday() {
+		return onlineNumToday;
+	}
+
+	public void setOnlineNumToday(Long onlineNumToday) {
+		this.onlineNumToday = onlineNumToday;
+	}
+
+	public Long getOnlineNumYsday() {
+		return onlineNumYsday;
+	}
+
+	public void setOnlineNumYsday(Long onlineNumYsday) {
+		this.onlineNumYsday = onlineNumYsday;
+	}
+	
 
 }
