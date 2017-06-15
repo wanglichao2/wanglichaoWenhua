@@ -16,10 +16,12 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.wenhua.proto.Wenhua;
 import com.wenhua.proto.Wenhua.AuthInfo;
+import com.wenhua.proto.Wenhua.BarInstantInfo;
 import com.wenhua.proto.Wenhua.FileBar;
 import com.wenhua.proto.Wenhua.FileInfo;
 import com.wenhua.proto.Wenhua.FileInfoList;
 import com.wenhua.proto.Wenhua.FileInfoList.Builder;
+import com.wenhua.proto.Wenhua.OnlineStatistic;
 import com.wenhua.proto.Wenhua.PcInfo;
 import com.wenhua.proto.Wenhua.PcInfoList;
 import com.wenhua.proto.Wenhua.PcInstantInfo;
@@ -33,6 +35,7 @@ import com.wenhua.svr.domain.BarAuthInfo;
 import com.wenhua.svr.domain.BarConfig;
 import com.wenhua.svr.domain.BarFileBar;
 import com.wenhua.svr.domain.BarFileInfo;
+import com.wenhua.svr.domain.BarOnlineStatistic;
 import com.wenhua.svr.domain.BarPcInstantInfo;
 import com.wenhua.svr.domain.NetBar;
 import com.wenhua.svr.exception.AuthBarNotExistException;
@@ -42,6 +45,7 @@ import com.wenhua.svr.exception.FileNotExistException;
 import com.wenhua.svr.exception.SystemException;
 import com.wenhua.svr.service.AuthService;
 import com.wenhua.util.BarIdUtils;
+import com.wenhua.util.tools.JsonUtil;
 import com.wenhua.util.tools.NumberUtil;
 
 import io.netty.channel.Channel;
@@ -100,13 +104,22 @@ public class ChannelHandlerWenhuaMsg extends ChannelInboundHandlerAdapter {
 		if(null != object && (Boolean)object) {
 			isBarDeleted = true;
 		}
-		
-		StatAreaInstanceCacher.inactiveBar(getBarId(ctx));
-		StatBarInstancerCacher.updateCache(getBarId(ctx), null, isBarDeleted);
-		
-		ctx.close();
+		String barId=getBarId(ctx);
+		this.clientDisconnect(barId, isBarDeleted);
+		ChannelGroups.close(barId);
+		if(ctx!=null)
+			ctx.close();
 		
 		super.channelInactive(ctx);
+	}
+	
+	private void clientDisconnect(String barId,boolean isBarDeleted){
+		StatAreaInstanceCacher.inactiveBar(barId);
+		StatBarInstancerCacher.updateCache(barId, null, isBarDeleted);
+		BarOnlineStatistic statistic= StatBarInstancerCacher.getBarOnLineStatisticsFromCache(barId);
+		statistic.setOnlineNum(0);
+		statistic.setOfflineNum(0);
+		StatBarInstancerCacher.updateBarOnlineStatisticCache(statistic);
 	}
 	
 	@Override
@@ -157,6 +170,10 @@ public class ChannelHandlerWenhuaMsg extends ChannelInboundHandlerAdapter {
 				case SetInstantPcInfoList : 
 					doSetInstantPcInfoList(ctx, message);
 					
+				break;
+				/** 上报客户机实时信息列表 新*/
+				case SetBarInstantInfo : 
+					doSetBarInstantInfoList(ctx, message);
 				break;
 				/** 上报客户机信息列表 */
 				case SetPcInfoList : 
@@ -699,6 +716,75 @@ public class ChannelHandlerWenhuaMsg extends ChannelInboundHandlerAdapter {
 		logger.info(
 				content
 				);
+	}
+	
+	/**
+	 * 上报客户机实时信息列表  新
+	 * @param ctx
+	 * @param message
+	 */
+	private void doSetBarInstantInfoList(ChannelHandlerContext ctx, Message message) {
+		BarInstantInfo barInstanceInfo=null;
+		try {
+			barInstanceInfo=Wenhua.BarInstantInfo.parseFrom(message.getContent());
+		} catch (InvalidProtocolBufferException e) {
+			invalidRequestCloseChannel(ctx, message.getId(), 1009, message.getMethod(), e);
+			return;
+		}
+		String barId=getBarId(ctx);
+//		List<PcInstantInfo> infosList= barInstanceInfo.getInfosList();
+		OnlineStatistic onlineStatistic=barInstanceInfo.getStat();
+		/*if(logger.isInfoEnabled()) {
+			logger.info(
+					String.format(
+							"##SetBarInstantInfoList ChannelShortId: %s RemoteIp: %s MessageId: %s onlineStatistic: %s", 
+							getChannelShortId(ctx), 
+							getRemoteIp(ctx), 
+							message.getId(),
+							JSON.toJSONString(onlineStatistic)
+							));
+		}*/
+		
+		int exceptCode = 0;
+		try {
+			/** 1. 更新网吧信息缓存 */
+			BarOnlineStatistic statistic=this.formatOnLineStatistic(barId,onlineStatistic);
+			logger.info(String.format("##SetBarInstantInfoList ChannelShortId: %s RemoteIp: %s MessageId: %s onlineStatistic: %s", getChannelShortId(ctx), getRemoteIp(ctx), message.getId(),JsonUtil.toJson(statistic)));
+
+			StatBarInstancerCacher.updateBarOnlineStatisticCache(statistic);
+		} catch (Exception e) {
+			// TODO: handle exception
+			logger.error("",e);
+			exceptCode=1010;
+		}
+		String exceptMsg = codeMaps.get(exceptCode);
+		ByteString content = null;
+		Message response = getResponseMsg(ctx, message.getId(), exceptCode, exceptMsg, content, message.getMethod());
+		ctx.writeAndFlush(response);
+		
+	}
+	
+	private BarOnlineStatistic formatOnLineStatistic(String barId,OnlineStatistic s){
+		BarOnlineStatistic statistic=new BarOnlineStatistic();
+		statistic.setBarId(barId);
+		statistic.setStatDate(s.getStatDate());
+		statistic.setOfflineNum(s.getOfflineNum());
+		statistic.setOnlineNum(s.getOnlineNum());
+		statistic.setOnlineNumToday(s.getOnlineNumToday());
+		statistic.setOnlineMaxToday(s.getOnlineMaxToday());
+		statistic.setOnlineNumYsday(s.getOnlineNumYsday());
+		statistic.setOnlineMaxYsday(s.getOnlineMaxYsday());
+		statistic.setUserNum(s.getUserNum());
+		statistic.setUserNumToday(s.getUserNumToday());
+		statistic.setUserMaxToday(s.getUserMaxToday());
+		statistic.setUserNumYsday(s.getUserNumYsday());
+		statistic.setUserMaxYsday(s.getUserMaxYsday());
+		statistic.setPoweronNum(s.getPoweronNum());
+		statistic.setPoweronNumToday(s.getPoweronNumToday());
+		statistic.setPoweronMaxToday(s.getPoweronMaxToday());
+		statistic.setPoweronNumYsday(s.getPoweronNumYsday());
+		statistic.setPoweronMaxYsday(s.getPoweronMaxYsday());
+		return statistic;
 	}
 	
 	@Override

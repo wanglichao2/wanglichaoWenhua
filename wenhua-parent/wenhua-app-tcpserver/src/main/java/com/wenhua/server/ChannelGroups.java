@@ -83,9 +83,9 @@ public class ChannelGroups {
 		if(!BarIdUtils.isValid(barId)) return false;
 		ChannelHandlerContext ctx = BAR_CHANNEL_MAP.get(barId);
 		if(null == ctx) return false;
-		
+//		if(ctx.isRemoved())
 		ctx.close();
-		
+		BAR_CHANNEL_MAP.remove(barId);
 		logger.info(String.format("##Channel of barId: [%s] is closed by forced", barId));
 		return true;
 	}
@@ -144,5 +144,13 @@ public class ChannelGroups {
 		if(null != previous) {
 			previous.close();
 		}
+	}
+	public static String showChannelInfo(){
+		int channelGroupSize=CHANNEL_GROUP.size();
+		int channelMapSize= BAR_CHANNEL_MAP.size();
+		String channelInfo ="CHANNEL_GROUP size is ["+channelGroupSize+"]=======BAR_CHANNEL_MAP size is ["+channelMapSize+"]";
+		logger.info(channelInfo);
+//		CHANNEL_GROUP.iterator()
+		return channelInfo;
 	}
 }

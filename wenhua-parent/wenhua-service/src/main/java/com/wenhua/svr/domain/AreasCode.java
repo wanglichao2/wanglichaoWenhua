@@ -54,7 +54,7 @@ public class AreasCode extends BaseAreasCode {
 	 * @return
 	 */
 	public boolean isMine(String code) {
-		System.out.println(this.getAreasid()+"--"+code+"---------------------------------------");
+//		System.out.println(this.getAreasid()+"--"+code+"---------------------------------------");
 		if(null == code) return false;
 		if(!isValidCode(code)) return false;
 		

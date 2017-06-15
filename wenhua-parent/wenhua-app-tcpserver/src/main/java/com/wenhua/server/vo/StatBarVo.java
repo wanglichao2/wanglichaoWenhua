@@ -6,13 +6,17 @@ public class StatBarVo {
 
 	private String barName;
 
-	private int online;
+	private int online;//在线终端数
 
-	private int offline;
+	private int offline;//离线终端数
 
 	private int valid;
 
 	private String serverVersion;
+	
+	private int onlineNumToday;//今日累计在线
+	private int onlineNumYsday; //昨日累计在线
+
 
 	public static StatBarVo newOne(String barId, String barName, int online, int offline, int valid, String serverVersion) {
 		StatBarVo vo = new StatBarVo();
@@ -22,6 +26,17 @@ public class StatBarVo {
 		vo.setOffline(offline);
 		vo.setValid(valid);
 		vo.setServerVersion(serverVersion);
+		return vo;
+	}
+	
+	public static StatBarVo newOne(String barId, String barName, int online, int offline, int onlineNumToday, int onlineNumYsday) {
+		StatBarVo vo = new StatBarVo();
+		vo.setBarId(barId);
+		vo.setBarName(barName);
+		vo.setOnline(online);
+		vo.setOffline(offline);
+		vo.setOnlineNumToday(onlineNumToday);
+		vo.setOnlineNumYsday(onlineNumYsday);
 		return vo;
 	}
 	
@@ -71,6 +86,22 @@ public class StatBarVo {
 
 	public void setServerVersion(String serverVersion) {
 		this.serverVersion = serverVersion;
+	}
+
+	public int getOnlineNumToday() {
+		return onlineNumToday;
+	}
+
+	public void setOnlineNumToday(int onlineNumToday) {
+		this.onlineNumToday = onlineNumToday;
+	}
+
+	public int getOnlineNumYsday() {
+		return onlineNumYsday;
+	}
+
+	public void setOnlineNumYsday(int onlineNumYsday) {
+		this.onlineNumYsday = onlineNumYsday;
 	}
 
 }

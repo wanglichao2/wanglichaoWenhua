@@ -1,98 +1,135 @@
-// version	1.40
+// version	1.44
 // protoc.exe --cpp_out=.  Wenhua.proto
 
 syntax = "proto3";
-// ***ä»¥ä¸‹ä¸ºä¸­å¿ƒæ¥å£ï¼Œç”±ç½‘å§ç«¯è°ƒç”¨***
+// ***ÒÔÏÂÎªÖĞĞÄ½Ó¿Ú£¬ÓÉÍø°É¶Ëµ÷ÓÃ***
 
 
-// æ¥  å£ï¼šbool Authentication(AuthenInfo auth)		ç½‘å§æœåŠ¡ç«¯èº«ä»½éªŒè¯:
-// å‚  æ•°ï¼šAuthInfo
-// è¿”å›å€¼ï¼šbool			å¦‚æœéªŒè¯å¤±è´¥ï¼Œå¤±è´¥åŸå› ï¼ˆâ€œä¸­å¿ƒæ— æ­¤ç½‘å§â€ã€â€œæ¯”å¦‚signæ— æ•ˆâ€ï¼‰åœ¨Message.returnMsgé‡Œç»™å‡º
+// ½Ó  ¿Ú£ºbool Authentication(AuthenInfo auth)		Íø°É·şÎñ¶ËÉí·İÑéÖ¤:
+// ²Î  Êı£ºAuthInfo
+// ·µ»ØÖµ£ºbool			Èç¹ûÑéÖ¤Ê§°Ü£¬Ê§°ÜÔ­Òò£¨¡°ÖĞĞÄÎŞ´ËÍø°É¡±¡¢¡°±ÈÈçsignÎŞĞ§¡±£©ÔÚMessage.returnMsgÀï¸ø³ö
 message AuthInfo {
-	string barID = 1;	// ç½‘å§ID
-	string when = 2;	// å½“æ—¶çš„æ—¶é—´
-	string sign = 3;	// éªŒè¯ä¿¡æ¯ï¼Œå¤§å†™hexç¼–ç çš„md5å€¼ã€‚md5(barID + when + key)ï¼Œkey="hn123wh"
+	string barID = 1;	// Íø°ÉID
+	string when = 2;	// µ±Ê±µÄÊ±¼ä
+	string sign = 3;	// ÑéÖ¤ĞÅÏ¢£¬´óĞ´hex±àÂëµÄmd5Öµ¡£md5(barID + when + key)£¬key="hn123wh"
 }
 
 
-// æ¥  å£ï¼šBarConfig GetConfig(string barID)		è·å–ç½‘å§é…ç½®:
-// å‚  æ•°ï¼šstring ç½‘å§ID
-// è¿”å›å€¼ï¼šBarConfig ç½‘å§é…ç½®
+// ½Ó  ¿Ú£ºBarConfig GetConfig(string barID)		»ñÈ¡Íø°ÉÅäÖÃ:
+// ²Î  Êı£ºstring Íø°ÉID
+// ·µ»ØÖµ£ºBarConfig Íø°ÉÅäÖÃ
 message BarConfig {
-	int32 freqInstantPcInfo = 1;	// å•ä½ï¼šç§’ï¼Œä¸ŠæŠ¥å®¢æˆ·æœºå®æ—¶ä¿¡æ¯é¢‘ç‡ï¼Œé»˜è®¤1åˆ†é’Ÿ
-	string barID = 2;				// ç½‘å§ID
+	int32 freqInstantPcInfo = 1;	// µ¥Î»£ºÃë£¬ÉÏ±¨¿Í»§»úÊµÊ±ĞÅÏ¢ÆµÂÊ£¬Ä¬ÈÏ1·ÖÖÓ
+	string barID = 2;				// Íø°ÉID
 }
 
 
-// æ¥  å£ï¼švoid SetServerInfo(ServerInfo info)		ä¸ŠæŠ¥æœåŠ¡å™¨åŸºæœ¬ä¿¡æ¯
-// å‚  æ•°ï¼šServerInfo æœåŠ¡å™¨åŸºæœ¬ä¿¡æ¯
-// è¿”å›å€¼ï¼šæ— 
+// ½Ó  ¿Ú£ºvoid SetServerInfo(ServerInfo info)		ÉÏ±¨·şÎñÆ÷»ù±¾ĞÅÏ¢
+// ²Î  Êı£ºServerInfo ·şÎñÆ÷»ù±¾ĞÅÏ¢
+// ·µ»ØÖµ£ºÎŞ
 message ServerInfo {
-	string mac = 1;			// æœåŠ¡å™¨Macåœ°å€ï¼›	ä¾‹ï¼š50-E5-49-3D-5D-78	æ­¤ä¸ºå­—æ®µèƒ½å”¯ä¸€æ ‡è¯†ä¸€å°æœåŠ¡å™¨
-	string ip = 2;			// æœåŠ¡å™¨IPåœ°å€ï¼›	ä¾‹ï¼š192.168.0.112
-	string pcname = 3;		// æœåŠ¡å™¨æœºå™¨åï¼›	ä¾‹ï¼šBAR-SERVER
-	int32 osType = 4;		// æ“ä½œç³»ç»Ÿç±»å‹ï¼›	ä¾‹ï¼š0-windows, 1-macos, 2-android, 3-linux
-	string osVersion = 5;	// æ“ä½œç³»ç»Ÿç‰ˆæœ¬ï¼›	ä¾‹ï¼šwin7, win10
-	string wenhuaVer = 6;	// æ–‡åŒ–æœåŠ¡ç«¯ç‰ˆæœ¬ï¼›	ä¾‹ï¼š"3.01"
+	string mac = 1;			// ·şÎñÆ÷MacµØÖ·£»	Àı£º50-E5-49-3D-5D-78	´ËÎª×Ö¶ÎÄÜÎ¨Ò»±êÊ¶Ò»Ì¨·şÎñÆ÷
+	string ip = 2;			// ·şÎñÆ÷IPµØÖ·£»	Àı£º192.168.0.112
+	string pcname = 3;		// ·şÎñÆ÷»úÆ÷Ãû£»	Àı£ºBAR-SERVER
+	int32 osType = 4;		// ²Ù×÷ÏµÍ³ÀàĞÍ£»	Àı£º0-windows, 1-macos, 2-android, 3-linux
+	string osVersion = 5;	// ²Ù×÷ÏµÍ³°æ±¾£»	Àı£ºwin7, win10
+	string wenhuaVer = 6;	// ÎÄ»¯·şÎñ¶Ë°æ±¾£»	Àı£º"3.01"
 }
 
 
-// æ¥  å£ï¼švoid SetPcInfoList(PcInfoList infos)		ä¸ŠæŠ¥å®¢æˆ·æœºåŸºæœ¬ä¿¡æ¯åˆ—è¡¨
-// å‚  æ•°ï¼šPcInfoList å®¢æˆ·æœºåŸºæœ¬ä¿¡æ¯åˆ—è¡¨
-// è¿”å›å€¼ï¼šæ— 
+// ½Ó  ¿Ú£ºvoid SetPcInfoList(PcInfoList infos)		ÉÏ±¨¿Í»§»ú»ù±¾ĞÅÏ¢ÁĞ±í
+// ²Î  Êı£ºPcInfoList ¿Í»§»ú»ù±¾ĞÅÏ¢ÁĞ±í
+// ·µ»ØÖµ£ºÎŞ
 message PcInfoList {
 	repeated PcInfo infos = 1;
 }
-message PcInfo {			// å®¢æˆ·æœºåŸºæœ¬ä¿¡æ¯
-	string mac = 1;			// å®¢æˆ·æœºMacåœ°å€ï¼›	ä¾‹ï¼š50-E5-49-3D-5D-78	æ­¤ä¸ºå­—æ®µèƒ½å”¯ä¸€æ ‡è¯†ä¸€å°å®¢æˆ·æœº
-	string ip = 2;			// å®¢æˆ·æœºIPåœ°å€ï¼›	ä¾‹ï¼š192.168.0.112
-	string pcname = 3;		// å®¢æˆ·æœºåï¼›		ä¾‹ï¼šPC-001
-	int32 osType = 4;		// æ“ä½œç³»ç»Ÿç±»å‹ï¼›	ä¾‹ï¼š0-windows, 1-macos, 2-android, 3-linux
-	string osVersion = 5;	// æ“ä½œç³»ç»Ÿç‰ˆæœ¬ï¼›	ä¾‹ï¼šwin7, win10
-	string wenhuaVer = 6;	// æ–‡åŒ–å®¢æˆ·ç«¯ç‰ˆæœ¬ï¼›	ä¾‹ï¼š"3.01"
+message PcInfo {			// ¿Í»§»ú»ù±¾ĞÅÏ¢
+	string mac = 1;			// ¿Í»§»úMacµØÖ·£»	Àı£º50-E5-49-3D-5D-78	´ËÎª×Ö¶ÎÄÜÎ¨Ò»±êÊ¶Ò»Ì¨¿Í»§»ú
+	string ip = 2;			// ¿Í»§»úIPµØÖ·£»	Àı£º192.168.0.112
+	string pcname = 3;		// ¿Í»§»úÃû£»		Àı£ºPC-001
+	int32 osType = 4;		// ²Ù×÷ÏµÍ³ÀàĞÍ£»	Àı£º0-windows, 1-macos, 2-android, 3-linux
+	string osVersion = 5;	// ²Ù×÷ÏµÍ³°æ±¾£»	Àı£ºwin7, win10
+	string wenhuaVer = 6;	// ÎÄ»¯¿Í»§¶Ë°æ±¾£»	Àı£º"3.01"
 }
 
 
-// æ¥  å£ï¼švoid SetInstantPcInfoList(PcInstantInfoList infos)		ä¸ŠæŠ¥å®¢æˆ·æœºå®æ—¶ä¿¡æ¯åˆ—è¡¨
-// å‚  æ•°ï¼šPcInstantInfoList
-// è¿”å›å€¼ï¼šæ— 
+// ½Ó  ¿Ú£ºvoid SetBarInstantInfo(BarInstantInfo info)			ÉÏ±¨Íø°ÉÊµÊ±ĞÅÏ¢
+// ²Î  Êı£ºBarInstantInfo
+// ·µ»ØÖµ£ºÎŞ
+message BarInstantInfo {
+	OnlineStatistic stat = 1;
+	repeated PcInstantInfo infos = 2;
+}
+message OnlineStatistic {		// ÔÚÏßÍ³¼Æ
+	string statDate = 1;		// Í³¼ÆÈÕÆÚ(2017-06-01)
+	
+	// ÔÚÏßÖÕ¶ËÊı
+	uint32 offlineNum = 2;		// ÀëÏßÊı--µ±Ç°
+	uint32 onlineNum = 3;		// ÔÚÏßÊı--µ±Ç°
+	uint32 onlineNumToday = 4;	// ÔÚÏßÊı--½ñÌìÀÛ¼Æ
+	uint32 onlineMaxToday = 5;	// ÔÚÏßÊı--½ñÌì×î´ó
+	uint32 onlineNumYsday = 6;	// ÔÚÏßÊı--×òÌìÀÛ¼Æ
+	uint32 onlineMaxYsday = 7;	// ÔÚÏßÊı--×òÌì×î´ó
+	
+	// ÊµÃûµÇÂ¼¹ıµÄÓÃ»§Êı(ÔİÊ±²»ÓÃ)
+	uint32 userNum = 8;			// ÓÃ»§Êı--µ±Ç°
+	uint32 userNumToday = 9;	// ÓÃ»§Êı--½ñÌìÀÛ¼Æ
+	uint32 userMaxToday = 10;	// ÓÃ»§Êı--½ñÌì×î´ó
+	uint32 userNumYsday = 11;	// ÓÃ»§Êı--×òÌìÀÛ¼Æ
+	uint32 userMaxYsday = 12;	// ÓÃ»§Êı--×òÌì×î´ó
+
+	// ¿ª¹ıµÄÖÕ¶ËÊı(ÔİÊ±²»ÓÃ)
+	uint32 poweronNum = 13;		// ¿ª»úÊı--µ±Ç°
+	uint32 poweronNumToday = 14;// ¿ª»úÊı--½ñÌìÀÛ¼Æ
+	uint32 poweronMaxToday = 15;// ¿ª»úÊı--½ñÌì×î´ó
+	uint32 poweronNumYsday = 16;// ¿ª»úÊı--×òÌìÀÛ¼Æ
+	uint32 poweronMaxYsday = 17;// ¿ª»úÊı--×òÌì×î´ó
+}
+
+// ½Ó  ¿Ú£ºvoid SetInstantPcInfoList(PcInstantInfoList infos)		ÉÏ±¨¿Í»§»úÊµÊ±ĞÅÏ¢ÁĞ±í(·ÏÆú,ÓÉSetBarInstantInfo´úÌæ)
+// ²Î  Êı£ºPcInstantInfoList
+// ·µ»ØÖµ£ºÎŞ
 message PcInstantInfoList {
 	repeated PcInstantInfo infos = 1;
 }
-message PcInstantInfo {			// å®¢æˆ·æœºå®æ—¶ä¿¡æ¯
-	string mac = 1;				// å®¢æˆ·æœºMacåœ°å€ï¼›	ä¾‹ï¼š50-E5-49-3D-5D-78	ä»¥æ­¤ä¸ºå­—æ®µå…³è”æ˜¯è¿™å®¶ç½‘å§çš„å“ªå°æœºå™¨
-	bool  isPowerOn = 2;		// æ˜¯å¦å¼€æœº
-	bool  isRunWenhua = 3;		// æ˜¯å¦è¿è¡Œæ–‡åŒ–å®¢æˆ·ç«¯
-	bool  isUserLogin = 4;		// æ˜¯å¦å®åç™»å½•
-	int32 wenhuaDuration = 5;	// æ–‡åŒ–å®¢æˆ·ç«¯è¿è¡Œæ—¶é•¿ï¼Œå•ä½ï¼šç§’
-	int32 poweronDuration = 6;	// å®¢æˆ·æœºå¼€æœºæ—¶é•¿ï¼Œå•ä½ï¼šç§’
+message PcInstantInfo {			// ¿Í»§»úÊµÊ±ĞÅÏ¢
+	string mac = 1;				// ¿Í»§»úMacµØÖ·£»	Àı£º50-E5-49-3D-5D-78	ÒÔ´ËÎª×Ö¶Î¹ØÁªÊÇÕâ¼ÒÍø°ÉµÄÄÄÌ¨»úÆ÷
+	bool  isPowerOn = 2;		// ÊÇ·ñ¿ª»ú
+	bool  isRunWenhua = 3;		// ÊÇ·ñÔËĞĞÎÄ»¯¿Í»§¶Ë
+	bool  isUserLogin = 4;		// ÊÇ·ñÊµÃûµÇÂ¼
+	int32 wenhuaDuration = 5;	// ÎÄ»¯¿Í»§¶ËÔËĞĞÊ±³¤£¬µ¥Î»£ºÃë
+	int32 poweronDuration = 6;	// ¿Í»§»ú¿ª»úÊ±³¤£¬µ¥Î»£ºÃë
 }
 
 
-// æ¥  å£ï¼šFileInfoList GetFileInfoList()		è·å–æ–‡ä»¶ä¿¡æ¯åˆ—è¡¨
-// å‚  æ•°ï¼šæ— 
-// è¿”å›å€¼ï¼šä¸­å¿ƒè¿”å›å½“å‰æ–‡ä»¶ä¿¡æ¯åˆ—è¡¨æ‰€æœ‰è®°å½•
+// ½Ó  ¿Ú£ºFileInfoList GetFileInfoList()		»ñÈ¡ÎÄ¼şĞÅÏ¢ÁĞ±í
+// ²Î  Êı£ºÎŞ
+// ·µ»ØÖµ£ºÖĞĞÄ·µ»Øµ±Ç°ÎÄ¼şĞÅÏ¢ÁĞ±íËùÓĞ¼ÇÂ¼
 
 message FileInfoList {
 	repeated FileInfo infos = 1;
 	repeated FileBar fileBars = 2;
 }
 message FileInfo {
-	int32 id = 1;				// æ–‡ä»¶ID
-	string filename = 2;		// æ–‡ä»¶å
-	string version = 3;			// æ–‡ä»¶ç‰ˆæœ¬å·ï¼ˆ1.01ï¼‰
-	string md5 = 4;				// æ–‡ä»¶md5å€¼(å¤§å†™hexç¼–ç çš„md5å€¼)
-	int32 flag = 5;				// æ–‡ä»¶æ‰€åœ¨æ¨¡å—ï¼š1-æœåŠ¡ç«¯ï¼Œ2-å®¢æˆ·ç«¯
-	int32 type = 6;				// 0-å¿½ç•¥ï¼Œ1-dllï¼Œ2-exe
-	int32 action = 7;			// 0-å¿½ç•¥ï¼Œ1-åŠ è½½dllï¼Œ2-è¿è¡Œexe
-	bool applyAllBar = 8;		// æ˜¯å¦åº”ç”¨åˆ°æ‰€æœ‰ç½‘å§
-	bytes binary = 9;			// æ–‡ä»¶äºŒè¿›åˆ¶å†…å®¹ï¼Œ***æ­¤å­—æ®µä¸ºç½‘å§å§ä½¿ç”¨ï¼Œä¸­å¿ƒå¿½ç•¥ä¸ä½œå¤„ç†***
+	int32 id = 1;				// ÎÄ¼şID
+	string filename = 2;		// ÎÄ¼şÃû
+	string version = 3;			// ÎÄ¼ş°æ±¾ºÅ£¨1.01£©
+	string md5 = 4;				// ÎÄ¼şmd5Öµ(´óĞ´hex±àÂëµÄmd5Öµ)
+	int32 flag = 5;				// ÎÄ¼şËùÔÚÄ£¿é£º1-·şÎñ¶Ë£¬2-¿Í»§¶Ë
+	int32 type = 6;				// 0-ºöÂÔ£¬1-dll£¬2-exe
+	int32 action = 7;			// 0-ºöÂÔ£¬1-¼ÓÔØdll£¬2-ÔËĞĞexe
+	bool applyAllBar = 8;		// ÊÇ·ñÓ¦ÓÃµ½ËùÓĞÍø°É£¨Ä¬ÈÏ£ºÊÇ£©
+	bytes binary = 9;			// ÎÄ¼ş¶ş½øÖÆÄÚÈİ	***´Ë×Ö¶ÎÎªÍø°É°ÉÊ¹ÓÃ£¬ÖĞĞÄºöÂÔ²»×÷´¦Àí***
+	bool isUpdated = 10;		// ÊÇ·ñÒÑ¸üĞÂ		***´Ë×Ö¶ÎÎªÍø°É°ÉÊ¹ÓÃ£¬ÖĞĞÄºöÂÔ²»×÷´¦Àí***
+	bool isActioned = 11;		// ÊÇ·ñÒÑÖ´ĞĞ		***´Ë×Ö¶ÎÎªÍø°É°ÉÊ¹ÓÃ£¬ÖĞĞÄºöÂÔ²»×÷´¦Àí***
+	string localPath = 12;		// ±¾µØ±£´æÂ·¾¶		***´Ë×Ö¶ÎÎªÍø°É°ÉÊ¹ÓÃ£¬ÖĞĞÄºöÂÔ²»×÷´¦Àí***
+	bool isSaveTempDir = 13;	// ÊÇ·ñ±£´æµ½ÁÙÊ±Ä¿Â¼£¨Ä¬ÈÏ£º·ñ£©
 }
 message FileBar {
-	int32 fileID = 1;			// æ–‡ä»¶ID
-	repeated string barID = 2;	// è¯¥æ–‡ä»¶åº”ç”¨åˆ°çš„ç½‘å§åˆ—è¡¨
+	int32 fileID = 1;			// ÎÄ¼şID
+	repeated string barID = 2;	// ¸ÃÎÄ¼şÓ¦ÓÃµ½µÄÍø°ÉÁĞ±í
 }
 
-// æ¥  å£ï¼šbyte[] GetFile(int32 fileID)		è·å–æ–‡ä»¶
-// å‚  æ•°ï¼šfileID æ–‡ä»¶ID
-// è¿”å›å€¼ï¼šæ–‡ä»¶äºŒè¿›è¡Œå­—èŠ‚æ•°ç»„ï¼Œæ”¾åœ¨Message.contentä¸­
+// ½Ó  ¿Ú£ºbyte[] GetFile(int32 fileID)		»ñÈ¡ÎÄ¼ş
+// ²Î  Êı£ºfileID ÎÄ¼şID
+// ·µ»ØÖµ£ºÎÄ¼ş¶ş½øĞĞ×Ö½ÚÊı×é£¬·ÅÔÚMessage.contentÖĞ

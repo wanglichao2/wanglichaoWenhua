@@ -11,7 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alibaba.fastjson.JSON;
 import com.wenhua.svr.domain.AreasCode;
+import com.wenhua.svr.domain.BarOnlineStatistic;
 import com.wenhua.svr.domain.BarPcInstantInfo;
 import com.wenhua.svr.domain.NetBar;
 import com.wenhua.svr.domain.StatBarInstance;
@@ -31,6 +33,7 @@ public class StatBarInstancerCacher {
 	
 	/** BarId : 网吧实时信息 */
 	private static final Map<String, StatBarInstance> barInstanceCacher = new ConcurrentHashMap<String, StatBarInstance>();
+	private static final Map<String, BarOnlineStatistic> barOnlineStatisticCacher=new ConcurrentHashMap<String,BarOnlineStatistic>();
 	
 	/** 单位分钟 文化客户端需要运行的时间 */
 	private static int wenhuaDuration = 60;
@@ -83,6 +86,17 @@ public class StatBarInstancerCacher {
 			list.add(barInstanceCacher.get(barId));
 		}
 		return list;
+	}
+	
+	/**
+	 * 获取网吧在线统计信息
+	 * @param barId
+	 * @return
+	 */
+	public static BarOnlineStatistic getBarOnLineStatisticsFromCache(String barId) {
+		if(barId==null|| "".equals(barId))return null;
+		return barOnlineStatisticCacher.get(barId);
+		
 	}
 	
 	public static List<StatBarInstance> getBarsInIds(List<String> barIdList){
@@ -201,6 +215,27 @@ public class StatBarInstancerCacher {
 		
 		return barInstance;
 		
+	}
+	/**
+	 * 更新网吧在线统计
+	 * @param statistic
+	 */
+	public static void updateBarOnlineStatisticCache(BarOnlineStatistic statistic) {
+		if(!BarIdUtils.isValid(statistic.getBarId())) {
+			logger.warn(String.format("##Invalid barId: %s", statistic.getBarId()));
+			return;
+		}
+		BarOnlineStatistic barOnlineStatistic = barOnlineStatisticCacher.get(statistic.getBarId());
+		if(null != barOnlineStatistic) {
+			logger.warn(String.format("##Found unexcepted barId: [%s], the bar is in the cacher go remove and add", statistic.getBarId()));
+			barOnlineStatisticCacher.remove(statistic.getBarId());
+		}
+		StatBarInstance bar= barInstanceCacher.get(statistic.getBarId());
+		if(bar!=null){
+			statistic.setBarName(bar.getBarName());
+		}
+		barOnlineStatisticCacher.put(statistic.getBarId(), statistic);
+		logger.debug(String.format("##StatBarOnlineStatistics of barId[%s] is : %s", statistic.getBarId(), JSON.toJSONString(statistic)));
 	}
 	
 	public int getWenhuaDuration() {

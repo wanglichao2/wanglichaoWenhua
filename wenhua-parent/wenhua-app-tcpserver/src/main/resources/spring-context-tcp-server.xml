@@ -39,6 +39,7 @@
 				<entry key="1007" 	value="系统异常" />
 				<entry key="1008" 	value="网吧已无效" />
 				<entry key="1009" 	value="请求消息解析错误" />
+				<entry key="1010" 	value="更新网吧统计信息错误" />
 			</map>
 		</property>
 	</bean>

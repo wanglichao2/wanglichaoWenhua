@@ -21,6 +21,7 @@ import com.wenhua.server.vo.StatAreaVo;
 import com.wenhua.server.vo.StatBarVo;
 import com.wenhua.svr.component.StatAreaInstanceCacher;
 import com.wenhua.svr.component.StatBarInstancerCacher;
+import com.wenhua.svr.domain.BarOnlineStatistic;
 import com.wenhua.svr.domain.NetBar;
 import com.wenhua.svr.domain.StatAreaInstance;
 import com.wenhua.svr.domain.StatAreaInstanceCity;
@@ -312,7 +313,13 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		if("code".equals(type)){//编号查询
 			List<StatBarInstance> bars = StatBarInstancerCacher.getBarInArea(keyword);
 			for(StatBarInstance bar : bars) {
-				list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion()));
+				BarOnlineStatistic barStatistic= StatBarInstancerCacher.getBarOnLineStatisticsFromCache(bar.getBarId());
+				if(barStatistic!=null){
+					list.add(StatBarVo.newOne(barStatistic.getBarId(), barStatistic.getBarName(), barStatistic.getOnlineNum(), barStatistic.getOfflineNum(), barStatistic.getOnlineNumToday(), barStatistic.getOnlineNumYsday()));
+				}else{
+					list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), 0, 0,0, 0));
+				}
+//				list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion()));
 			}
 		}else{
 			// 关键字
@@ -324,9 +331,13 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 			List<String> barIds = this.authService.getBarIdsByMap(queryMap);
 			List<StatBarInstance> bars = StatBarInstancerCacher.getBarsInIds(barIds);
 			for (StatBarInstance bar : bars) {
-				list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(),
-						bar.getOnline(), bar.getOffline(), bar.getValid(),
-						bar.getServerVersion()));
+//				list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(),bar.getOnline(), bar.getOffline(), bar.getValid(),bar.getServerVersion()));
+				BarOnlineStatistic barStatistic= StatBarInstancerCacher.getBarOnLineStatisticsFromCache(bar.getBarId());
+				if(barStatistic!=null){
+					list.add(StatBarVo.newOne(barStatistic.getBarId(), barStatistic.getBarName(), barStatistic.getOnlineNum(), barStatistic.getOfflineNum(), barStatistic.getOnlineNumToday(), barStatistic.getOnlineNumYsday()));
+				}else{
+					list.add(StatBarVo.newOne(bar.getBarId(), bar.getBarName(), 0, 0,0, 0));
+				}
 			}
 		}
 		return list;
@@ -339,8 +350,15 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 		List<StatBarInstance> bars = StatBarInstancerCacher.getBarInArea(areaCode);
 		for(StatBarInstance bar : bars) {
 			if(barId.equals(bar.getBarId())){
-				StatBarVo vo=StatBarVo.newOne(bar.getBarId(), bar.getBarName(), 
-						bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion());
+//				StatBarVo vo=StatBarVo.newOne(bar.getBarId(), bar.getBarName(), 
+//						bar.getOnline(), bar.getOffline(), bar.getValid(), bar.getServerVersion());
+				StatBarVo vo=null;
+				BarOnlineStatistic barStatistic= StatBarInstancerCacher.getBarOnLineStatisticsFromCache(bar.getBarId());
+				if(barStatistic!=null){
+					vo=StatBarVo.newOne(barStatistic.getBarId(), barStatistic.getBarName(), barStatistic.getOnlineNum(), barStatistic.getOfflineNum(), barStatistic.getOnlineNumToday(), barStatistic.getOnlineNumYsday());
+				}else{
+					vo=StatBarVo.newOne(bar.getBarId(), bar.getBarName(), 0, 0,0, 0);
+				}
 				return vo;
 			}
 		}
