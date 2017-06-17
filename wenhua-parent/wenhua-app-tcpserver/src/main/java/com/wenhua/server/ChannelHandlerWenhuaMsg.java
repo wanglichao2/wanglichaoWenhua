@@ -117,9 +117,12 @@ public class ChannelHandlerWenhuaMsg extends ChannelInboundHandlerAdapter {
 		StatAreaInstanceCacher.inactiveBar(barId);
 		StatBarInstancerCacher.updateCache(barId, null, isBarDeleted);
 		BarOnlineStatistic statistic= StatBarInstancerCacher.getBarOnLineStatisticsFromCache(barId);
-		statistic.setOnlineNum(0);
-		statistic.setOfflineNum(0);
-		StatBarInstancerCacher.updateBarOnlineStatisticCache(statistic);
+		if(statistic!=null){
+			statistic.setOnlineNum(0);
+			statistic.setOfflineNum(0);
+			StatBarInstancerCacher.updateBarOnlineStatisticCache(statistic);
+		}
+		
 	}
 	
 	@Override

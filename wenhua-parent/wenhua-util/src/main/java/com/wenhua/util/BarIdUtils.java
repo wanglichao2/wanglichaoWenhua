@@ -14,7 +14,7 @@ public class BarIdUtils {
 		//4199190125
 		String areaCode=barId.substring(0, 6);
 		String headStr=areaCode.substring(0, 4);
-		if(Long.valueOf(headStr)>SystemConstant.District_Head)
+		if(Long.valueOf(headStr)>=SystemConstant.District_Head)
 		return headStr+"00";
 		else return areaCode;
 	}
@@ -27,7 +27,7 @@ public class BarIdUtils {
 	public static String getCityCode(String barId) {
 		if(!isValid(barId)) return null;
 		String headStr=barId.substring(0, 4);
-		if(Long.valueOf(headStr)>SystemConstant.District_Head)
+		if(Long.valueOf(headStr)>=SystemConstant.District_Head)
 		return SystemConstant.District_Center;
 		else
 		return barId.substring(0, 4) + "00";
