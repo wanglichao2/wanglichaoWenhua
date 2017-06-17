@@ -363,8 +363,10 @@ public class ChannelHandlerHttp extends ChannelInboundHandlerAdapter {
 			}
 		}
 		return null;
+		
+	
 	}
-
+    
 	private List<?> doCity(String cityCode) {
 		List<StatAreaVo> list = new ArrayList<StatAreaVo>();
 		

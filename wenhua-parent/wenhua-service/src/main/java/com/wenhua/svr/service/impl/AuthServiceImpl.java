@@ -62,8 +62,7 @@ public class AuthServiceImpl implements AuthService {
 	private String key = "hn123wh";
 	/** 客户机上报信息频率 */
 	private int freqInstantPcInfo = 60;
-
-	@Override
+   @Override    
 	public NetBar isAuth(BarAuthInfo barAuthInfo) throws AuthBarNotExistException, AuthSignNotValidException, AuthBarNotValidException {
 		if(null == barAuthInfo) throw new AuthBarNotExistException();
 
@@ -456,6 +455,10 @@ public class AuthServiceImpl implements AuthService {
 		return this.netBarDao.selectBarIdsByMap(queryMap);
 		
 	}
+
+	
+
+	
 
 	
 	

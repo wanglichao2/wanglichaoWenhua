@@ -1,0 +1,178 @@
+<wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://controlInfo.interfaceImp.netbar.ccm.gov/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="UploadControlInfoServiceService" targetNamespace="http://controlInfo.interfaceImp.netbar.ccm.gov/">
+<wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://controlInfo.interfaceImp.netbar.ccm.gov/" elementFormDefault="unqualified" targetNamespace="http://controlInfo.interfaceImp.netbar.ccm.gov/" version="1.0">
+<xs:element name="sendCustomerInfo" type="tns:sendCustomerInfo"/>
+<xs:element name="sendCustomerInfoResponse" type="tns:sendCustomerInfoResponse"/>
+<xs:element name="sendCustomerOnlineInfo" type="tns:sendCustomerOnlineInfo"/>
+<xs:element name="sendCustomerOnlineInfoResponse" type="tns:sendCustomerOnlineInfoResponse"/>
+<xs:element name="sendExigencyInfo" type="tns:sendExigencyInfo"/>
+<xs:element name="sendExigencyInfoResponse" type="tns:sendExigencyInfoResponse"/>
+<xs:element name="sendOnlineTimeInfo" type="tns:sendOnlineTimeInfo"/>
+<xs:element name="sendOnlineTimeInfoResponse" type="tns:sendOnlineTimeInfoResponse"/>
+<xs:complexType name="sendCustomerOnlineInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="key" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="customerOnlineInfo" type="tns:customerOnlineInfo"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="customerOnlineInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="customer_num" type="xs:string"/>
+<xs:element minOccurs="0" name="netbar_code" type="xs:string"/>
+<xs:element minOccurs="0" name="report_time" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sendCustomerOnlineInfoResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sendExigencyInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="key" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="ExigencyInfo" type="tns:exigencyInfo"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="exigencyInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="exigencyNum" type="xs:string"/>
+<xs:element minOccurs="0" name="netbar_code" type="xs:string"/>
+<xs:element minOccurs="0" name="reportTime" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sendExigencyInfoResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sendOnlineTimeInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="key" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="onlineTimeInfo" type="tns:onlineTimeTipInfo"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="onlineTimeTipInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="netbarCode" type="xs:string"/>
+<xs:element minOccurs="0" name="reportTime" type="xs:string"/>
+<xs:element minOccurs="0" name="warnNum" type="xs:string"/>
+<xs:element minOccurs="0" name="warnType" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sendOnlineTimeInfoResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sendCustomerInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="key" type="xs:string"/>
+<xs:element maxOccurs="unbounded" minOccurs="0" name="customerInfo" type="tns:customerBaseInfo"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="customerBaseInfo">
+<xs:sequence>
+<xs:element minOccurs="0" name="card" type="xs:string"/>
+<xs:element minOccurs="0" name="cardType" type="xs:string"/>
+<xs:element minOccurs="0" name="content" type="xs:string"/>
+<xs:element minOccurs="0" name="customerName" type="xs:string"/>
+<xs:element minOccurs="0" name="end_time" type="xs:string"/>
+<xs:element minOccurs="0" name="ip" type="xs:string"/>
+<xs:element minOccurs="0" name="netbarCode" type="xs:string"/>
+<xs:element minOccurs="0" name="start_time" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="sendCustomerInfoResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="sendOnlineTimeInfo">
+<wsdl:part element="tns:sendOnlineTimeInfo" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="sendCustomerOnlineInfoResponse">
+<wsdl:part element="tns:sendCustomerOnlineInfoResponse" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="sendExigencyInfo">
+<wsdl:part element="tns:sendExigencyInfo" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="sendCustomerInfoResponse">
+<wsdl:part element="tns:sendCustomerInfoResponse" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="sendExigencyInfoResponse">
+<wsdl:part element="tns:sendExigencyInfoResponse" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="sendCustomerOnlineInfo">
+<wsdl:part element="tns:sendCustomerOnlineInfo" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="sendCustomerInfo">
+<wsdl:part element="tns:sendCustomerInfo" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:message name="sendOnlineTimeInfoResponse">
+<wsdl:part element="tns:sendOnlineTimeInfoResponse" name="parameters"></wsdl:part>
+</wsdl:message>
+<wsdl:portType name="UploadControlInfoService">
+<wsdl:operation name="sendCustomerOnlineInfo">
+<wsdl:input message="tns:sendCustomerOnlineInfo" name="sendCustomerOnlineInfo"></wsdl:input>
+<wsdl:output message="tns:sendCustomerOnlineInfoResponse" name="sendCustomerOnlineInfoResponse"></wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="sendExigencyInfo">
+<wsdl:input message="tns:sendExigencyInfo" name="sendExigencyInfo"></wsdl:input>
+<wsdl:output message="tns:sendExigencyInfoResponse" name="sendExigencyInfoResponse"></wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="sendOnlineTimeInfo">
+<wsdl:input message="tns:sendOnlineTimeInfo" name="sendOnlineTimeInfo"></wsdl:input>
+<wsdl:output message="tns:sendOnlineTimeInfoResponse" name="sendOnlineTimeInfoResponse"></wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="sendCustomerInfo">
+<wsdl:input message="tns:sendCustomerInfo" name="sendCustomerInfo"></wsdl:input>
+<wsdl:output message="tns:sendCustomerInfoResponse" name="sendCustomerInfoResponse"></wsdl:output>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="UploadControlInfoServiceServiceSoapBinding" type="tns:UploadControlInfoService">
+<soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+<wsdl:operation name="sendCustomerOnlineInfo">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="sendCustomerOnlineInfo">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="sendCustomerOnlineInfoResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="sendExigencyInfo">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="sendExigencyInfo">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="sendExigencyInfoResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="sendOnlineTimeInfo">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="sendOnlineTimeInfo">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="sendOnlineTimeInfoResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="sendCustomerInfo">
+<soap:operation soapAction="" style="document"/>
+<wsdl:input name="sendCustomerInfo">
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output name="sendCustomerInfoResponse">
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="UploadControlInfoServiceService">
+<wsdl:port binding="tns:UploadControlInfoServiceServiceSoapBinding" name="UploadControlInfoServicePort">
+<soap:address location="http://192.168.70.40:8080/netbar/services/ControlInfo"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>
