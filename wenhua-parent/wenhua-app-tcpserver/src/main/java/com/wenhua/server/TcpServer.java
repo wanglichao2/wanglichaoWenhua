@@ -34,7 +34,7 @@ public class TcpServer {
 			ServerBootstrap b = getProtobufBootstrap(bossGroup, workerGroup);
 
 			// Bind and start to accept incoming connections.
-			ChannelFuture f = b.bind(port).sync(); // (7)
+			ChannelFuture f = b.bind(port).sync(); // (7)//ChannelFuture为完成或未完成状态
 			logger.info("##TcpServer start at [" + port + "]...");
 			// Wait until the server socket is closed.
 			// In this example, this does not happen, but you can do that to

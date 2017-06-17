@@ -13,7 +13,7 @@
 					http://www.springframework.org/schema/aop/spring-aop-4.2.xsd">
 
 	<context:property-placeholder location="classpath*:app-*.properties" />
-	
+
 	<!-- 业务服务 -->
 	<import resource="classpath:spring-context-service.xml"/>
 	

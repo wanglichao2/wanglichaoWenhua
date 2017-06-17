@@ -14,7 +14,7 @@
 		<jdbcConnection 
 		connectionURL="jdbc:mysql://127.0.0.1:3306/qcms" 
 		driverClass="com.mysql.jdbc.Driver"
-		password="fpe511" 
+		password="111111" 
 		userId="root" />
 		<javaModelGenerator 
 			targetPackage="com.wenhua.svr.domain.base"

@@ -34,9 +34,11 @@ public class HttpServer implements Runnable {
 
 		try {
 			ServerBootstrap b = getProtobufBootstrap(bossGroup, workerGroup);
+			//绑定端口，同步等待成功
 			ChannelFuture f = b.bind(defaultPort).sync();
 			
 			logger.info("##HttpServer start at [" + defaultPort + "]...");
+		//等待服务端监听端口关闭
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
