@@ -367,18 +367,31 @@ public class StatAreaInstanceCacher {
 			provinceCurrent = provinceInstance.online(barId);
 		}
 		try {
+			System.out.println(String.format(
+							"##ActiveBar id: %s,Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
+							barId,
+							provinceCode,
+							provinceInstance==null?"province:"+provinceCode+"无数据":provinceInstance.getName(),
+							provinceCurrent,
+							areaCode,
+							areaInstance==null?"areaCode："+areaCode+"无数据":areaInstance.getName(),
+							areaCurrent,
+							cityCode,
+							cityInstance==null?"cityCode"+cityCode+"无数据":cityInstance.getName(),
+							cityCurrent
+							));
 			logger.info(
 					String.format(
 							"##ActiveBar id: %s,Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
 							barId,
 							provinceCode,
-							provinceInstance.getName(),
+							provinceInstance==null?"province:"+provinceCode+"无数据":provinceInstance.getName(),
 							provinceCurrent,
 							areaCode,
-							areaInstance.getName(),
+							areaInstance==null?"areaCode："+areaCode+"无数据":areaInstance.getName(),
 							areaCurrent,
 							cityCode,
-							cityInstance.getName(),
+							cityInstance==null?"cityCode"+cityCode+"无数据":cityInstance.getName(),
 							cityCurrent
 							));
 		} catch (Exception e) {
@@ -415,18 +428,31 @@ public class StatAreaInstanceCacher {
 			provinceCurrent = provinceInstance.offline(barId);
 		}
 		try {
+			System.out.println(String.format(
+							"##InactiveBar id: %s, Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
+							barId,
+							provinceCode,
+							provinceInstance==null?"province:"+provinceCode+"无数据":provinceInstance.getName(),
+							provinceCurrent,
+							areaCode,
+							areaInstance==null?"areaCode："+areaCode+"无数据":areaInstance.getName(),
+							areaCurrent,
+							cityCode,
+							cityInstance==null?"cityCode"+cityCode+"无数据":cityInstance.getName(),
+							cityCurrent
+							));
 			logger.info(
 					String.format(
 							"##InactiveBar id: %s, Province: %s %s CurrentActive Bar: %d Area: %s %s CurrentActive Bar: %d City: %s %s CurrentActive Bar: %d", 
 							barId,
 							provinceCode,
-							provinceInstance.getName(),
+							provinceInstance==null?"province:"+provinceCode+"无数据":provinceInstance.getName(),
 							provinceCurrent,
 							areaCode,
-							areaInstance.getName(),
+							areaInstance==null?"areaCode："+areaCode+"无数据":areaInstance.getName(),
 							areaCurrent,
 							cityCode,
-							cityInstance.getName(),
+							cityInstance==null?"cityCode"+cityCode+"无数据":cityInstance.getName(),
 							cityCurrent
 							));
 		} catch (Exception e) {
