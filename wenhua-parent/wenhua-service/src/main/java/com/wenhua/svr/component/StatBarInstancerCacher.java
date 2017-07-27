@@ -98,6 +98,22 @@ public class StatBarInstancerCacher {
 		return barOnlineStatisticCacher.get(barId);
 		
 	}
+	/**
+	 * 判断当前时间，如果当前时间是23：50分 从缓存中取出来，就把    ：获取网吧在线统计信息 这个方法中的所有数据  赋给 下面的这个方法
+	 * @author wanglichao
+	 * @param barIdList
+	 * @return
+	 */
+	/*public static BarOnlineStatistic getBarOnlineStatisticWhenTime(String barId){
+		StatBarInstancerCacher sbinsCacher =new StatBarInstancerCacher();
+		return sbinsCacher.getBarOnLineStatisticsFromCache(barId);
+		
+	}*/
+	
+	
+	
+	
+	
 	
 	public static List<StatBarInstance> getBarsInIds(List<String> barIdList){
 		List<StatBarInstance> list = new ArrayList<StatBarInstance>();

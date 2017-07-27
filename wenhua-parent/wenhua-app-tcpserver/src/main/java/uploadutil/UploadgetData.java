@@ -16,6 +16,29 @@ public class UploadgetData {
 	private  Connection conn=null;
 	private  ResultSet rs=null;
 	private  PreparedStatement pstmt=null;
+	public List<CustomerOnlineInfo> getAllNetbar_code(){
+		List<CustomerOnlineInfo> t_up_cuonliinfolist=new ArrayList<CustomerOnlineInfo>();
+	   	  CustomerOnlineInfo t=null;
+	   	  try {
+	   			conn=DBManager.getConnection();
+	   			String sql="select netbar_code from t_up_customeronlineinfo";
+	   			pstmt=conn.prepareStatement(sql);
+	   			rs=pstmt.executeQuery();
+	   			while(rs.next()){
+	   				t =new CustomerOnlineInfo();
+	   			
+	   				t.setNetbar_code(rs.getString("netbar_code"));
+	   				
+	   				t_up_cuonliinfolist.add(t);
+	   			}
+	   		} catch (SQLException e) {
+	   			// TODO Auto-generated catch block
+	   			e.printStackTrace();
+	   		}finally{
+	   			DBManager.closeResource(rs, pstmt, conn);
+	   		}
+	   	  return t_up_cuonliinfolist;
+	}
 	public List<CustomerOnlineInfo> getAll(){
    	  List<CustomerOnlineInfo> t_up_cuonliinfolist=new ArrayList<CustomerOnlineInfo>();
    	  CustomerOnlineInfo t=null;
@@ -124,17 +147,18 @@ public class UploadgetData {
 		return elist;
 	 }
 	 //删除紧急状态信息上传
-	 public int delExigencyInfoByNetbarcode(){
+	 public int delExigencyInfoByNetbarcode(String netbar_code){
 		 int result=0;
 		 try {
 			 conn=DBManager.getConnection();
-			 String sql="delete from t_up_sendExigencyInfo where netbar_code=?";
+			 String sql="delete from t_up_sendexigencyinfo where netbar_code=?";
 			pstmt=conn.prepareStatement(sql);
+			pstmt.setString(1, netbar_code);
 			result=pstmt.executeUpdate();
 			if(result>0)
-				System.out.println("删除成功");
+				System.out.println("w删除成功");
 			else
-				System.out.println("删除失败");
+				System.out.println("w删除失败");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,6 +183,33 @@ public class UploadgetData {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
+	}
+	public int deleteCustomerOnlineInfoArray(String[] s) {
+		 int result=0;
+		 try {
+			 conn=DBManager.getConnection();
+			 conn.setAutoCommit(false);
+			 
+			 String sql="delete from t_up_customeronlineinfo where netbar_code in(0"; 
+			 	 
+			 		for(int i=0;i<s.length;i++) 
+			 		
+			 		{
+			 			
+			 		  sql+=","+s[i]; 
+			 		} 
+			 		sql+=")"; 
+		
+			result=pstmt.executeUpdate();
+			if(result>0)
+				System.out.println("批量删除成功");
+			else
+				System.out.println("批量删除失败");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		 return result;
 	}
 
 
