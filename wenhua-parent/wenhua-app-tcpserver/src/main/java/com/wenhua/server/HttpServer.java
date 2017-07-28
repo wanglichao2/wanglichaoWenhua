@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 
 import com.google.protobuf.Method;
 import com.wenhua.proto.WenhuaMsg;
+import com.wenhua.proto.WenhuaMsg.Message;
 import com.wenhua.server.vo.StatAreaVo;
 import com.wenhua.server.vo.StatBarVo;
 import com.wenhua.svr.component.StatAreaInstanceCacher;
@@ -59,6 +60,7 @@ public class HttpServer implements Runnable {
 	private ApplicationContext applicationContext;
 	private BarAuthInfo ba;
 	private static final Map<String, BarOnlineStatistic> barOnlineStatisticCacher=new ConcurrentHashMap<String,BarOnlineStatistic>();
+	
 	private StatBarInstancerCacher sbicacher;
 	private AuthService authService;
 	private BarOnlineStatistic baronlinestatic;
@@ -125,13 +127,10 @@ public class HttpServer implements Runnable {
 						WebServiceUtilUpload webseruupload=new WebServiceUtilUpload();
 						String key=webseruupload.login();
 						 System.out.println("=====每10分钟登陆一下这个接口=======>"+key);
-						 WenhuaMsg.Message message = (WenhuaMsg.Message) msg;
+						// WenhuaMsg.Message message = (WenhuaMsg.Message) obj;
 						// java.lang.reflect.Method method=ChannelHandlerWenhuaMsg.class.getDeclaredMethod("getBarId", Object.class);
 						 //   method.setAccessible(true);
 						   //  System.out.println("------>"+method);
-						 
-						 
-						 
 						 /*
 						  *                  场所上网信息上传
 						  * 首先，我要想获取到网吧id，那网吧必须要和中心建立连接，建立连接的前提是： 网吧端必须要和中心端认证通过，通过以后，调用
@@ -148,9 +147,7 @@ public class HttpServer implements Runnable {
 						 Date date= new Date();
 						 int hours = date.getHours();
 						 int minutes=date.getMinutes();
-						 if(hours==23 &&hours<24 && minutes>=50){
-							 /*   下面这个方法是：  场所上网信息上传            */
-							 
+						 if(hours==23 &&hours<24 && minutes>=50){	 
 							 /**
 							  * 1.备份缓存数据
 							  * 2把缓存数据整理上报
@@ -193,6 +190,7 @@ public class HttpServer implements Runnable {
 							//把今日上报数据插入数据库，然后删除上个月之前的旧数据
 							
 						}
+						 /*   下面这个方法是：  场所上网信息上传            */
 							/* if(upgetdata.getAll().size()>0){
 									res= webseruupload.sendCustomerOnlineInfo(upgetdata.getAll());//返回上传的结果successful/failing
 									System.out.println("===========线程调用上传的结果：=====》"+res);
